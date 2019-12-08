@@ -36,7 +36,7 @@ class _ClockState extends State<Clock> {
   }
 
   @override
-  Widget build(BuildContext context) => true
+  Widget build(BuildContext context) => false
       ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock();
