@@ -15,6 +15,29 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
+  ClockModel model;
+
   @override
-  Widget build(BuildContext context) => true ? Container() : CompositedClock();
+  void initState() {
+    super.initState();
+
+    model = widget.model;
+  }
+
+  @override
+  void didUpdateWidget(Clock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.model == widget.model) return;
+
+    setState(() {
+      model = widget.model;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => true
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+          '${model.is24HourFormat}, ${model.highString}, ${model.high}')
+      : CompositedClock();
 }
