@@ -12,6 +12,12 @@ class CompositedClock extends MultiChildRenderObjectWidget {
   }
 }
 
-class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox> {}
+class CompositedClockChildrenParentData
+    extends ContainerBoxParentData<RenderBox> {}
 
-class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {}
+class RenderCompositedClock extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox,
+            CompositedClockChildrenParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox,
+            CompositedClockChildrenParentData> {}
