@@ -4,8 +4,6 @@
 
 ## TODO
 
- * Add gitignore that ignores directories based on the publishing requirements of the challenge.
-
  * Take picture of the real-world inspiration (GDR one).
 
  * Implement first compositing using `MultiChildRenderObjectWidget`.
