@@ -16,5 +16,5 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> {
   @override
-  Widget build(BuildContext context) => CompositedClock();
+  Widget build(BuildContext context) => true ? Container() : CompositedClock();
 }
