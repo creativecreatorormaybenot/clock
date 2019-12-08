@@ -33,7 +33,7 @@
 # Web related
 lib/generated_plugin_registrant.dart
 
-pubsped.lock
+pubspec.lock
 .metadata
 .packages
 gdr_clock.iml
