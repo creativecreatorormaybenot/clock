@@ -13,8 +13,7 @@ dependencies:
     path: ../flutter_clock_helper
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  pedantic: 1.9.0
 
 flutter:
   uses-material-design: true
