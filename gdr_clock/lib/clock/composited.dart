@@ -23,18 +23,25 @@ enum CompositedClockComponent {
   weather,
 }
 
-class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox> {
+class CompositedClockChildrenParentData
+    extends ContainerBoxParentData<RenderBox> {
   CompositedClockComponent component;
 
   /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
-  /// If one of this is passed to [CompositedClock], an error should be thrown.
+  /// If a child is passed to [CompositedClock] that does not update this to `true`, an error should be thrown.
   bool valid;
 }
 
-class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
+class RenderCompositedClock extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox,
+            CompositedClockChildrenParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox,
+            CompositedClockChildrenParentData> {
   @override
   void setupParentData(RenderObject child) {
-    if (child.parentData is! CompositedClockChildrenParentData) child.parentData = CompositedClockChildrenParentData()..valid = false;
+    if (child.parentData is! CompositedClockChildrenParentData)
+      child.parentData = CompositedClockChildrenParentData()..valid = false;
   }
 
   @override
@@ -55,12 +62,14 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as CompositedClockChildrenParentData;
+      final childParentData =
+          child.parentData as CompositedClockChildrenParentData;
 
       if (!childParentData.valid) throw ClockCompositionError(child: child);
       if (!components.contains(childParentData.component)) {
         throw ClockCompositionError(
-            message: 'The children passed to [CompositedClock] contain the component type ${describeEnum(childParentData.component)} more than once. '
+            message:
+                'The children passed to [CompositedClock] contain the component type ${describeEnum(childParentData.component)} more than once. '
                 'Every component can only be passed exactly once:');
       }
 
@@ -71,7 +80,8 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
     if (components.isNotEmpty) {
       throw ClockCompositionError(
-          message: 'The children passed to [CompositedClock] do not cover every component in [CompositedClockComponent]. '
+          message:
+              'The children passed to [CompositedClock] do not cover every component in [CompositedClockComponent]. '
               'You need to pass every component exactly once and specify the component type correctly using [CompositedClockChildrenParentData]:');
     }
   }
@@ -81,7 +91,10 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
     assert(() {
       if (debugPaintSizeEnabled) {
         final painter = TextPainter(
-            text: TextSpan(text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.', style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
+            text: TextSpan(
+                text:
+                    'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
+                style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         painter.layout(maxWidth: size.width);
@@ -106,5 +119,7 @@ class ClockCompositionError extends Error {
   }) : assert(child != null || message != null);
 
   @override
-  String toString() => '${message ?? 'A child was passed to [CompositedClock] which does not set up its [RenderObject.parentData] as [CompositedClockChildrenParentData] correctly:'} $stackTrace.';
+  String toString() =>
+      '${message ?? 'A child was passed to [CompositedClock] which does not set up its [RenderObject.parentData] '
+          'as [CompositedClockChildrenParentData] correctly (setting [CompositedClockChildrenParentData.valid] to `true`:'} $stackTrace.';
 }

@@ -12,18 +12,19 @@ class AnalogPart extends LeafRenderObjectWidget {
 }
 
 class RenderAnalogPart extends RenderBox {
+  CompositedClockChildrenParentData get compositedClockData =>
+      parentData as CompositedClockChildrenParentData;
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    parentData = CompositedClockChildrenParentData()..component = CompositedClockComponent.analogTime;
+    compositedClockData.valid = true;
+    compositedClockData.component = CompositedClockComponent.analogTime;
   }
 
   @override
   void detach() {
-
-
     super.detach();
   }
 }
