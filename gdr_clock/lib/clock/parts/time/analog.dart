@@ -78,13 +78,18 @@ class RenderAnalogPart extends RenderClockPart {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius), Paint()..color = const Color(0xffffd345));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius),
+        Paint()..color = const Color(0xffffd345));
 
     final largeDivisions = 12, smallDivisions = 60;
     for (var n = smallDivisions; n > 0; n--) {
-      final largeTick = n % (smallDivisions / largeDivisions) == 0, height = largeTick ? 7.4 : 4.5;
+      final largeTick = n % (smallDivisions / largeDivisions) == 0,
+          height = largeTick ? 7.4 : 4.5;
       canvas.drawRect(
-          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: largeTick ? 1.8 : 1.3, height: height),
+          Rect.fromCenter(
+              center: Offset(0, (-size.width + height) / 2),
+              width: largeTick ? 1.8 : 1.3,
+              height: height),
           Paint()
             ..color = const Color(0xff000000)
             ..blendMode = BlendMode.darken);
@@ -93,7 +98,9 @@ class RenderAnalogPart extends RenderClockPart {
     }
 
     for (var n = largeDivisions; n > 0; n--) {
-      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+          text: TextSpan(text: '$n', style: textStyle),
+          textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 + 6.2));
 
