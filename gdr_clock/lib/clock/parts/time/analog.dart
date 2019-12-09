@@ -78,7 +78,8 @@ class RenderAnalogPart extends RenderClockPart {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius), Paint()..color = Color(0xffffd345));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius),
+        Paint()..color = Color(0xffffd345));
 
     final divisions = 12;
     canvas.rotate(pi * 2 / divisions);
@@ -86,7 +87,9 @@ class RenderAnalogPart extends RenderClockPart {
     for (var n = divisions; n > 0; n--) {
       canvas.rotate(-pi * 2 / divisions);
 
-      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+          text: TextSpan(text: '$n', style: textStyle),
+          textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2));
     }

@@ -54,13 +54,15 @@ class _ClockState extends State<Clock> {
     setState(() {
       time = DateTime.now();
 
-      timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond), update);
+      timer =
+          Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond), update);
     });
   }
 
   @override
   Widget build(BuildContext context) => false
-      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text(
+          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
           children: <Widget>[
