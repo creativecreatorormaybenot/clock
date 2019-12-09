@@ -1,4 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
@@ -17,11 +20,21 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   ClockModel model;
 
+  Timer timer;
+
   @override
   void initState() {
     super.initState();
 
     model = widget.model;
+
+    update();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -35,14 +48,27 @@ class _ClockState extends State<Clock> {
     });
   }
 
+  DateTime time;
+
+  void update() {
+    setState(() {
+      time = DateTime.now();
+
+      timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond), update);
+    });
+  }
+
   @override
   Widget build(BuildContext context) => false
-      ? Text(
-          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
           children: <Widget>[
-            AnalogPart(),
+            AnalogPart(
+              radius: 219,
+              textStyle: Theme.of(context).textTheme.display1,
+              pointerAngle: pi * 2 / 60 * time.second,
+            ),
           ],
         );
 }
