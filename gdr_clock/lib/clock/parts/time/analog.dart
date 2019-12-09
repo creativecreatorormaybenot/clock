@@ -5,13 +5,13 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 class AnalogPart extends LeafRenderObjectWidget {
-  final double radius, pointerAngle;
+  final double radius, handAngle;
   final TextStyle textStyle;
 
   const AnalogPart({
     @required this.radius,
     @required this.textStyle,
-    @required this.pointerAngle,
+    @required this.handAngle,
   }) : assert(radius != null);
 
   @override
@@ -19,7 +19,7 @@ class AnalogPart extends LeafRenderObjectWidget {
     return RenderAnalogPart(
       radius: radius,
       textStyle: textStyle,
-      pointerAngle: pointerAngle,
+      handAngle: handAngle,
     );
   }
 
@@ -28,19 +28,19 @@ class AnalogPart extends LeafRenderObjectWidget {
     renderObject.update(
       radius: radius,
       textStyle: textStyle,
-      pointerAngle: pointerAngle,
+      handAngle: handAngle,
     );
   }
 }
 
 class RenderAnalogPart extends RenderClockPart {
-  double radius, pointerAngle;
+  double radius, handAngle;
   TextStyle textStyle;
 
   RenderAnalogPart({
     this.radius,
     this.textStyle,
-    this.pointerAngle,
+    this.handAngle,
   }) : super(ClockComponent.analogTime);
 
   @override
@@ -55,10 +55,10 @@ class RenderAnalogPart extends RenderClockPart {
     super.detach();
   }
 
-  void update({double radius, TextStyle textStyle, double pointerAngle}) {
+  void update({double radius, TextStyle textStyle, double handAngle}) {
     this.radius = radius;
     this.textStyle = textStyle;
-    this.pointerAngle = pointerAngle;
+    this.handAngle = handAngle;
 
     markNeedsPaint();
   }
@@ -96,7 +96,7 @@ class RenderAnalogPart extends RenderClockPart {
 
     canvas.drawLine(
         Offset.zero,
-        Offset.fromDirection(pointerAngle, size.width / 2.1),
+        Offset.fromDirection(handAngle, size.width / 2.1),
         Paint()
           ..color = Color(0xff000000)
           ..strokeWidth = 3

@@ -5,9 +5,7 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
 
 ## TODO
 
- * Test `MultiChildRenderObjectWidget` implementation.
-
- * Test the three types of `ClockCompositionError`.
+ * Implement minute hand and make minute and second hand both bounce.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 

@@ -69,7 +69,7 @@ class _ClockState extends State<Clock> {
             AnalogPart(
               radius: 219,
               textStyle: Theme.of(context).textTheme.display1,
-              pointerAngle: pi * 2 / 60 * time.second,
+              handAngle: pi * 2 / 60 * time.second,
             ),
           ],
         );
