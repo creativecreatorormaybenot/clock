@@ -1,12 +1,15 @@
 # clock
 
-[creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
+[creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).  
+I was inspired by the design of an old analog barometer and hygrometer kind of device.
 
 ## TODO
 
- * Get fully familiar with the mock data and design hierarchy to work with the clock data.
+ * Test `MultiChildRenderObjectWidget` implementation.
 
- * Take picture of the real-world inspiration (GDR one).
+ * Test the three types of `ClockCompositionError`.
+
+ * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
  * Finish clock first.
 
