@@ -126,6 +126,7 @@ class ClockCompositionError extends Error {
 }
 
 /// Takes care of validating [RenderObject]s passed to [CompositedClock] and assigning a [ClockComponent].
+/// It also provides easy access to the [CompositedClockChildrenParentData] of this [RenderObject] via [compositedClockData].
 class RenderClockPart extends RenderBox {
   final ClockComponent component;
 
