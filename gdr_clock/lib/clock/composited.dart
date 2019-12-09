@@ -100,7 +100,7 @@ class RenderCompositedClock extends RenderBox
     assert(() {
       if (debugPaintSizeEnabled) {
         final painter = TextPainter(
-            text: TextSpan(
+            text: const TextSpan(
                 text:
                     'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
                 style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
