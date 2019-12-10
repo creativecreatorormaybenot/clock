@@ -3,6 +3,16 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).  
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
 
+## Implementation
+
+ * I used only the Flutter rendering layer to create this clock face, i.e. no plugins were used at all (check [`pubspec.yaml`](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
+
+ * No widgets from the standard library were used in my own code, i.e. I basically avoided the widget layer completely in order to have most control.
+
+ * No assets were used. The bullet point would be a bit short without this second sentence.
+
+ * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did). This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them :)
+
 ## TODO
 
  * Implement minute hand and make minute and second hand both bounce.
