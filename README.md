@@ -1,8 +1,14 @@
 ## TODO
 
- * Implement minute hand and make minute and second hand both bounce.
+ * Fix timer.
+
+ * Implement minute hand, hour hand, and make minute and second hand both bounce.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
+
+ * Add ball that bounces about scene, e.g. off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
+
+ * Create spin-up animation for when the widget is created or updated?
 
  * Finish clock first.
 
