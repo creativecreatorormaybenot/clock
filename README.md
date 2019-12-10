@@ -34,3 +34,7 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
  * No assets were used. The bullet point would be a bit short without this second sentence.
 
  * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did). This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them :)
+
+## Notes
+
+ * You can follow my whole process of building this in this repository. Maybe it helps someone :)
