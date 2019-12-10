@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
@@ -7,11 +8,13 @@ import 'package:gdr_clock/clock/clock.dart';
 class AnalogPart extends LeafRenderObjectWidget {
   final double radius, handAngle;
   final TextStyle textStyle;
+  final int hourDivisions;
 
   const AnalogPart({
     @required this.radius,
     @required this.textStyle,
     @required this.handAngle,
+    @required this.hourDivisions,
   }) : assert(radius != null);
 
   @override
@@ -20,6 +23,7 @@ class AnalogPart extends LeafRenderObjectWidget {
       radius: radius,
       textStyle: textStyle,
       handAngle: handAngle,
+      hourDivisions: hourDivisions,
     );
   }
 
@@ -29,6 +33,7 @@ class AnalogPart extends LeafRenderObjectWidget {
       radius: radius,
       textStyle: textStyle,
       handAngle: handAngle,
+      hourDivisions: hourDivisions,
     );
   }
 }
@@ -36,11 +41,13 @@ class AnalogPart extends LeafRenderObjectWidget {
 class RenderAnalogPart extends RenderClockPart {
   double radius, handAngle;
   TextStyle textStyle;
+  int hourDivisions;
 
   RenderAnalogPart({
     this.radius,
     this.textStyle,
     this.handAngle,
+    this.hourDivisions,
   }) : super(ClockComponent.analogTime);
 
   @override
@@ -55,10 +62,16 @@ class RenderAnalogPart extends RenderClockPart {
     super.detach();
   }
 
-  void update({double radius, TextStyle textStyle, double handAngle}) {
+  void update({
+    double radius,
+    TextStyle textStyle,
+    double handAngle,
+    int hourDivisions,
+  }) {
     this.radius = radius;
     this.textStyle = textStyle;
     this.handAngle = handAngle;
+    this.hourDivisions = hourDivisions;
 
     markNeedsPaint();
   }
@@ -78,29 +91,32 @@ class RenderAnalogPart extends RenderClockPart {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius),
-        Paint()..color = const Color(0xffffd345));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius), Paint()..color = const Color(0xffffd345));
 
-    final largeDivisions = 12, smallDivisions = 60;
+    final largeDivisions = hourDivisions, smallDivisions = 60;
     for (var n = smallDivisions; n > 0; n--) {
-      final largeTick = n % (smallDivisions / largeDivisions) == 0,
-          height = largeTick ? 7.4 : 4.5;
-      canvas.drawRect(
-          Rect.fromCenter(
-              center: Offset(0, (-size.width + height) / 2),
-              width: largeTick ? 1.8 : 1.3,
-              height: height),
-          Paint()
-            ..color = const Color(0xff000000)
-            ..blendMode = BlendMode.darken);
+      // Do not draw small ticks when large ones will be drawn afterwards anyway.
+      if (n % (smallDivisions / largeDivisions) != 0) {
+        final height = 4.5;
+        canvas.drawRect(
+            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+            Paint()
+              ..color = const Color(0xff000000)
+              ..blendMode = BlendMode.darken);
+      }
 
       canvas.rotate(-pi * 2 / smallDivisions);
     }
 
     for (var n = largeDivisions; n > 0; n--) {
-      final painter = TextPainter(
-          text: TextSpan(text: '$n', style: textStyle),
-          textDirection: TextDirection.ltr);
+      final height = 7.9;
+      canvas.drawRect(
+          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 2.3, height: height),
+          Paint()
+            ..color = const Color(0xff000000)
+            ..blendMode = BlendMode.darken);
+
+      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 + 6.2));
 

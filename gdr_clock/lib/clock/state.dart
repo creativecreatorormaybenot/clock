@@ -54,23 +54,24 @@ class _ClockState extends State<Clock> {
     setState(() {
       time = DateTime.now();
 
-      timer =
-          Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond), update);
+      timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond), update);
     });
   }
 
   @override
   Widget build(BuildContext context) => false
-      ? Text(
-          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
-      : CompositedClock(
-          children: <Widget>[
-            AnalogPart(
-              radius: 219,
-              textStyle: Theme.of(context).textTheme.display1,
-              handAngle: pi * 2 / 60 * time.second,
-            ),
-          ],
+      : LayoutBuilder(
+          builder: (context, constraints) => CompositedClock(
+            children: <Widget>[
+              AnalogPart(
+                radius: constraints.biggest.height / 3,
+                textStyle: Theme.of(context).textTheme.display1,
+                handAngle: pi * 2 / 60 * time.second,
+                hourDivisions: model.is24HourFormat ? 24 : 12,
+              ),
+            ],
+          ),
         );
 }
