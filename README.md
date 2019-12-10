@@ -26,6 +26,8 @@
 
  * Make repository public.
 
+ * Share with P.
+
 # clock
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).  
