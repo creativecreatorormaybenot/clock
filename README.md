@@ -14,6 +14,8 @@
 
  * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
 
+ * Remove unnecessary depencies and other stuff. For example, `pedantic` or `uses-material-design` if there are no icons in the final design.
+
  * Submit submission :)
 
  * Make repository public.
