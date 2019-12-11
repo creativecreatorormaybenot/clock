@@ -2,6 +2,8 @@
 
  * Fix timer.
 
+ * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact.
+
  * Implement minute hand, hour hand, and make minute and second hand both bounce.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
@@ -14,7 +16,11 @@
 
  * Implement accessibility.
 
+   * Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
+
  * Make clock available on web via GitHub pages.
+
+   * Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 
  * Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
 
