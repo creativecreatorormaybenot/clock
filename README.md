@@ -1,7 +1,5 @@
 ## TODO
 
- * Fix timer.
-
  * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact.
 
  * Implement minute hand, hour hand, and make minute and second hand both bounce.

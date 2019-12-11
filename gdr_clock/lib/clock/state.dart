@@ -54,8 +54,11 @@ class _ClockState extends State<Clock> {
     setState(() {
       time = DateTime.now();
 
-      timer =
-          Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+      timer = Timer(
+          Duration(
+              microseconds:
+                  1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
+          update);
     });
   }
 
