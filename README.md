@@ -2,11 +2,11 @@
 
  * Create weather dial and temperature dials.
 
- * Have some full screen background color.
-
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
  * Use Bézier curves to display background with cut to another color and animate that nicely, e.g. top half pink and bottom half yellow using a Bézier curve to create the cut.
+
+   * Curve should be adjusted by the model dynamically, e.g. the height of the cut or w/e and always animate in a relaxing fashion.
 
  * Add ball that bounces about scene, e.g. off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
