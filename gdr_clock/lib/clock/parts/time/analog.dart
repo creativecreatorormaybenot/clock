@@ -3,7 +3,51 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
+
+class AnimatedAnalogPart extends AnimatedWidget {
+  final Animation<double> handBounce;
+  final DateTime time;
+  final ClockModel model;
+  final double radius;
+
+  AnimatedAnalogPart({
+    Key key,
+    @required this.handBounce,
+    @required this.time,
+    @required this.radius,
+    @required this.model,
+  }): assert(handBounce != null), assert(time != null), assert(radius != null), assert(model != null), super(key: key, listenable: handBounce);
+
+  @override
+  Widget build(BuildContext context) {
+    final bounce = Curves.bounceOut.transform(handBounce.value);
+    return AnalogPart(
+      radius: radius,
+      textStyle: Theme.of(context).textTheme.display1,
+      secondHandAngle: -pi / 2 +
+          // Regular distance
+          pi * 2 / 60 * time.second +
+          // Bounce
+          pi * 2 / 60 * (bounce - 1),
+      minuteHandAngle: -pi / 2 +
+          pi * 2 / 60 * time.minute +
+          // Bounce only when the minute changes.
+          (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
+      hourHandAngle:
+      // Angle equal to 0 starts on the right side and not on the top.
+      -pi / 2 +
+          // Distance for the hour.
+          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+          // Distance for the minute.
+          pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
+          // Distance for the second.
+          pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
+      hourDivisions: model.is24HourFormat ? 24 : 12,
+    );
+  }
+}
 
 class AnalogPart extends LeafRenderObjectWidget {
   final double radius, secondHandAngle, minuteHandAngle, hourHandAngle;
@@ -11,13 +55,14 @@ class AnalogPart extends LeafRenderObjectWidget {
   final int hourDivisions;
 
   const AnalogPart({
+    Key key,
     @required this.radius,
     @required this.textStyle,
     @required this.secondHandAngle,
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
-  }) : assert(radius != null);
+  }) : assert(radius != null), super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {

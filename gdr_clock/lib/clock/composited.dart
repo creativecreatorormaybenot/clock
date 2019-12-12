@@ -18,13 +18,13 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 
 enum ClockComponent {
   analogTime,
+  background,
 //  digitalTime,
 //  temperature,
 //  weather,
 }
 
-class CompositedClockChildrenParentData
-    extends ContainerBoxParentData<RenderBox> {
+class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox> {
   ClockComponent component;
 
   /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
@@ -32,12 +32,7 @@ class CompositedClockChildrenParentData
   bool valid;
 }
 
-class RenderCompositedClock extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox,
-            CompositedClockChildrenParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox,
-            CompositedClockChildrenParentData> {
+class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! CompositedClockChildrenParentData) {
@@ -63,14 +58,12 @@ class RenderCompositedClock extends RenderBox
 
     var child = firstChild;
     while (child != null) {
-      final childParentData =
-          child.parentData as CompositedClockChildrenParentData;
+      final childParentData = child.parentData as CompositedClockChildrenParentData;
 
       if (!childParentData.valid) throw ClockCompositionError(child: child);
       if (!components.contains(childParentData.component)) {
         throw ClockCompositionError(
-            message:
-                'The children passed to CompositedClock contain the component type ${describeEnum(childParentData.component)} more than once. '
+            message: 'The children passed to CompositedClock contain the component type ${describeEnum(childParentData.component)} more than once. '
                 'Every component can only be passed exactly once.');
       }
 
@@ -79,8 +72,7 @@ class RenderCompositedClock extends RenderBox
       switch (childParentData.component) {
         case ClockComponent.analogTime:
           child.layout(const BoxConstraints(), parentUsesSize: true);
-          childParentData.offset =
-              Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
+          childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
           break;
       }
 
@@ -89,9 +81,9 @@ class RenderCompositedClock extends RenderBox
 
     if (components.isNotEmpty) {
       throw ClockCompositionError(
-          message:
-              'The children passed to CompositedClock do not cover every component in CompositedClockComponent. '
-              'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.');
+          message: 'The children passed to CompositedClock do not cover every component in CompositedClockComponent. '
+              'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
+              'Missing components are: $components.');
     }
   }
 
@@ -100,10 +92,7 @@ class RenderCompositedClock extends RenderBox
     assert(() {
       if (debugPaintSizeEnabled) {
         final painter = TextPainter(
-            text: const TextSpan(
-                text:
-                    'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
-                style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
+            text: const TextSpan(text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.', style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         painter.layout(maxWidth: size.width);
@@ -128,9 +117,8 @@ class ClockCompositionError extends Error {
   }) : assert(child != null || message != null);
 
   @override
-  String toString() =>
-      '${message ?? 'A child was passed to CompositedClock which does not set up its RenderObject.parentData '
-          'as CompositedClockChildrenParentData correctly (setting CompositedClockChildrenParentData.valid to `true`).'}\n$stackTrace.';
+  String toString() => '${message ?? 'A child was passed to CompositedClock which does not set up its RenderObject.parentData '
+      'as CompositedClockChildrenParentData correctly (setting CompositedClockChildrenParentData.valid to `true`).'}\n$stackTrace.';
 }
 
 /// Takes care of validating [RenderObject]s passed to [CompositedClock] and assigning a [ClockComponent].
@@ -142,8 +130,7 @@ class RenderClockPart extends RenderBox {
     this.component,
   ) : assert(component != null);
 
-  CompositedClockChildrenParentData get compositedClockData =>
-      parentData as CompositedClockChildrenParentData;
+  CompositedClockChildrenParentData get compositedClockData => parentData as CompositedClockChildrenParentData;
 
   /// Takes care of validating the RenderObject for when it is passed to [CompositedClock]
   /// and sets [CompositedClockChildrenParentData.component] to the appropriate [ClockComponent].
