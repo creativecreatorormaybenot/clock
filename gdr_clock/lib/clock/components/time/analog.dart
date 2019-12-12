@@ -140,71 +140,73 @@ class RenderAnalogPart extends RenderClockComponent {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    final canvas = context.canvas;
+    context.pushTransform(needsCompositing, offset, Matrix4.rotationX(pi / 3), (context, offset) {
+      final canvas = context.canvas;
 
-    canvas.save();
-    // Translate the canvas to the center of the square.
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+      canvas.save();
+      // Translate the canvas to the center of the square.
+      canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
+      canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
 
-    final largeDivisions = hourDivisions, smallDivisions = 60;
-    for (var n = smallDivisions; n > 0; n--) {
-      // Do not draw small ticks when large ones will be drawn afterwards anyway.
-      if (n % (smallDivisions / largeDivisions) != 0) {
-        final height = 4.5;
+      final largeDivisions = hourDivisions, smallDivisions = 60;
+      for (var n = smallDivisions; n > 0; n--) {
+        // Do not draw small ticks when large ones will be drawn afterwards anyway.
+        if (n % (smallDivisions / largeDivisions) != 0) {
+          final height = 4.5;
+          canvas.drawRect(
+              Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+              Paint()
+                ..color = const Color(0xff000000)
+                ..blendMode = BlendMode.darken);
+        }
+
+        canvas.rotate(-pi * 2 / smallDivisions);
+      }
+
+      for (var n = largeDivisions; n > 0; n--) {
+        final height = 7.9;
         canvas.drawRect(
-            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 2.3, height: height),
             Paint()
               ..color = const Color(0xff000000)
               ..blendMode = BlendMode.darken);
+
+        final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+        painter.layout();
+        painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 + 6.2));
+
+        canvas.rotate(-pi * 2 / largeDivisions);
       }
 
-      canvas.rotate(-pi * 2 / smallDivisions);
-    }
-
-    for (var n = largeDivisions; n > 0; n--) {
-      final height = 7.9;
-      canvas.drawRect(
-          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 2.3, height: height),
+      // Hand displaying the current hour.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(hourHandAngle, size.width / 3.1),
           Paint()
             ..color = const Color(0xff000000)
-            ..blendMode = BlendMode.darken);
+            ..strokeWidth = 13.7
+            ..strokeCap = StrokeCap.square);
 
-      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
-      painter.layout();
-      painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 + 6.2));
+      // Hand displaying the current minute.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(minuteHandAngle, size.width / 2.3),
+          Paint()
+            ..color = const Color(0xff000000)
+            ..strokeWidth = 8.4
+            ..strokeCap = StrokeCap.round);
 
-      canvas.rotate(-pi * 2 / largeDivisions);
-    }
+      // Hand displaying the current second.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(secondHandAngle, size.width / 2.1),
+          Paint()
+            ..color = const Color(0xff000000)
+            ..strokeWidth = 3
+            ..strokeCap = StrokeCap.round);
 
-    // Hand displaying the current hour.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(hourHandAngle, size.width / 3.1),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 13.7
-          ..strokeCap = StrokeCap.square);
-
-    // Hand displaying the current minute.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(minuteHandAngle, size.width / 2.3),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 8.4
-          ..strokeCap = StrokeCap.round);
-
-    // Hand displaying the current second.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(secondHandAngle, size.width / 2.1),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 3
-          ..strokeCap = StrokeCap.round);
-
-    canvas.restore();
+      canvas.restore();
+    });
   }
 }
