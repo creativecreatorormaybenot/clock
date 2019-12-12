@@ -101,7 +101,8 @@ class RenderAnalogPart extends RenderClockPart {
     final canvas = context.canvas;
 
     canvas.save();
-    canvas.translate(offset.dx, offset.dy);
+    // Translate the canvas to the center of the square.
+    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius), Paint()..color = const Color(0xffffd345));
 
