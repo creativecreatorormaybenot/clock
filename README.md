@@ -6,6 +6,8 @@
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
+ * Use Bézier curves to display background with cut to another color and animate that nicely, e.g. top half pink and bottom half yellow using a Bézier curve to create the cut.
+
  * Add ball that bounces about scene, e.g. off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
    * This should ideally be relaxing -> not fast.
