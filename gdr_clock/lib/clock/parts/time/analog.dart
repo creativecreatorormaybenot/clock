@@ -6,14 +6,16 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 class AnalogPart extends LeafRenderObjectWidget {
-  final double radius, handAngle;
+  final double radius, secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
 
   const AnalogPart({
     @required this.radius,
     @required this.textStyle,
-    @required this.handAngle,
+    @required this.secondHandAngle,
+    @required this.minuteHandAngle,
+    @required this.hourHandAngle,
     @required this.hourDivisions,
   }) : assert(radius != null);
 
@@ -22,7 +24,9 @@ class AnalogPart extends LeafRenderObjectWidget {
     return RenderAnalogPart(
       radius: radius,
       textStyle: textStyle,
-      handAngle: handAngle,
+      secondHandAngle: secondHandAngle,
+      minuteHandAngle: minuteHandAngle,
+      hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
     );
   }
@@ -32,21 +36,25 @@ class AnalogPart extends LeafRenderObjectWidget {
     renderObject.update(
       radius: radius,
       textStyle: textStyle,
-      handAngle: handAngle,
+      secondHandAngle: secondHandAngle,
+      minuteHandAngle: minuteHandAngle,
+      hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
     );
   }
 }
 
 class RenderAnalogPart extends RenderClockPart {
-  double radius, handAngle;
+  double radius, secondHandAngle, minuteHandAngle, hourHandAngle;
   TextStyle textStyle;
   int hourDivisions;
 
   RenderAnalogPart({
     this.radius,
     this.textStyle,
-    this.handAngle,
+    this.secondHandAngle,
+    this.minuteHandAngle,
+    this.hourHandAngle,
     this.hourDivisions,
   }) : super(ClockComponent.analogTime);
 
@@ -65,12 +73,16 @@ class RenderAnalogPart extends RenderClockPart {
   void update({
     double radius,
     TextStyle textStyle,
-    double handAngle,
+    double secondHandAngle,
+    double minuteHandAngle,
+    double hourHandAngle,
     int hourDivisions,
   }) {
     this.radius = radius;
     this.textStyle = textStyle;
-    this.handAngle = handAngle;
+    this.secondHandAngle = secondHandAngle;
+    this.minuteHandAngle = minuteHandAngle;
+    this.hourHandAngle = hourHandAngle;
     this.hourDivisions = hourDivisions;
 
     markNeedsPaint();
@@ -134,7 +146,7 @@ class RenderAnalogPart extends RenderClockPart {
 
     canvas.drawLine(
         Offset.zero,
-        Offset.fromDirection(handAngle, size.width / 2.1),
+        Offset.fromDirection(secondHandAngle, size.width / 2.1),
         Paint()
           ..color = const Color(0xff000000)
           ..strokeWidth = 3

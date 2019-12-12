@@ -1,8 +1,8 @@
 ## TODO
 
- * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact.
-
  * Implement minute hand, hour hand, and make minute and second hand both bounce on change.
+
+ * Have some full screen background color.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 

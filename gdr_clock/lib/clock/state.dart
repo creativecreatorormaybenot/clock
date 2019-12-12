@@ -73,7 +73,12 @@ class _ClockState extends State<Clock> {
               AnalogPart(
                 radius: constraints.biggest.height / 3,
                 textStyle: Theme.of(context).textTheme.display1,
-                handAngle: pi * 2 / 60 * time.second,
+                secondHandAngle: pi * 2 / 60 * time.second,
+                minuteHandAngle: pi * 2 / 60 * time.minute,
+                hourHandAngle: pi *
+                    2 /
+                    (model.is24HourFormat ? 24 : 12) *
+                    (model.is24HourFormat ? time.hour : time.hour % 12),
                 hourDivisions: model.is24HourFormat ? 24 : 12,
               ),
             ],
