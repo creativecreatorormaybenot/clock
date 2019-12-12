@@ -7,24 +7,22 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 class AnimatedAnalogPart extends AnimatedWidget {
-  final Animation<double> handBounce;
-  final DateTime time;
+  final Animation<double> animation;
   final ClockModel model;
-  final double radius;
 
   AnimatedAnalogPart({
     Key key,
-    @required this.handBounce,
-    @required this.time,
-    @required this.radius,
+    @required this.animation,
     @required this.model,
-  }): assert(handBounce != null), assert(time != null), assert(radius != null), assert(model != null), super(key: key, listenable: handBounce);
+  })  : assert(animation != null),
+        assert(model != null),
+        super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
-    final bounce = Curves.bounceOut.transform(handBounce.value);
+    final bounce = Curves.bounceOut.transform(animation.value), time = DateTime.now();
+
     return AnalogPart(
-      radius: radius,
       textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: -pi / 2 +
           // Regular distance
@@ -36,38 +34,36 @@ class AnimatedAnalogPart extends AnimatedWidget {
           // Bounce only when the minute changes.
           (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
       hourHandAngle:
-      // Angle equal to 0 starts on the right side and not on the top.
-      -pi / 2 +
-          // Distance for the hour.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
-          // Distance for the minute.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
-          // Distance for the second.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
+          // Angle equal to 0 starts on the right side and not on the top.
+          -pi / 2 +
+              // Distance for the hour.
+              pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+              // Distance for the minute.
+              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
+              // Distance for the second.
+              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
       hourDivisions: model.is24HourFormat ? 24 : 12,
     );
   }
 }
 
 class AnalogPart extends LeafRenderObjectWidget {
-  final double radius, secondHandAngle, minuteHandAngle, hourHandAngle;
+  final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
 
   const AnalogPart({
     Key key,
-    @required this.radius,
     @required this.textStyle,
     @required this.secondHandAngle,
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
-  }) : assert(radius != null), super(key: key);
+  }) : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderAnalogPart(
-      radius: radius,
       textStyle: textStyle,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
@@ -79,7 +75,6 @@ class AnalogPart extends LeafRenderObjectWidget {
   @override
   void updateRenderObject(BuildContext context, RenderAnalogPart renderObject) {
     renderObject.update(
-      radius: radius,
       textStyle: textStyle,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
@@ -90,12 +85,11 @@ class AnalogPart extends LeafRenderObjectWidget {
 }
 
 class RenderAnalogPart extends RenderClockPart {
-  double radius, secondHandAngle, minuteHandAngle, hourHandAngle;
+  double secondHandAngle, minuteHandAngle, hourHandAngle;
   TextStyle textStyle;
   int hourDivisions;
 
   RenderAnalogPart({
-    this.radius,
     this.textStyle,
     this.secondHandAngle,
     this.minuteHandAngle,
@@ -123,7 +117,6 @@ class RenderAnalogPart extends RenderClockPart {
     double hourHandAngle,
     int hourDivisions,
   }) {
-    this.radius = radius;
     this.textStyle = textStyle;
     this.secondHandAngle = secondHandAngle;
     this.minuteHandAngle = minuteHandAngle;
@@ -136,9 +129,11 @@ class RenderAnalogPart extends RenderClockPart {
   @override
   bool get sizedByParent => true;
 
+  double _radius;
+
   @override
   void performResize() {
-    size = Size.fromRadius(radius);
+    size = Size.fromRadius(_radius = constraints.biggest.height / 2);
   }
 
   @override
@@ -149,7 +144,7 @@ class RenderAnalogPart extends RenderClockPart {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius), Paint()..color = const Color(0xffffd345));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
     for (var n = smallDivisions; n > 0; n--) {

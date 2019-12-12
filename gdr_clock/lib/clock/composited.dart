@@ -71,7 +71,7 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
       switch (childParentData.component) {
         case ClockComponent.analogTime:
-          child.layout(const BoxConstraints(), parentUsesSize: true);
+          child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
           childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
           break;
       }

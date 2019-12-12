@@ -53,12 +53,10 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
     });
   }
 
-  DateTime time;
-
   void update() {
-    time = DateTime.now();
     analogBounceController.forward(from: 0);
 
+    final time = DateTime.now();
     timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
   }
 
@@ -66,11 +64,9 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) => false
       ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
-      : LayoutBuilder(
-          builder: (context, constraints) => CompositedClock(
-            children: <Widget>[
-              AnimatedAnalogPart(handBounce: analogBounceController, time: time, radius: constraints.biggest.height / 3, model: model),
-            ],
-          ),
+      : CompositedClock(
+          children: <Widget>[
+            AnimatedAnalogPart(animation: analogBounceController, model: model),
+          ],
         );
 }
