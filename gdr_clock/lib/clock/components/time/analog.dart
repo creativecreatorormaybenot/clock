@@ -6,11 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
-class AnimatedAnalogPart extends AnimatedWidget {
+class AnimatedAnalogComponent extends AnimatedWidget {
   final Animation<double> animation;
   final ClockModel model;
 
-  AnimatedAnalogPart({
+  AnimatedAnalogComponent({
     Key key,
     @required this.animation,
     @required this.model,
@@ -22,7 +22,7 @@ class AnimatedAnalogPart extends AnimatedWidget {
   Widget build(BuildContext context) {
     final bounce = Curves.bounceOut.transform(animation.value), time = DateTime.now();
 
-    return AnalogPart(
+    return AnalogComponent(
       textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: -pi / 2 +
           // Regular distance
@@ -47,12 +47,12 @@ class AnimatedAnalogPart extends AnimatedWidget {
   }
 }
 
-class AnalogPart extends LeafRenderObjectWidget {
+class AnalogComponent extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
 
-  const AnalogPart({
+  const AnalogComponent({
     Key key,
     @required this.textStyle,
     @required this.secondHandAngle,
@@ -84,7 +84,7 @@ class AnalogPart extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogPart extends RenderClockPart {
+class RenderAnalogPart extends RenderClockComponent {
   double secondHandAngle, minuteHandAngle, hourHandAngle;
   TextStyle textStyle;
   int hourDivisions;
@@ -133,7 +133,9 @@ class RenderAnalogPart extends RenderClockPart {
 
   @override
   void performResize() {
-    size = Size.fromRadius(_radius = constraints.biggest.height / 2);
+    size = constraints.biggest;
+
+    _radius = size.height / 2;
   }
 
   @override

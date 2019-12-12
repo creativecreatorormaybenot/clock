@@ -74,6 +74,9 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
           childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
           break;
+        case ClockComponent.background:
+          child.layout(BoxConstraints.tight(constraints.biggest), parentUsesSize: false);
+          break;
       }
 
       child = childParentData.nextSibling;
@@ -81,9 +84,9 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
     if (components.isNotEmpty) {
       throw ClockCompositionError(
-          message: 'The children passed to CompositedClock do not cover every component in CompositedClockComponent. '
+          message: 'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
               'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
-              'Missing components are: $components.');
+              'Missing components are $components.');
     }
   }
 
@@ -123,10 +126,10 @@ class ClockCompositionError extends Error {
 
 /// Takes care of validating [RenderObject]s passed to [CompositedClock] and assigning a [ClockComponent].
 /// It also provides easy access to the [CompositedClockChildrenParentData] of this [RenderObject] via [compositedClockData].
-class RenderClockPart extends RenderBox {
+class RenderClockComponent extends RenderBox {
   final ClockComponent component;
 
-  RenderClockPart(
+  RenderClockComponent(
     this.component,
   ) : assert(component != null);
 
@@ -136,7 +139,7 @@ class RenderClockPart extends RenderBox {
   /// and sets [CompositedClockChildrenParentData.component] to the appropriate [ClockComponent].
   /// Thus, this is annotated with [mustCallSuper]. Alternatively, you could ignore this and
   /// implement the validation and setting the component in the sub class, but the whole point of
-  /// [RenderClockPart] is to take care of this step, so you should likely extend [RenderBox] instead.
+  /// [RenderClockComponent] is to take care of this step, so you should likely extend [RenderBox] instead.
   @override
   @mustCallSuper
   void attach(PipelineOwner owner) {
