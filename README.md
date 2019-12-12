@@ -1,5 +1,7 @@
 ## TODO
 
+ * Create weather dial and temperature dials.
+
  * Have some full screen background color.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
