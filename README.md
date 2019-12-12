@@ -12,6 +12,8 @@
 
    * This should ideally be relaxing -> not fast.
 
+ * Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
+
  * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
  * Create spin-up animation for when the widget is created or updated?
