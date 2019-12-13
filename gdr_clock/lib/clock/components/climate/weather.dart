@@ -27,7 +27,8 @@ class WeatherComponent extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderWeatherComponent renderObject) {
+  void updateRenderObject(
+      BuildContext context, RenderWeatherComponent renderObject) {
     renderObject
       ..conditions = conditions
       ..handAngle = handAngle
@@ -67,11 +68,14 @@ class RenderWeatherComponent extends RenderClockComponent {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xff3c9aff));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
+        Paint()..color = const Color(0xff3c9aff));
 
     final divisions = conditions.length;
     for (final condition in conditions) {
-      final painter = TextPainter(text: TextSpan(text: '$condition', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+          text: TextSpan(text: '$condition', style: textStyle),
+          textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(
           canvas,

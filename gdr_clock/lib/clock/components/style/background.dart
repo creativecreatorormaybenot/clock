@@ -20,9 +20,12 @@ class RenderBackgroundComponent extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     final clockData = parentData as CompositedClockChildrenParentData;
 
-    final analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
+    final analogComponentRect = clockData.rectOf(ClockComponent.analogTime),
+        weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
-    context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), (context, offset) {
+    context.pushClipRect(
+        needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height),
+        (context, offset) {
       final canvas = context.canvas;
 
       canvas.save();
