@@ -80,11 +80,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     final time = DateTime.now();
     timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
-    // Animate layout every 6 seconds, for fun. todo remove
-    if (time.second % 6 == 0) animateLayout();
-
-//    // Change layout when the minute changes.
-//    if (time.second == 0) animateLayout();
+    // Change layout when the minute changes.
+    if (time.second == 0) animateLayout();
   }
 
   @override
