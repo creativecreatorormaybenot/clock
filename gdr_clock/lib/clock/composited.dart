@@ -68,36 +68,45 @@ class RenderCompositedClock extends RenderBox
   void performLayout() {
     size = constraints.biggest;
 
-    final components = <ClockComponent, RenderBox>{};
+    final components = List.of(ClockComponent.values);
+
+    CompositedClockChildrenParentData background;
 
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData as CompositedClockChildrenParentData;
 
       if (!childParentData.valid) throw ClockCompositionError(child: child);
-      if (components.containsKey(childParentData.component)) {
+      if (!components.contains(childParentData.component)) {
         throw ClockCompositionError(
             message: 'The children passed to CompositedClock contain the component type ${describeEnum(childParentData.component)} more than once. '
                 'Every component can only be passed exactly once.');
       }
 
-      components[childParentData.component] = child;
+      components.remove(childParentData.component);
+
+      if (childParentData.component == ClockComponent.background) background = childParentData;
+
       child = childParentData.nextSibling;
     }
 
-    if (ClockComponent.values.fold(true, (p, component) => components.containsKey(component) ? p : false)) {
+    if (components.isNotEmpty) {
       throw ClockCompositionError(
           message: 'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
               'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
               'Missing components are $components.');
     }
 
-    final background = components[ClockComponent.background].parentData as CompositedClockChildrenParentData;
+    background._sizes = {};
+    background._offsets = {};
 
-    components.forEach((component, child) {
+    child = firstChild;
+    while (child != null) {
       final childParentData = child.parentData as CompositedClockChildrenParentData;
 
-      bool backgroundCanUseSize = false, backgroundCanUseOffset = false;
+      // The reason this is not true for all is that parentUsesSize does not need to be true
+      // and also that not every child needs an offset.
+      var backgroundCanUseSize = false, backgroundCanUseOffset = false;
 
       switch (childParentData.component) {
         case ClockComponent.background:
@@ -111,10 +120,12 @@ class RenderCompositedClock extends RenderBox
           break;
       }
 
-      if (backgroundCanUseSize) background._sizes[component] = child.size;
+      if (backgroundCanUseSize) background._sizes[childParentData.component] = child.size;
 
-      if (backgroundCanUseOffset) background._offsets[component] = childParentData.offset;
-    });
+      if (backgroundCanUseOffset) background._offsets[childParentData.component] = childParentData.offset;
+
+      child = childParentData.nextSibling;
+    };
   }
 
   @override

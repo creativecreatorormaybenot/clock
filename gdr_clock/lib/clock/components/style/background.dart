@@ -18,6 +18,10 @@ class RenderBackgroundComponent extends RenderClockComponent {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    final clockData = parentData as CompositedClockChildrenParentData;
+
+    final analogComponentOffset = clockData.offsetOf(ClockComponent.analogTime), analogComponentSize = clockData.sizeOf(ClockComponent.analogTime);
+
     context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), (context, offset) {
       final canvas = context.canvas;
 
@@ -27,12 +31,15 @@ class RenderBackgroundComponent extends RenderClockComponent {
 
       // This path is supposed to represent a Bézier curve cutting the background colors.
       // It is supposed to be dynamically animated in order to convey a relaxed feeling.
-      final h = size.height / 2;
+      final s = size.height / 2, e = size.height / 2;
       final curve = Path()
-        ..lineTo(0, h)
-        ..cubicTo(size.width / 4, size.height / 3, size.width / 4, size.height * 2 / 3, size.width / 2, h)
-        ..cubicTo(size.width * 3 / 4, size.height / 3, size.width * 3 / 4, size.height * 2 / 3, size.width, h)
-        ..lineTo(size.width, h);
+        ..lineTo(0, s)
+        // Curve abound the left side of the analog part to the bottom center of the analog part.
+        ..cubicTo(analogComponentOffset.dx, analogComponentOffset.dy + analogComponentSize.height / 2, analogComponentOffset.dx, analogComponentOffset.dy + analogComponentSize.height,
+            analogComponentOffset.dx + analogComponentSize.width / 2, analogComponentOffset.dy + analogComponentSize.height)
+        // Curve abound the right side of the analog part to the end of the screen.
+        ..cubicTo(analogComponentOffset.dx + analogComponentSize.width, analogComponentOffset.dy + analogComponentSize.height, analogComponentOffset.dx + analogComponentSize.width,
+            analogComponentOffset.dy + analogComponentSize.height / 2, size.width, e);
 
       final upperPath = Path()
         ..moveTo(0, 0)
