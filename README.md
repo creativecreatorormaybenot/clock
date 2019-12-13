@@ -1,6 +1,6 @@
 ## TODO
 
-  + Create weather dial and temperature dials.
+  + Create weather and temperature dials.
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
