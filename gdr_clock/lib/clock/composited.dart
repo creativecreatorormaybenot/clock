@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-const layoutAnimationDuration = Duration(seconds: 1), layoutAnimationCurve = Curves.elasticInOut;
+const layoutAnimationDuration = Duration(seconds: 1),
+    layoutAnimationCurve = Curves.elasticInOut;
 
 class CompositedClock extends MultiChildRenderObjectWidget {
   final Animation<double> layoutAnimation;
@@ -13,8 +14,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
     Key key,
     List<Widget> children,
     @required this.layoutAnimation,
-  }) :
-        assert(layoutAnimation != null),
+  })  : assert(layoutAnimation != null),
         super(key: key, children: children);
 
   @override
