@@ -9,23 +9,25 @@ import 'package:gdr_clock/clock/clock.dart';
 const handBounceDuration = Duration(milliseconds: 274);
 
 class AnimatedAnalogComponent extends AnimatedWidget {
-  final Animation<double> animation;
+  final Animation<double> animation, layoutAnimation;
   final ClockModel model;
 
   AnimatedAnalogComponent({
     Key key,
     @required this.animation,
     @required this.model,
+    @required this.layoutAnimation,
   })  : assert(animation != null),
         assert(model != null),
+        assert(layoutAnimation != null),
         super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value),
-        time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogComponent(
+      layoutAnimation: layoutAnimation,
       textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: -pi / 2 +
           // Regular distance
@@ -40,10 +42,7 @@ class AnimatedAnalogComponent extends AnimatedWidget {
           // Angle equal to 0 starts on the right side and not on the top.
           -pi / 2 +
               // Distance for the hour.
-              pi *
-                  2 /
-                  (model.is24HourFormat ? 24 : 12) *
-                  (model.is24HourFormat ? time.hour : time.hour % 12) +
+              pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
@@ -78,6 +77,7 @@ class AnalogComponent extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
+  final Animation<double> layoutAnimation;
 
   const AnalogComponent({
     Key key,
@@ -86,21 +86,29 @@ class AnalogComponent extends LeafRenderObjectWidget {
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
-  }) : super(key: key);
+    @required this.layoutAnimation,
+  })  : assert(textStyle != null),
+        assert(secondHandAngle != null),
+        assert(minuteHandAngle != null),
+        assert(hourHandAngle != null),
+        assert(hourDivisions != null),
+        assert(layoutAnimation != null),
+        super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderAnalogPart(
+    return RenderAnalogComponent(
       textStyle: textStyle,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
+      layoutAnimation: layoutAnimation,
     );
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderAnalogPart renderObject) {
+  void updateRenderObject(BuildContext context, RenderAnalogComponent renderObject) {
     renderObject.update(
       textStyle: textStyle,
       secondHandAngle: secondHandAngle,
@@ -111,28 +119,32 @@ class AnalogComponent extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogPart extends RenderClockComponent {
-  double secondHandAngle, minuteHandAngle, hourHandAngle;
-  TextStyle textStyle;
-  int hourDivisions;
+class RenderAnalogComponent extends RenderClockComponent {
+  final Animation<double> layoutAnimation;
 
-  RenderAnalogPart({
+  RenderAnalogComponent({
     this.textStyle,
     this.secondHandAngle,
     this.minuteHandAngle,
     this.hourHandAngle,
     this.hourDivisions,
+    this.layoutAnimation,
   }) : super(ClockComponent.analogTime);
+
+  double secondHandAngle, minuteHandAngle, hourHandAngle;
+  TextStyle textStyle;
+  int hourDivisions;
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    // (for formatting reasons)
+
+    layoutAnimation.addListener(markNeedsPaint);
   }
 
   @override
   void detach() {
-    // (for formatting reasons)
+    layoutAnimation.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -167,89 +179,83 @@ class RenderAnalogPart extends RenderClockComponent {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    final canvas = context.canvas;
+    context.pushTransform(needsCompositing, offset, Matrix4.rotationZ(0), (context, offset) {
+      final canvas = context.canvas;
 
-    canvas.save();
-    // Translate the canvas to the center of the square.
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+      canvas.save();
+      // Translate the canvas to the center of the square.
+      canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+      canvas.rotate(2 * pi * layoutAnimationCurve.transform(layoutAnimation.value));
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
-        Paint()..color = const Color(0xffffd345));
+      canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
 
-    final largeDivisions = hourDivisions, smallDivisions = 60;
+      final largeDivisions = hourDivisions, smallDivisions = 60;
 
-    // Ticks indicating minutes and seconds (both 60).
-    for (var n = smallDivisions; n > 0; n--) {
-      // Do not draw small ticks when large ones will be drawn afterwards anyway.
-      if (n % (smallDivisions / largeDivisions) != 0) {
-        final height = 8.3;
+      // Ticks indicating minutes and seconds (both 60).
+      for (var n = smallDivisions; n > 0; n--) {
+        // Do not draw small ticks when large ones will be drawn afterwards anyway.
+        if (n % (smallDivisions / largeDivisions) != 0) {
+          final height = 8.3;
+          canvas.drawRect(
+              Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+              Paint()
+                ..color = const Color(0xff000000)
+                ..blendMode = BlendMode.darken);
+        }
+
+        canvas.rotate(-pi * 2 / smallDivisions);
+      }
+
+      // Ticks and numbers indicating hours.
+      for (var n = largeDivisions; n > 0; n--) {
+        final height = 4.2;
         canvas.drawRect(
-            Rect.fromCenter(
-                center: Offset(0, (-size.width + height) / 2),
-                width: 1.3,
-                height: height),
+            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 3.1, height: height),
             Paint()
               ..color = const Color(0xff000000)
               ..blendMode = BlendMode.darken);
+
+        final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+        painter.layout();
+        painter.paint(
+            canvas,
+            Offset(
+                -painter.width / 2,
+                -size.height / 2 +
+                    // Push the numbers inwards a bit.
+                    9.6));
+
+        canvas.rotate(-pi * 2 / largeDivisions);
       }
 
-      canvas.rotate(-pi * 2 / smallDivisions);
-    }
-
-    // Ticks and numbers indicating hours.
-    for (var n = largeDivisions; n > 0; n--) {
-      final height = 4.2;
-      canvas.drawRect(
-          Rect.fromCenter(
-              center: Offset(0, (-size.width + height) / 2),
-              width: 3.1,
-              height: height),
+      // Hand displaying the current hour.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(hourHandAngle, size.width / 3.1),
           Paint()
             ..color = const Color(0xff000000)
-            ..blendMode = BlendMode.darken);
+            ..strokeWidth = 13.7
+            ..strokeCap = StrokeCap.butt);
 
-      final painter = TextPainter(
-          text: TextSpan(text: '$n', style: textStyle),
-          textDirection: TextDirection.ltr);
-      painter.layout();
-      painter.paint(
-          canvas,
-          Offset(
-              -painter.width / 2,
-              -size.height / 2 +
-                  // Push the numbers inwards a bit.
-                  9.6));
+      // Hand displaying the current minute.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(minuteHandAngle, size.width / 2.3),
+          Paint()
+            ..color = const Color(0xff000000)
+            ..strokeWidth = 8.4
+            ..strokeCap = StrokeCap.square);
 
-      canvas.rotate(-pi * 2 / largeDivisions);
-    }
+      // Hand displaying the current second.
+      canvas.drawLine(
+          Offset.zero,
+          Offset.fromDirection(secondHandAngle, size.width / 2.1),
+          Paint()
+            ..color = const Color(0xff000000)
+            ..strokeWidth = 3
+            ..strokeCap = StrokeCap.round);
 
-    // Hand displaying the current hour.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(hourHandAngle, size.width / 3.1),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 13.7
-          ..strokeCap = StrokeCap.butt);
-
-    // Hand displaying the current minute.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(minuteHandAngle, size.width / 2.3),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 8.4
-          ..strokeCap = StrokeCap.square);
-
-    // Hand displaying the current second.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(secondHandAngle, size.width / 2.1),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = 3
-          ..strokeCap = StrokeCap.round);
-
-    canvas.restore();
+      canvas.restore();
+    });
   }
 }
