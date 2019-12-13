@@ -22,6 +22,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Timer timer;
 
   AnimationController analogBounceController, layoutController;
+  Animation<double> layoutAnimation;
 
   @override
   void initState() {
@@ -29,10 +30,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController =
-        AnimationController(vsync: this, duration: handBounceDuration);
-    layoutController =
-        AnimationController(vsync: this, duration: layoutAnimationDuration);
+    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
+
+    layoutController = AnimationController(vsync: this, duration: layoutAnimationDuration);
+    layoutAnimation = CurvedAnimation(parent: layoutController, curve: layoutAnimationCurve, reverseCurve: layoutAnimationCurve.flipped);
 
     widget.model.addListener(modelChanged);
 
@@ -60,46 +61,41 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   void modelChanged() {
     // Change layout when the model changes.
-    if (layoutController.value == 0) {
-      layoutController.forward();
-    } else if (layoutController.value == 1) layoutController.reverse();
+    animateLayout();
 
     setState(() {
       model = widget.model;
     });
   }
 
+  void animateLayout() {
+    if (layoutController.value == 0) {
+      layoutController.forward();
+    } else if (layoutController.value == 1) layoutController.reverse();
+  }
+
   void update() {
     analogBounceController.forward(from: 0);
 
     final time = DateTime.now();
-    timer = Timer(
-        Duration(
-            microseconds:
-                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
-        update);
+    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+
+    // Animate layout every 6 seconds, for fun. todo remove
+    if (time.second % 6 == 0) animateLayout();
 
 //    // Change layout when the minute changes.
-//    if (time.second == 0) {
-//      if (layoutController.value == 0) {
-//        layoutController.forward();
-//      } else if (layoutController.value == 1) layoutController.reverse();
-//    }
+//    if (time.second == 0) animateLayout();
   }
 
   @override
   Widget build(BuildContext context) => false
-      ? Text(
-          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
-          layoutAnimation: layoutController,
+          layoutAnimation: layoutAnimation,
           children: <Widget>[
             BackgroundComponent(),
-            AnimatedAnalogComponent(
-                layoutAnimation: layoutController,
-                animation: analogBounceController,
-                model: model),
+            AnimatedAnalogComponent(layoutAnimation: layoutAnimation, animation: analogBounceController, model: model),
           ],
         );
 }
