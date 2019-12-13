@@ -24,8 +24,7 @@ class AnimatedAnalogComponent extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value),
-        time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogComponent(
       layoutAnimation: layoutAnimation,
@@ -43,10 +42,7 @@ class AnimatedAnalogComponent extends AnimatedWidget {
           // Angle equal to 0 starts on the right side and not on the top.
           -pi / 2 +
               // Distance for the hour.
-              pi *
-                  2 /
-                  (model.is24HourFormat ? 24 : 12) *
-                  (model.is24HourFormat ? time.hour : time.hour % 12) +
+              pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
@@ -112,15 +108,14 @@ class AnalogComponent extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderAnalogComponent renderObject) {
-    renderObject.update(
-      textStyle: textStyle,
-      secondHandAngle: secondHandAngle,
-      minuteHandAngle: minuteHandAngle,
-      hourHandAngle: hourHandAngle,
-      hourDivisions: hourDivisions,
-    );
+  void updateRenderObject(BuildContext context, RenderAnalogComponent renderObject) {
+    renderObject
+      ..textStyle = textStyle
+      ..secondHandAngle = secondHandAngle
+      ..minuteHandAngle = minuteHandAngle
+      ..hourHandAngle = hourHandAngle
+      ..hourDivisions = hourDivisions
+      ..markNeedsPaint();
   }
 }
 
@@ -153,23 +148,6 @@ class RenderAnalogComponent extends RenderClockComponent {
     super.detach();
   }
 
-  void update({
-    double radius,
-    TextStyle textStyle,
-    double secondHandAngle,
-    double minuteHandAngle,
-    double hourHandAngle,
-    int hourDivisions,
-  }) {
-    this.textStyle = textStyle;
-    this.secondHandAngle = secondHandAngle;
-    this.minuteHandAngle = minuteHandAngle;
-    this.hourHandAngle = hourHandAngle;
-    this.hourDivisions = hourDivisions;
-
-    markNeedsPaint();
-  }
-
   @override
   bool get sizedByParent => true;
 
@@ -189,10 +167,11 @@ class RenderAnalogComponent extends RenderClockComponent {
     canvas.save();
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+
+    // Apply rotation as part of the CompositedClock layout animation.
     canvas.rotate(2 * pi * layoutAnimation.value);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
-        Paint()..color = const Color(0xffffd345));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
 
@@ -202,10 +181,7 @@ class RenderAnalogComponent extends RenderClockComponent {
       if (n % (smallDivisions / largeDivisions) != 0) {
         final height = 8.3;
         canvas.drawRect(
-            Rect.fromCenter(
-                center: Offset(0, (-size.width + height) / 2),
-                width: 1.3,
-                height: height),
+            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
             Paint()
               ..color = const Color(0xff000000)
               ..blendMode = BlendMode.darken);
@@ -218,17 +194,12 @@ class RenderAnalogComponent extends RenderClockComponent {
     for (var n = largeDivisions; n > 0; n--) {
       final height = 4.2;
       canvas.drawRect(
-          Rect.fromCenter(
-              center: Offset(0, (-size.width + height) / 2),
-              width: 3.1,
-              height: height),
+          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 3.1, height: height),
           Paint()
             ..color = const Color(0xff000000)
             ..blendMode = BlendMode.darken);
 
-      final painter = TextPainter(
-          text: TextSpan(text: '$n', style: textStyle),
-          textDirection: TextDirection.ltr);
+      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(
           canvas,

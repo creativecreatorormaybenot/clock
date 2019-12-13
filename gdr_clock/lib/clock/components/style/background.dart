@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 class BackgroundComponent extends LeafRenderObjectWidget {
-  BackgroundComponent({Key key}) : super(key: key);
+  const BackgroundComponent({Key key}) : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -20,12 +20,9 @@ class RenderBackgroundComponent extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     final clockData = parentData as CompositedClockChildrenParentData;
 
-    final analogComponentOffset = clockData.offsetOf(ClockComponent.analogTime),
-        analogComponentSize = clockData.sizeOf(ClockComponent.analogTime);
+    final analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
-    context.pushClipRect(
-        needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height),
-        (context, offset) {
+    context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), (context, offset) {
       final canvas = context.canvas;
 
       canvas.save();
@@ -34,25 +31,34 @@ class RenderBackgroundComponent extends RenderClockComponent {
 
       // This path is supposed to represent a Bézier curve cutting the background colors.
       // It is supposed to be dynamically animated in order to convey a relaxed feeling.
-      final s = size.height / 2, e = size.height / 2;
+      final s = weatherComponentRect.centerLeft, e = size.height / 2;
       final curve = Path()
-        ..lineTo(0, s)
-        // Curve abound the left side of the analog part to the bottom center of the analog part.
+        ..lineTo(s.dx, s.dy)
+        // Curve about the left and bottom side of the weather component.
+        ..quadraticBezierTo(
+          weatherComponentRect.bottomLeft.dx,
+          weatherComponentRect.bottomLeft.dy,
+          weatherComponentRect.bottomCenter.dx,
+          weatherComponentRect.bottomCenter.dy,
+        )
+        // Curve about the left side of the analog part to the bottom center of the analog part.
         ..cubicTo(
-            analogComponentOffset.dx,
-            analogComponentOffset.dy + analogComponentSize.height / 2,
-            analogComponentOffset.dx,
-            analogComponentOffset.dy + analogComponentSize.height,
-            analogComponentOffset.dx + analogComponentSize.width / 2,
-            analogComponentOffset.dy + analogComponentSize.height)
-        // Curve abound the right side of the analog part to the end of the screen.
+          analogComponentRect.centerLeft.dx,
+          analogComponentRect.centerLeft.dy,
+          analogComponentRect.bottomLeft.dx,
+          analogComponentRect.bottomLeft.dy,
+          analogComponentRect.bottomCenter.dx,
+          analogComponentRect.bottomCenter.dy,
+        )
+        // Curve about the right side of the analog part to the end of the screen.
         ..cubicTo(
-            analogComponentOffset.dx + analogComponentSize.width,
-            analogComponentOffset.dy + analogComponentSize.height,
-            analogComponentOffset.dx + analogComponentSize.width,
-            analogComponentOffset.dy + analogComponentSize.height / 2,
-            size.width,
-            e);
+          analogComponentRect.bottomRight.dx,
+          analogComponentRect.bottomRight.dy,
+          analogComponentRect.centerRight.dx,
+          analogComponentRect.centerRight.dy,
+          size.width,
+          e,
+        );
 
       final upperPath = Path()
         ..moveTo(0, 0)
