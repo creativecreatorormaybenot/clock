@@ -19,6 +19,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 
 enum ClockComponent {
   analogTime,
+  background,
 //  digitalTime,
 //  temperature,
 //  weather,
@@ -30,10 +31,27 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
   /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
   /// If a child is passed to [CompositedClock] that does not update this to `true`, an error should be thrown.
   bool valid;
+
+  Map<ClockComponent, Size> _sizes;
+  Map<ClockComponent, Offset> _offsets;
+
+  Offset offsetOf(ClockComponent component) {
+    assert(this.component == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
+    final offset = _offsets[component];
+    assert(offset != null, 'No offset was provided for $component. If the offset of this child should be accessible from ${this.component}, this needs to be changed in $RenderCompositedClock.');
+    return offset;
+  }
+
+  Size sizeOf(ClockComponent component) {
+    assert(this.component == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
+    final size = _sizes[component];
+    assert(offset != null, 'No size was provided for $component. If the size of this child should be accessible from ${this.component}, this needs to be changed in $RenderCompositedClock.');
+    return size;
+  }
 }
 
 class RenderCompositedClock extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData>, BackgroundComponent {
+    with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! CompositedClockChildrenParentData) {
@@ -50,44 +68,57 @@ class RenderCompositedClock extends RenderBox
   void performLayout() {
     size = constraints.biggest;
 
-    final components = List.of(ClockComponent.values);
+    final components = <ClockComponent, RenderBox>{};
 
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData as CompositedClockChildrenParentData;
 
       if (!childParentData.valid) throw ClockCompositionError(child: child);
-      if (!components.contains(childParentData.component)) {
+      if (components.containsKey(childParentData.component)) {
         throw ClockCompositionError(
             message: 'The children passed to CompositedClock contain the component type ${describeEnum(childParentData.component)} more than once. '
                 'Every component can only be passed exactly once.');
       }
 
-      components.remove(childParentData.component);
-
-      switch (childParentData.component) {
-        case ClockComponent.analogTime:
-          child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
-          childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
-          break;
-      }
-
+      components[childParentData.component] = child;
       child = childParentData.nextSibling;
     }
 
-    if (components.isNotEmpty) {
+    if (ClockComponent.values.fold(true, (p, component) => components.containsKey(component) ? p : false)) {
       throw ClockCompositionError(
           message: 'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
               'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
               'Missing components are $components.');
     }
+
+    final background = components[ClockComponent.background].parentData as CompositedClockChildrenParentData;
+
+    components.forEach((component, child) {
+      final childParentData = child.parentData as CompositedClockChildrenParentData;
+
+      bool backgroundCanUseSize = false, backgroundCanUseOffset = false;
+
+      switch (childParentData.component) {
+        case ClockComponent.background:
+          child.layout(BoxConstraints.tight(constraints.biggest));
+          break;
+        case ClockComponent.analogTime:
+          child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
+          childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
+          backgroundCanUseSize = true;
+          backgroundCanUseOffset = true;
+          break;
+      }
+
+      if (backgroundCanUseSize) background._sizes[component] = child.size;
+
+      if (backgroundCanUseOffset) background._offsets[component] = childParentData.offset;
+    });
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    // Draw background first.
-    context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), drawBackground);
-
     // Draw components.
     var child = firstChild;
     while (child != null) {
