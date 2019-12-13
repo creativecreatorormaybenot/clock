@@ -20,9 +20,12 @@ class RenderBackgroundComponent extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     final clockData = parentData as CompositedClockChildrenParentData;
 
-    final analogComponentOffset = clockData.offsetOf(ClockComponent.analogTime), analogComponentSize = clockData.sizeOf(ClockComponent.analogTime);
+    final analogComponentOffset = clockData.offsetOf(ClockComponent.analogTime),
+        analogComponentSize = clockData.sizeOf(ClockComponent.analogTime);
 
-    context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), (context, offset) {
+    context.pushClipRect(
+        needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height),
+        (context, offset) {
       final canvas = context.canvas;
 
       canvas.save();
@@ -35,11 +38,21 @@ class RenderBackgroundComponent extends RenderClockComponent {
       final curve = Path()
         ..lineTo(0, s)
         // Curve abound the left side of the analog part to the bottom center of the analog part.
-        ..cubicTo(analogComponentOffset.dx, analogComponentOffset.dy + analogComponentSize.height / 2, analogComponentOffset.dx, analogComponentOffset.dy + analogComponentSize.height,
-            analogComponentOffset.dx + analogComponentSize.width / 2, analogComponentOffset.dy + analogComponentSize.height)
+        ..cubicTo(
+            analogComponentOffset.dx,
+            analogComponentOffset.dy + analogComponentSize.height / 2,
+            analogComponentOffset.dx,
+            analogComponentOffset.dy + analogComponentSize.height,
+            analogComponentOffset.dx + analogComponentSize.width / 2,
+            analogComponentOffset.dy + analogComponentSize.height)
         // Curve abound the right side of the analog part to the end of the screen.
-        ..cubicTo(analogComponentOffset.dx + analogComponentSize.width, analogComponentOffset.dy + analogComponentSize.height, analogComponentOffset.dx + analogComponentSize.width,
-            analogComponentOffset.dy + analogComponentSize.height / 2, size.width, e);
+        ..cubicTo(
+            analogComponentOffset.dx + analogComponentSize.width,
+            analogComponentOffset.dy + analogComponentSize.height,
+            analogComponentOffset.dx + analogComponentSize.width,
+            analogComponentOffset.dy + analogComponentSize.height / 2,
+            size.width,
+            e);
 
       final upperPath = Path()
         ..moveTo(0, 0)
