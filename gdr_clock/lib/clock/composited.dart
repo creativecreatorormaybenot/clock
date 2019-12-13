@@ -3,20 +3,20 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
-  final Animation<double> layoutMover;
+  final Animation<double> layoutAnimation;
 
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
   /// Every component can only exist exactly once.
   CompositedClock({
     Key key,
     List<Widget> children,
-    this.layoutMover,
+    this.layoutAnimation,
   }) : super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderCompositedClock(
-      layoutMover: layoutMover,
+      layoutAnimation: layoutAnimation,
     );
   }
 }
@@ -55,20 +55,20 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
 }
 
 class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
-  RenderCompositedClock({this.layoutMover});
+  RenderCompositedClock({this.layoutAnimation});
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    layoutMover.addListener(markNeedsLayout);
+    layoutAnimation.addListener(markNeedsLayout);
   }
 
   @override
   void detach() {
     super.detach();
 
-    layoutMover.removeListener(markNeedsLayout);
+    layoutAnimation.removeListener(markNeedsLayout);
   }
 
   @override
@@ -78,7 +78,7 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
     }
   }
 
-  Animation<double> layoutMover;
+  Animation<double> layoutAnimation;
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
@@ -135,7 +135,7 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
           break;
         case ClockComponent.analogTime:
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
-          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (Curves.elasticInOut.transform(layoutMover.value) - 1 / 2) * child.size.width, size.height / 2 - child.size.height / 2);
+          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (Curves.elasticInOut.transform(layoutAnimation.value) - 1 / 2) * child.size.width, size.height / 2 - child.size.height / 2);
           backgroundCanUseSize = true;
           backgroundCanUseOffset = true;
           break;

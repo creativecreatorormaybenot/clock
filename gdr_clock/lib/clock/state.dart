@@ -21,7 +21,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer timer;
 
-  AnimationController analogBounceController, layoutMover;
+  AnimationController analogBounceController, layoutController;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     model = widget.model;
 
     analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
-    layoutMover = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    layoutController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
     update();
   }
@@ -40,7 +40,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     timer?.cancel();
 
     analogBounceController.dispose();
-    layoutMover.dispose();
+    layoutController.dispose();
     super.dispose();
   }
 
@@ -62,9 +62,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
     if (time.second == 0) {
-      if (layoutMover.value == 0) {
-        layoutMover.forward();
-      } else if (layoutMover.value == 1) layoutMover.reverse();
+      if (layoutController.value == 0) {
+        layoutController.forward();
+      } else if (layoutController.value == 1) layoutController.reverse();
     }
   }
 
@@ -73,7 +73,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
-          layoutMover: layoutMover,
+          layoutAnimation: layoutController,
           children: <Widget>[
             BackgroundComponent(),
             AnimatedAnalogComponent(animation: analogBounceController, model: model),
