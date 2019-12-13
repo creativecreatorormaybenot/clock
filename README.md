@@ -4,13 +4,13 @@
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
- * Use Bézier curves to display background with cut to another color and animate that nicely, e.g. top half pink and bottom half yellow using a Bézier curve to create the cut.
+ * Add wave animation to background.
 
-   * Curve should be adjusted by the model dynamically, e.g. the height of the cut or w/e and always animate in a relaxing fashion.
+ * Background curve should be adjusted by the model dynamically, e.g. the height of the cut or w/e and always animate in a relaxing fashion.
 
  * Add ball that bounces about scene, e.g. off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
-   * This should ideally be relaxing -> not fast.
+  * This should ideally be relaxing -> not fast.
 
  * Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
 
@@ -22,11 +22,11 @@
 
  * Implement accessibility.
 
-   * Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
+  * Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
 
  * Make clock available on web via GitHub pages.
 
-   * Watch "Designing for the Web with Flutter" from Flutter Interact for this.
+  * Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 
  * Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
 
@@ -62,3 +62,5 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
  * No assets were used. The bullet point would be a bit short without this second sentence.
 
  * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did). This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them :)
+
+ * Use Bézier curves to display background with cut to another color and animate that nicely, e.g. top half pink and bottom half yellow using a Bézier curve to create the cut.
