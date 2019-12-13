@@ -1,9 +1,5 @@
 ## TODO
 
- * Extract background again - pass positions and sizes of other elements to background.
-
- * Position background elements based on components.
-
  * Create weather dial and temperature dials.
 
  * Get fully familiar with the mock data and design hierarchy to work with the clock data.

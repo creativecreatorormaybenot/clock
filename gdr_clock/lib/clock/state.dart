@@ -16,12 +16,12 @@ class Clock extends StatefulWidget {
   State createState() => _ClockState();
 }
 
-class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
+class _ClockState extends State<Clock> with TickerProviderStateMixin {
   ClockModel model;
 
   Timer timer;
 
-  AnimationController analogBounceController;
+  AnimationController analogBounceController, layoutMover;
 
   @override
   void initState() {
@@ -30,6 +30,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
     model = widget.model;
 
     analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
+    layoutMover = AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
     update();
   }
@@ -39,6 +40,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
     timer?.cancel();
 
     analogBounceController.dispose();
+    layoutMover.dispose();
     super.dispose();
   }
 
@@ -58,6 +60,12 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
 
     final time = DateTime.now();
     timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+
+    if (time.second == 0) {
+      if (layoutMover.value == 0) {
+        layoutMover.forward();
+      } else if (layoutMover.value == 1) layoutMover.reverse();
+    }
   }
 
   @override
@@ -65,6 +73,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
       ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
+          layoutMover: layoutMover,
           children: <Widget>[
             BackgroundComponent(),
             AnimatedAnalogComponent(animation: analogBounceController, model: model),

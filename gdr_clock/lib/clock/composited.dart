@@ -1,19 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gdr_clock/clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
+  final Animation<double> layoutMover;
+
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
   /// Every component can only exist exactly once.
   CompositedClock({
     Key key,
     List<Widget> children,
+    this.layoutMover,
   }) : super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderCompositedClock();
+    return RenderCompositedClock(
+      layoutMover: layoutMover,
+    );
   }
 }
 
@@ -50,14 +54,31 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
   }
 }
 
-class RenderCompositedClock extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
+class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
+  RenderCompositedClock({this.layoutMover});
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    layoutMover.addListener(markNeedsLayout);
+  }
+
+  @override
+  void detach() {
+    super.detach();
+
+    layoutMover.removeListener(markNeedsLayout);
+  }
+
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! CompositedClockChildrenParentData) {
       child.parentData = CompositedClockChildrenParentData()..valid = false;
     }
   }
+
+  Animation<double> layoutMover;
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
@@ -114,7 +135,7 @@ class RenderCompositedClock extends RenderBox
           break;
         case ClockComponent.analogTime:
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
-          childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
+          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (Curves.elasticInOut.transform(layoutMover.value) - 1 / 2) * child.size.width, size.height / 2 - child.size.height / 2);
           backgroundCanUseSize = true;
           backgroundCanUseOffset = true;
           break;
@@ -125,7 +146,8 @@ class RenderCompositedClock extends RenderBox
       if (backgroundCanUseOffset) background._offsets[childParentData.component] = childParentData.offset;
 
       child = childParentData.nextSibling;
-    };
+    }
+    ;
   }
 
   @override
