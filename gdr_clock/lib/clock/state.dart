@@ -66,7 +66,6 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
           children: <Widget>[
-            BackgroundComponent(),
             AnimatedAnalogComponent(animation: analogBounceController, model: model),
           ],
         );

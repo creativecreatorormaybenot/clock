@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gdr_clock/clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
@@ -18,7 +19,6 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 
 enum ClockComponent {
   analogTime,
-  background,
 //  digitalTime,
 //  temperature,
 //  weather,
@@ -32,17 +32,13 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
   bool valid;
 }
 
-class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData> {
+class RenderCompositedClock extends RenderBox
+    with ContainerRenderObjectMixin<RenderBox, CompositedClockChildrenParentData>, RenderBoxContainerDefaultsMixin<RenderBox, CompositedClockChildrenParentData>, BackgroundComponent {
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! CompositedClockChildrenParentData) {
       child.parentData = CompositedClockChildrenParentData()..valid = false;
     }
-  }
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    defaultPaint(context, offset);
   }
 
   @override
@@ -74,9 +70,6 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 3)), parentUsesSize: true);
           childParentData.offset = Offset(size.width / 2 - child.size.width / 2, size.height / 2 - child.size.height / 2);
           break;
-        case ClockComponent.background:
-          child.layout(BoxConstraints.tight(constraints.biggest), parentUsesSize: false);
-          break;
       }
 
       child = childParentData.nextSibling;
@@ -91,11 +84,27 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
   }
 
   @override
+  void paint(PaintingContext context, Offset offset) {
+    // Draw background first.
+    context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), drawBackground);
+
+    // Draw components.
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData as CompositedClockChildrenParentData;
+      context.paintChild(child, childParentData.offset + offset);
+      child = childParentData.nextSibling;
+    }
+  }
+
+  @override
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
       if (debugPaintSizeEnabled) {
         final painter = TextPainter(
-            text: const TextSpan(text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.', style: TextStyle(fontSize: 42, color: Color(0xffff3456))),
+            text: const TextSpan(
+                text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
+                style: TextStyle(fontSize: 42, color: Color(0xffff3456), backgroundColor: Color(0xffffffff))),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         painter.layout(maxWidth: size.width);
