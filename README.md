@@ -18,6 +18,10 @@
 
   + Create spin-up animation for when the widget is created or updated? 
 
+  + Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.
+
+    - Use concepts from there to add that sparkle to the submission.
+
   + Finish clock first.
 
   + Implement accessibility.
