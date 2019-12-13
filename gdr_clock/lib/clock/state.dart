@@ -29,7 +29,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController = AnimationController(vsync: this, duration: const Duration(milliseconds: 342));
+    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
 
     update();
   }

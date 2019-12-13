@@ -25,10 +25,13 @@ class RenderBackgroundComponent extends RenderClockComponent {
       // Translate to upper left corner of the clock's area.
       canvas.translate(offset.dx, offset.dy);
 
-      // todo temporary background
-      canvas.drawPaint(Paint()..color = const Color(0xffff46d3));
+      // This path is supposed to represent a Bézier curve cutting the background colors.
+      // It is supposed to be dynamically animated in order to convey a relaxed feeling.
+      final curve = Path();
 
-      // todo draw background separated by curve
+
+
+      canvas.drawPath(curve, Paint()..color = const Color(0xffff46d3)..style = PaintingStyle.fill);
 
       canvas.restore();
     });

@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
+const handBounceDuration = Duration(milliseconds: 274);
+
 class AnimatedAnalogComponent extends AnimatedWidget {
   final Animation<double> animation;
   final ClockModel model;
@@ -20,7 +22,7 @@ class AnimatedAnalogComponent extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = Curves.bounceOut.transform(animation.value), time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogComponent(
       textStyle: Theme.of(context).textTheme.display1,
@@ -44,6 +46,27 @@ class AnimatedAnalogComponent extends AnimatedWidget {
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
       hourDivisions: model.is24HourFormat ? 24 : 12,
     );
+  }
+}
+
+/// Curve describing the bouncing motion of the clock hands.
+///
+/// [ElasticOutCurve] already showed the overshoot beyond the destination position well,
+/// however, the oscillation movement back to before the destination position was not pronounced enough.
+/// Changing [ElasticOutCurve.period] to values greater than `0.4` will decrease how much the
+/// curve oscillates as a whole, but I only wanted to decrease the magnitude of the first part
+/// of the oscillation and increase the second to match real hand movement more closely,
+/// hence, I created [HandBounceCurve].
+///
+/// I used this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) as a guide.
+class HandBounceCurve extends Curve {
+  const HandBounceCurve();
+
+  @override
+  double transformInternal(double t) {
+    final b = .4;
+    // todo implement transformations
+    return 1 + pow(2, -10 * t) * sin(((t - b / 4) * pi * 2) / b);
   }
 }
 
@@ -149,10 +172,12 @@ class RenderAnalogPart extends RenderClockComponent {
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffffd345));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
+
+    // Ticks indicating minutes and seconds (both 60).
     for (var n = smallDivisions; n > 0; n--) {
       // Do not draw small ticks when large ones will be drawn afterwards anyway.
       if (n % (smallDivisions / largeDivisions) != 0) {
-        final height = 4.5;
+        final height = 8.3;
         canvas.drawRect(
             Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
             Paint()
@@ -163,17 +188,20 @@ class RenderAnalogPart extends RenderClockComponent {
       canvas.rotate(-pi * 2 / smallDivisions);
     }
 
+    // Ticks and numbers indicating hours.
     for (var n = largeDivisions; n > 0; n--) {
-      final height = 7.9;
+      final height = 4.2;
       canvas.drawRect(
-          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 2.3, height: height),
+          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 3.1, height: height),
           Paint()
             ..color = const Color(0xff000000)
             ..blendMode = BlendMode.darken);
 
       final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
       painter.layout();
-      painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 + 6.2));
+      painter.paint(canvas, Offset(-painter.width / 2, -size.height / 2 +
+          // Push the numbers inwards a bit.
+          9.6));
 
       canvas.rotate(-pi * 2 / largeDivisions);
     }
@@ -185,7 +213,7 @@ class RenderAnalogPart extends RenderClockComponent {
         Paint()
           ..color = const Color(0xff000000)
           ..strokeWidth = 13.7
-          ..strokeCap = StrokeCap.square);
+          ..strokeCap = StrokeCap.butt);
 
     // Hand displaying the current minute.
     canvas.drawLine(
@@ -194,7 +222,7 @@ class RenderAnalogPart extends RenderClockComponent {
         Paint()
           ..color = const Color(0xff000000)
           ..strokeWidth = 8.4
-          ..strokeCap = StrokeCap.round);
+          ..strokeCap = StrokeCap.square);
 
     // Hand displaying the current second.
     canvas.drawLine(

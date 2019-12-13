@@ -45,7 +45,15 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).  
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
 
-## Implementation
+## Notes
+
+ * You can follow my whole process of building this in this repository. Maybe it helps someone :)
+
+### Hand bouncing
+
+ * For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
+
+### Implementation
 
  * I used only the Flutter rendering layer to create this clock face, i.e. no plugins were used at all (check [`pubspec.yaml`](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
 
@@ -54,7 +62,3 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
  * No assets were used. The bullet point would be a bit short without this second sentence.
 
  * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did). This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them :)
-
-## Notes
-
- * You can follow my whole process of building this in this repository. Maybe it helps someone :)
