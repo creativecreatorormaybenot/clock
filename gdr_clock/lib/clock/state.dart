@@ -34,6 +34,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     layoutController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
+    widget.model.addListener(modelChanged);
+
     update();
   }
 
@@ -52,6 +54,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     if (oldWidget.model == widget.model) return;
 
+    oldWidget.model.removeListener(modelChanged);
+    widget.model.addListener(modelChanged);
+  }
+
+  void modelChanged() {
+    // Change layout when the model changes.
+    if (layoutController.value == 0) {
+      layoutController.forward();
+    } else if (layoutController.value == 1) layoutController.reverse();
+
     setState(() {
       model = widget.model;
     });
@@ -67,11 +79,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
         update);
 
-    if (time.second == 0) {
-      if (layoutController.value == 0) {
-        layoutController.forward();
-      } else if (layoutController.value == 1) layoutController.reverse();
-    }
+//    // Change layout when the minute changes.
+//    if (time.second == 0) {
+//      if (layoutController.value == 0) {
+//        layoutController.forward();
+//      } else if (layoutController.value == 1) layoutController.reverse();
+//    }
   }
 
   @override

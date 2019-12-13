@@ -118,8 +118,9 @@ class RenderCompositedClock extends RenderBox
 
       components.remove(childParentData.component);
 
-      if (childParentData.component == ClockComponent.background)
+      if (childParentData.component == ClockComponent.background) {
         background = childParentData;
+      }
 
       child = childParentData.nextSibling;
     }
@@ -165,11 +166,13 @@ class RenderCompositedClock extends RenderBox
           break;
       }
 
-      if (backgroundCanUseSize)
+      if (backgroundCanUseSize) {
         background._sizes[childParentData.component] = child.size;
+      }
 
-      if (backgroundCanUseOffset)
+      if (backgroundCanUseOffset) {
         background._offsets[childParentData.component] = childParentData.offset;
+      }
 
       child = childParentData.nextSibling;
     }
