@@ -1,5 +1,9 @@
 ## TODO
 
+  + Rotate disc instead of hand for weather dial.
+
+    - However, still rotate whole component when the layout animates.
+
   + Create weather and temperature dials.
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.

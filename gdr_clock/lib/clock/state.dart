@@ -11,8 +11,9 @@ class Clock extends StatefulWidget {
 
   const Clock({
     Key key,
-    this.model,
-  }) : super(key: key);
+    @required this.model,
+  })  : assert(model != null),
+        super(key: key);
 
   @override
   State createState() => _ClockState();
@@ -32,15 +33,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController =
-        AnimationController(vsync: this, duration: handBounceDuration);
+    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
 
-    layoutController =
-        AnimationController(vsync: this, duration: layoutAnimationDuration);
-    layoutAnimation = CurvedAnimation(
-        parent: layoutController,
-        curve: layoutAnimationCurve,
-        reverseCurve: layoutAnimationCurve.flipped);
+    layoutController = AnimationController(vsync: this, duration: layoutAnimationDuration);
+    layoutAnimation = CurvedAnimation(parent: layoutController, curve: layoutAnimationCurve, reverseCurve: layoutAnimationCurve.flipped);
 
     widget.model.addListener(modelChanged);
 
@@ -85,11 +81,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     analogBounceController.forward(from: 0);
 
     final time = DateTime.now();
-    timer = Timer(
-        Duration(
-            microseconds:
-                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
-        update);
+    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
     // Change layout when the minute changes.
     if (time.second == 0) animateLayout();
@@ -97,22 +89,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) => false
-      ? Text(
-          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
           layoutAnimation: layoutAnimation,
           children: <Widget>[
             const BackgroundComponent(),
             WeatherComponent(
+              layoutAnimation: layoutAnimation,
               conditions: WeatherCondition.values.map(describeEnum).toList(),
-              handAngle: 0,
+              angle: 0,
               textStyle: Theme.of(context).textTheme.body1,
             ),
-            AnimatedAnalogComponent(
-                layoutAnimation: layoutAnimation,
-                animation: analogBounceController,
-                model: model),
+            AnimatedAnalogComponent(layoutAnimation: layoutAnimation, animation: analogBounceController, model: model),
           ],
         );
 }
