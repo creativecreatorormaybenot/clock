@@ -130,13 +130,13 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
           break;
         case ClockComponent.analogTime:
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / (3 - (1 - 2 * (layoutAnimation.value - 1 / 2).abs()) / 4))), parentUsesSize: backgroundCanUseRect = true);
-          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (layoutAnimation.value - 1 / 2) * child.size.width, size.height / 2 - child.size.height / 2);
+          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (layoutAnimation.value - 1 / 2) * child.size.width * 4 / 3, size.height / 2 - child.size.height / 2);
           break;
         case ClockComponent.weather:
           child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)), parentUsesSize: backgroundCanUseRect = true);
-          final clearanceFactor = 1 / 36;
+          final clearanceFactor = 1 / 19;
           childParentData.offset =
-              Offset(Tween(begin: size.width - child.size.width * (1 + clearanceFactor), end: child.size.width * clearanceFactor).transform(layoutAnimation.value), child.size.height * clearanceFactor);
+              Offset(Tween(begin: size.width - child.size.width * (1 + clearanceFactor * 3), end: child.size.width * clearanceFactor * 3).transform(layoutAnimation.value), child.size.height * clearanceFactor);
           break;
       }
 

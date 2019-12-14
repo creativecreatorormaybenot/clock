@@ -75,7 +75,7 @@ class HandBounceCurve extends Curve {
   }
 
   double elasticTransform(double t) {
-    final b = 11 / 27;
+    final b = 12 / 27;
     return 1 + pow(2, -10 * t) * sin(((t - b / 4) * pi * 2) / b);
   }
 

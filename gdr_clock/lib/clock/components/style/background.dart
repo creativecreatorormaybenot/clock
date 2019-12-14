@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
@@ -22,6 +25,54 @@ class RenderBackgroundComponent extends RenderClockComponent {
 
     final clockData = parentData as CompositedClockChildrenParentData, analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
+    final leftRect = () {
+      double left, top;
+
+      if (analogComponentRect.left < weatherComponentRect.left) {
+        left = analogComponentRect.left;
+        top = analogComponentRect.top;
+      } else {
+        left = weatherComponentRect.left;
+        top = weatherComponentRect.top;
+      }
+
+      double right, bottom;
+
+      if (analogComponentRect.right < weatherComponentRect.right) {
+        right = analogComponentRect.right;
+        bottom = analogComponentRect.bottom;
+      } else {
+        right = weatherComponentRect.right;
+        bottom = weatherComponentRect.bottom;
+      }
+
+      return Rect.fromLTRB(left, top, right, bottom);
+    }();
+
+    final rightRect = () {
+      double right, bottom;
+
+      if (analogComponentRect.right > weatherComponentRect.right) {
+        right = analogComponentRect.right;
+        bottom = analogComponentRect.bottom;
+      } else {
+        right = weatherComponentRect.right;
+        bottom = weatherComponentRect.bottom;
+      }
+
+      double left, top;
+
+      if (analogComponentRect.left > weatherComponentRect.left) {
+        left = analogComponentRect.left;
+        top = analogComponentRect.top;
+      } else {
+        left = weatherComponentRect.left;
+        top = weatherComponentRect.top;
+      }
+
+      return Rect.fromLTRB(left, top, right, bottom);
+    }();
+
     final canvas = context.canvas;
 
     canvas.save();
@@ -30,37 +81,45 @@ class RenderBackgroundComponent extends RenderClockComponent {
 
     // This path is supposed to represent a Bézier curve cutting the background colors.
     // It is supposed to be dynamically animated in order to convey a relaxed feeling.
-    final s = weatherComponentRect.centerLeft, e = size.height / 2;
+    final startHeight = lerpDouble(leftRect.centerLeft.dy, size.height / 2, 1 / 2),
+        middleHeight = max(leftRect.bottom, rightRect.bottom),
+        endHeight = lerpDouble(rightRect.centerLeft.dy, size.height / 2, 1 / 2);
     final curve = Path()
-      ..lineTo(s.dx, s.dy)
-      // Curve about the left and bottom side of the weather component.
-      ..quadraticBezierTo(
-        weatherComponentRect.bottomLeft.dx,
-        weatherComponentRect.bottomLeft.dy,
-        weatherComponentRect.bottomCenter.dx,
-        weatherComponentRect.bottomCenter.dy,
-      )
-      // Curve about the left side of the analog part to the bottom center of the analog part.
+      ..moveTo(0, startHeight)
       ..cubicTo(
-        analogComponentRect.centerLeft.dx,
-        analogComponentRect.centerLeft.dy,
-        analogComponentRect.bottomLeft.dx,
-        analogComponentRect.bottomLeft.dy,
-        analogComponentRect.bottomCenter.dx,
-        analogComponentRect.bottomCenter.dy,
+        leftRect.centerLeft.dx,
+        startHeight,
+        leftRect.bottomLeft.dx,
+        leftRect.bottomLeft.dy,
+        leftRect.bottomCenter.dx,
+        leftRect.bottomCenter.dy,
       )
-      // Curve about the right side of the analog part to the end of the screen.
       ..cubicTo(
-        analogComponentRect.bottomRight.dx,
-        analogComponentRect.bottomRight.dy,
-        analogComponentRect.centerRight.dx,
-        analogComponentRect.centerRight.dy,
+        leftRect.bottomRight.dx,
+        leftRect.bottomRight.dy,
+        leftRect.centerRight.dx,
+        middleHeight,
+        size.width / 2,
+        middleHeight,
+      )
+      ..cubicTo(
+        rightRect.centerLeft.dx,
+        middleHeight,
+        rightRect.bottomLeft.dx,
+        rightRect.bottomLeft.dy,
+        rightRect.bottomCenter.dx,
+        rightRect.bottomCenter.dy,
+      )
+      ..cubicTo(
+        rightRect.bottomRight.dx,
+        rightRect.bottomRight.dy,
+        rightRect.centerRight.dx,
+        endHeight,
         size.width,
-        e,
+        endHeight,
       );
 
     final upperPath = Path()
-      ..moveTo(0, 0)
       ..extendWithPath(curve, Offset.zero)
       // Line to top right, then top left, and then back to start to fill whole upper area.
       ..lineTo(size.width, 0)
@@ -73,7 +132,6 @@ class RenderBackgroundComponent extends RenderClockComponent {
           ..style = PaintingStyle.fill);
 
     final lowerPath = Path()
-      ..moveTo(0, 0)
       ..extendWithPath(curve, Offset.zero)
       // Line to bottom right, then bottom left, and then back to start to fill whole lower area.
       ..lineTo(size.width, size.height)
