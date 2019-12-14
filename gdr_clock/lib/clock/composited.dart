@@ -156,7 +156,7 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
       Tween(begin: size.width - weather.size.width * (1 + clearanceFactor * 3), end: weather.size.width * clearanceFactor * 3).transform(layoutAnimation.value),
       // The weather dial is supposed to roll down to the level of the analog component while the layout animates.
       lerpDouble(
-        analogTimeData.offset.dy + analogTime.size.height,
+        analogTimeData.offset.dy + analogTime.size.height - weather.size.height,
         weather.size.height * clearanceFactor,
         (2 * (layoutAnimation.value - 1 / 2).abs()).clamp(0, 1),
       ),
