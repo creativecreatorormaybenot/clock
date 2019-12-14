@@ -4,7 +4,15 @@
 
     - However, still rotate whole component when the layout animates.
 
-  + Create weather and temperature dials.
+  + Create icons for the different weather conditions.
+
+    - Pass `WeatherCondition` instead of strings.
+
+    - Make `WeatherComponent` a `MultiChildRenderObjectWidget` the same way `CompositedClock` is, i.e. with icons instead of components as children but their associated `parentData`.
+
+      * Use a single while-loop to loop over children in `performLayout` as they should have their weather condition saved as a property of their parent data.
+
+  + Create weather temperature thermometer.
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
@@ -15,6 +23,10 @@
   + Add ball that bounces about scene, e.g.off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
     - This should ideally be relaxing -> not fast. 
+
+    - Easy one would be a ball rolling down a Bézier curve every second, calculating the acceleration and velocity of the ball based on the slope of the curve.
+     
+      * The curve could slowly change over time like the background does for relaxation.
 
   + Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
 
