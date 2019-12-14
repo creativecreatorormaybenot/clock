@@ -4,17 +4,17 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
-class BackgroundComponent extends LeafRenderObjectWidget {
-  const BackgroundComponent({Key key}) : super(key: key);
+class Background extends LeafRenderObjectWidget {
+  const Background({Key key}) : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBackgroundComponent();
+    return RenderBackground();
   }
 }
 
-class RenderBackgroundComponent extends RenderClockComponent {
-  RenderBackgroundComponent() : super(ClockComponent.background);
+class RenderBackground extends RenderClockComponent {
+  RenderBackground() : super(ClockComponent.background);
 
   @override
   bool get sizedByParent => true;

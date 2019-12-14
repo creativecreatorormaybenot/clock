@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
   /// Every component can only exist exactly once.
+  /// Notice that the order of the [children] does not affect the layout or paint order.
   CompositedClock({
     Key key,
     List<Widget> children,
@@ -40,6 +43,15 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
   bool valid;
 
   Map<ClockComponent, Rect> _rects;
+
+  /// Returns `true` so it can be used for the `parentUsesSize` parameter.
+  /// Logic: if the background can access the [Rect] of a [RenderBox], i.e. [Size] and [Offset],
+  /// the background should be laid out again when the size changes.
+  bool _addRect(RenderBox child) {
+    final childParentData = child.parentData as CompositedClockChildrenParentData;
+    _rects[childParentData.component] = Rect.fromLTWH(childParentData.offset.dx, childParentData.offset.dy, child.size.width, child.size.height);
+    return true;
+  }
 
   Rect rectOf(ClockComponent component) {
     assert(this.component == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
@@ -82,84 +94,103 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
   @override
   void performLayout() {
-    size = constraints.biggest;
-
-    final components = List.of(ClockComponent.values);
-
-    CompositedClockChildrenParentData background;
+    //<editor-fold desc="Setup">
+    final children = <ClockComponent, RenderBox>{}, parentData = <ClockComponent, CompositedClockChildrenParentData>{};
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as CompositedClockChildrenParentData;
+      final childParentData = child.parentData as CompositedClockChildrenParentData, component = childParentData.component;
 
       if (!childParentData.valid) throw ClockCompositionError(child: child);
-      if (!components.contains(childParentData.component)) {
+      if (children.containsKey(component)) {
         throw ClockCompositionError(
-            message: 'The children passed to CompositedClock contain the component type ${describeEnum(childParentData.component)} more than once. '
+            message: 'The children passed to CompositedClock contain the component type ${describeEnum(component)} more than once. '
                 'Every component can only be passed exactly once.');
       }
 
-      components.remove(childParentData.component);
-
-      if (childParentData.component == ClockComponent.background) {
-        background = childParentData;
-      }
+      children[component] = child;
+      parentData[component] = childParentData;
 
       child = childParentData.nextSibling;
     }
 
-    if (components.isNotEmpty) {
+    final missingComponents = ClockComponent.values.where((component) => !children.containsKey(component));
+
+    if (missingComponents.isNotEmpty) {
       throw ClockCompositionError(
           message: 'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
               'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
-              'Missing components are $components.');
+              'Missing components are $missingComponents.');
     }
 
-    background._rects = {};
+    // This should prevent accidental use of child.
+    child = null;
+    //</editor-fold>
 
-    child = firstChild;
-    while (child != null) {
-      final childParentData = child.parentData as CompositedClockChildrenParentData;
+    //<editor-fold desc="Laying out children">
+    // Background
+    final background = children[ClockComponent.background], backgroundData = parentData[ClockComponent.background];
 
-      // The reason this is not true for all is that parentUsesSize does not need to be true.
-      var backgroundCanUseRect = false;
+    backgroundData._rects = {};
+    final provideRect = backgroundData._addRect;
 
-      switch (childParentData.component) {
-        case ClockComponent.background:
-          child.layout(BoxConstraints.tight(constraints.biggest));
-          break;
-        case ClockComponent.analogTime:
-          child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / (3 - (1 - 2 * (layoutAnimation.value - 1 / 2).abs()) / 4))), parentUsesSize: backgroundCanUseRect = true);
-          childParentData.offset = Offset(size.width / 2 - child.size.width / 2 + (layoutAnimation.value - 1 / 2) * child.size.width * 4 / 3, size.height / 2 - child.size.height / 2);
-          break;
-        case ClockComponent.weather:
-          child.layout(BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)), parentUsesSize: backgroundCanUseRect = true);
-          final clearanceFactor = 1 / 19;
-          childParentData.offset =
-              Offset(Tween(begin: size.width - child.size.width * (1 + clearanceFactor * 3), end: child.size.width * clearanceFactor * 3).transform(layoutAnimation.value), child.size.height * clearanceFactor);
-          break;
-      }
+    background.layout(BoxConstraints.tight(constraints.biggest));
 
-      if (backgroundCanUseRect) {
-        background._rects[childParentData.component] = Rect.fromLTWH(childParentData.offset.dx, childParentData.offset.dy, child.size.width, child.size.height);
-      }
+    // Analog time (paint order is different, but the weather component depends on the size of the analog component).
+    final analogTime = children[ClockComponent.analogTime], analogTimeData = parentData[ClockComponent.analogTime];
+    print('RenderCompositedClock.performLayout $analogTime');
+    analogTime.layout(
+      BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / (3 - (1 - 2 * (layoutAnimation.value - 1 / 2).abs()) / 4))),
+      parentUsesSize: provideRect(analogTime),
+    );
+    print('RenderCompositedClock.performLayout $analogTime');
+    analogTimeData.offset = Offset(size.width / 2 - analogTime.size.width / 2 + (layoutAnimation.value - 1 / 2) * analogTime.size.width * 4 / 3, size.height / 2 - analogTime.size.height / 2);
 
-      child = childParentData.nextSibling;
-    }
-    ;
+    // Weather
+    final weather = children[ClockComponent.weather], weatherData = parentData[ClockComponent.weather];
+    weather.layout(
+      BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)),
+      parentUsesSize: provideRect(weather),
+    );
+
+    final clearanceFactor = 1 / 19;
+    weatherData.offset = Offset(
+        Tween(begin: size.width - weather.size.width * (1 + clearanceFactor * 3), end: weather.size.width * clearanceFactor * 3).transform(layoutAnimation.value),
+        // The weather dial is supposed to roll down to the level of the analog component while the layout animates.
+        lerpDouble(
+          weather.size.height * clearanceFactor,
+          weatherData.offset.dy + weather.size.height,
+          2 * (1 - (layoutAnimation.value - 1 / 2).abs()),
+        ));
+    //</editor-fold>
+
+    size = constraints.biggest;
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
     context.pushClipRect(needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height), (context, offset) {
-      // Draw components.
+      //<editor-fold desc="Setup">
+      final children = <ClockComponent, RenderBox>{}, parentData = <ClockComponent, CompositedClockChildrenParentData>{};
+
       var child = firstChild;
       while (child != null) {
-        final childParentData = child.parentData as CompositedClockChildrenParentData;
-        context.paintChild(child, childParentData.offset + offset);
+        final childParentData = child.parentData as CompositedClockChildrenParentData, component = childParentData.component;
+
+        children[component] = child;
+        parentData[component] = childParentData;
+
         child = childParentData.nextSibling;
       }
+
+      void paint(ClockComponent component) => context.paintChild(children[offset], parentData[component].offset + offset);
+      //</editor-fold>
+
+      // Draw components.
+      paint(ClockComponent.background);
+      paint(ClockComponent.weather);
+      paint(ClockComponent.analogTime);
     });
   }
 

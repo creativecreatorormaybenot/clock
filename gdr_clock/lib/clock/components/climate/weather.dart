@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
-class WeatherComponent extends LeafRenderObjectWidget {
+class Weather extends LeafRenderObjectWidget {
   final List<String> conditions;
   final double angle;
   final TextStyle textStyle;
   final Animation<double> layoutAnimation;
 
-  WeatherComponent({
+  Weather({
     Key key,
     @required this.conditions,
     @required this.angle,
@@ -23,11 +23,11 @@ class WeatherComponent extends LeafRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderWeatherComponent(conditions: conditions, angle: angle, textStyle: textStyle, layoutAnimation: layoutAnimation);
+    return RenderWeather(conditions: conditions, angle: angle, textStyle: textStyle, layoutAnimation: layoutAnimation);
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderWeatherComponent renderObject) {
+  void updateRenderObject(BuildContext context, RenderWeather renderObject) {
     renderObject
       ..conditions = conditions
       ..angle = angle
@@ -36,10 +36,10 @@ class WeatherComponent extends LeafRenderObjectWidget {
   }
 }
 
-class RenderWeatherComponent extends RenderClockComponent {
+class RenderWeather extends RenderClockComponent {
   final Animation<double> layoutAnimation;
 
-  RenderWeatherComponent({
+  RenderWeather({
     this.conditions,
     this.angle,
     this.textStyle,

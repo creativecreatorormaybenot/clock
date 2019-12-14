@@ -94,14 +94,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       : CompositedClock(
           layoutAnimation: layoutAnimation,
           children: <Widget>[
-            const BackgroundComponent(),
-            WeatherComponent(
+            const Background(),
+            Weather(
               layoutAnimation: layoutAnimation,
               conditions: WeatherCondition.values.map(describeEnum).toList(),
               angle: 0,
               textStyle: Theme.of(context).textTheme.body1,
             ),
-            AnimatedAnalogComponent(layoutAnimation: layoutAnimation, animation: analogBounceController, model: model),
+            AnimatedAnalogTime(layoutAnimation: layoutAnimation, animation: analogBounceController, model: model),
           ],
         );
 }

@@ -8,11 +8,11 @@ import 'package:gdr_clock/clock/clock.dart';
 
 const handBounceDuration = Duration(milliseconds: 274);
 
-class AnimatedAnalogComponent extends AnimatedWidget {
+class AnimatedAnalogTime extends AnimatedWidget {
   final Animation<double> animation, layoutAnimation;
   final ClockModel model;
 
-  AnimatedAnalogComponent({
+  AnimatedAnalogTime({
     Key key,
     @required this.animation,
     @required this.model,
@@ -27,7 +27,7 @@ class AnimatedAnalogComponent extends AnimatedWidget {
     final bounce = const HandBounceCurve().transform(animation.value),
         time = DateTime.now();
 
-    return AnalogComponent(
+    return AnalogTime(
       layoutAnimation: layoutAnimation,
       textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: -pi / 2 +
@@ -87,13 +87,13 @@ class HandBounceCurve extends Curve {
   }
 }
 
-class AnalogComponent extends LeafRenderObjectWidget {
+class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
   final Animation<double> layoutAnimation;
 
-  const AnalogComponent({
+  const AnalogTime({
     Key key,
     @required this.textStyle,
     @required this.secondHandAngle,
@@ -111,7 +111,7 @@ class AnalogComponent extends LeafRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderAnalogComponent(
+    return RenderAnalogTime(
       textStyle: textStyle,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
@@ -123,7 +123,7 @@ class AnalogComponent extends LeafRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderAnalogComponent renderObject) {
+      BuildContext context, RenderAnalogTime renderObject) {
     renderObject
       ..textStyle = textStyle
       ..secondHandAngle = secondHandAngle
@@ -134,10 +134,10 @@ class AnalogComponent extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogComponent extends RenderClockComponent {
+class RenderAnalogTime extends RenderClockComponent {
   final Animation<double> layoutAnimation;
 
-  RenderAnalogComponent({
+  RenderAnalogTime({
     this.textStyle,
     this.secondHandAngle,
     this.minuteHandAngle,
