@@ -62,6 +62,8 @@ class RenderWeatherComponent extends RenderClockComponent {
     _radius = size.width / 2;
   }
 
+  static const arrowColor = Color(0xffffddbb);
+
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
@@ -91,21 +93,27 @@ class RenderWeatherComponent extends RenderClockComponent {
     }
 
     // Draw tip of the arrow pointing up.
-    final h = -size.height / 2.7;
+    final h = -size.height / 3.4, s = 13.42;
     canvas.drawPath(
         Path()
           // Remember that this is the center of the circle.
           ..moveTo(0, h)
-          ..lineTo(-9, h)
-          ..lineTo(0, h - 9)
-          ..lineTo(9, h)
+          ..lineTo(-s, h)
+          ..lineTo(0, h - s)
+          ..lineTo(s, h)
           ..lineTo(0, h)
           ..close(),
         Paint()
-          ..color = const Color(0xffffddbb)
+          ..color = arrowColor
           ..style = PaintingStyle.fill);
     // Draw the rest of the arrow.
-//    canvas.drawLine(p1, p2, paint)
+    canvas.drawLine(
+        Offset.zero,
+        Offset(0, h),
+        Paint()
+          ..color = arrowColor
+          ..strokeWidth = 5.2
+          ..strokeCap = StrokeCap.round);
 
     canvas.restore();
   }
