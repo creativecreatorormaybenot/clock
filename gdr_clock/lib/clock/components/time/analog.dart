@@ -71,9 +71,19 @@ class HandBounceCurve extends Curve {
 
   @override
   double transformInternal(double t) {
-    final b = .4;
-    // todo implement transformations
+    return troughTransform(elasticTransform(t));
+  }
+
+  double elasticTransform(double t) {
+    final b = 11 / 27;
     return 1 + pow(2, -10 * t) * sin(((t - b / 4) * pi * 2) / b);
+  }
+
+  /// I was [helped by Chris Drost](https://math.stackexchange.com/a/3475134/569406) with this one.
+  /// I have to say that I was mentally absent when reading the solution for the first time
+  /// but figured it out eventually. The result works fairly well.
+  double troughTransform(double t) {
+    return t * (1 - pow(e, pow(t, 12) * -5) * 4 / 9);
   }
 }
 
