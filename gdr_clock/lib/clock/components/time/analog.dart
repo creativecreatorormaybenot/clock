@@ -79,9 +79,9 @@ class HandBounceCurve extends Curve {
     return 1 + pow(2, -10 * t) * sin(((t - b / 4) * pi * 2) / b);
   }
 
-  /// I was [helped by Chris Drost](https://math.stackexchange.com/a/3475134/569406) with this one.
-  /// I have to say that I was mentally absent when reading the solution for the first time
-  /// but figured it out eventually. The result works fairly well.
+  /// [Chris Drost helped me](https://math.stackexchange.com/a/3475134/569406) with this one.
+  /// I have to say that I was mentally absent when reading through the solution for the first few times
+  /// but figured it out eventually after coming back to it later. The result works fairly well.
   double troughTransform(double t) {
     return t * (1 - pow(e, pow(t, 12) * -5) * 4 / 9);
   }
