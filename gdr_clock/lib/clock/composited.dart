@@ -44,13 +44,9 @@ class CompositedClockChildrenParentData extends ContainerBoxParentData<RenderBox
 
   Map<ClockComponent, Rect> _rects;
 
-  /// Returns `true` so it can be used for the `parentUsesSize` parameter.
-  /// Logic: if the background can access the [Rect] of a [RenderBox], i.e. [Size] and [Offset],
-  /// the background should be laid out again when the size changes.
-  bool _addRect(RenderBox child) {
+  void _addRect(RenderBox child) {
     final childParentData = child.parentData as CompositedClockChildrenParentData;
     _rects[childParentData.component] = Rect.fromLTWH(childParentData.offset.dx, childParentData.offset.dy, child.size.width, child.size.height);
-    return true;
   }
 
   Rect rectOf(ClockComponent component) {
@@ -127,6 +123,9 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
     child = null;
     //</editor-fold>
 
+    // The children use this size and the challenge provides a fixed size anyway.
+    size = constraints.biggest;
+
     //<editor-fold desc="Laying out children">
     // Background
     final background = children[ClockComponent.background], backgroundData = parentData[ClockComponent.background];
@@ -138,33 +137,32 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = children[ClockComponent.analogTime], analogTimeData = parentData[ClockComponent.analogTime];
-    print('RenderCompositedClock.performLayout $analogTime');
     analogTime.layout(
       BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / (3 - (1 - 2 * (layoutAnimation.value - 1 / 2).abs()) / 4))),
-      parentUsesSize: provideRect(analogTime),
+      parentUsesSize: true,
     );
-    print('RenderCompositedClock.performLayout $analogTime');
     analogTimeData.offset = Offset(size.width / 2 - analogTime.size.width / 2 + (layoutAnimation.value - 1 / 2) * analogTime.size.width * 4 / 3, size.height / 2 - analogTime.size.height / 2);
+    provideRect(analogTime);
 
     // Weather
     final weather = children[ClockComponent.weather], weatherData = parentData[ClockComponent.weather];
     weather.layout(
       BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)),
-      parentUsesSize: provideRect(weather),
+      parentUsesSize: true,
     );
 
     final clearanceFactor = 1 / 19;
     weatherData.offset = Offset(
-        Tween(begin: size.width - weather.size.width * (1 + clearanceFactor * 3), end: weather.size.width * clearanceFactor * 3).transform(layoutAnimation.value),
-        // The weather dial is supposed to roll down to the level of the analog component while the layout animates.
-        lerpDouble(
-          weather.size.height * clearanceFactor,
-          weatherData.offset.dy + weather.size.height,
-          2 * (1 - (layoutAnimation.value - 1 / 2).abs()),
-        ));
+      Tween(begin: size.width - weather.size.width * (1 + clearanceFactor * 3), end: weather.size.width * clearanceFactor * 3).transform(layoutAnimation.value),
+      // The weather dial is supposed to roll down to the level of the analog component while the layout animates.
+      lerpDouble(
+        analogTimeData.offset.dy + analogTime.size.height,
+        weather.size.height * clearanceFactor,
+        (2 * (layoutAnimation.value - 1 / 2).abs()).clamp(0, 1),
+      ),
+    );
+    provideRect(weather);
     //</editor-fold>
-
-    size = constraints.biggest;
   }
 
   @override
@@ -184,7 +182,7 @@ class RenderCompositedClock extends RenderBox with ContainerRenderObjectMixin<Re
         child = childParentData.nextSibling;
       }
 
-      void paint(ClockComponent component) => context.paintChild(children[offset], parentData[component].offset + offset);
+      void paint(ClockComponent component) => context.paintChild(children[component], parentData[component].offset + offset);
       //</editor-fold>
 
       // Draw components.
