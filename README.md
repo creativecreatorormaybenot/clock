@@ -60,7 +60,7 @@
 
   + Share with P.
 
-# clock
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
