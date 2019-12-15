@@ -34,7 +34,9 @@ class RenderBackground extends RenderClockComponent {
         rightBottomRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
         rightCenterRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.centerRight : weatherComponentRect.centerRight,
         leftCenterRightX = leftBottomRight.dx,
-        rightCenterLeftX = rightBottomLeft.dx;
+        rightCenterLeftX = rightBottomLeft.dx,
+        leftBottomCenterX = leftBottomCenter.dx,
+        leftBottomCenterY = rightBottomLeft.dx < leftBottomRight.dx && rightBottomLeft.dy > leftBottomRight.dy ? rightBottomLeft.dy : leftBottomRight.dy;
 
     final canvas = context.canvas;
 
@@ -54,15 +56,15 @@ class RenderBackground extends RenderClockComponent {
         startHeight,
         leftBottomLeft.dx,
         leftBottomLeft.dy,
-        leftBottomCenter.dx,
-        leftBottomCenter.dy,
+        leftBottomCenterX,
+        leftBottomCenterY,
       )
       ..cubicTo(
         leftBottomRight.dx,
         leftBottomRight.dy,
         leftCenterRightX,
         middleHeight,
-        size.width / 2,
+        lerpDouble(leftCenterRightX, rightCenterLeftX, 1 / 2),
         middleHeight,
       )
       ..cubicTo(
