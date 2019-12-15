@@ -32,7 +32,7 @@ class RenderBackground extends RenderClockComponent {
         rightBottomLeft = analogComponentRect.bottomLeft.dx > weatherComponentRect.bottomLeft.dx ? analogComponentRect.bottomLeft : weatherComponentRect.bottomLeft,
         rightBottomCenter = analogComponentRect.bottomCenter.dx > weatherComponentRect.bottomCenter.dx ? analogComponentRect.bottomCenter : weatherComponentRect.bottomCenter,
         rightBottomRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
-        rightCenterRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.centerRight : weatherComponentRect.centerLeft,
+        rightCenterRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.centerRight : weatherComponentRect.centerRight,
         leftCenterRightX = leftBottomRight.dx,
         rightCenterLeftX = rightBottomLeft.dx;
 

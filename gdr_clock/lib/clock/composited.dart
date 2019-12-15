@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-const layoutAnimationDuration = Duration(milliseconds: 2471), layoutAnimationCurve = ElasticOutCurve(4 / 6);
+const layoutAnimationDuration = Duration(milliseconds: 2471), layoutAnimationCurve = ElasticInOutCurve(4 / 6);
 
 class CompositedClock extends MultiChildRenderObjectWidget {
   final Animation<double> layoutAnimation;
