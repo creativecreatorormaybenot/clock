@@ -25,53 +25,16 @@ class RenderBackground extends RenderClockComponent {
 
     final clockData = parentData as CompositedClockChildrenParentData, analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
-    final leftRect = () {
-      double left, top;
-
-      if (analogComponentRect.left < weatherComponentRect.left) {
-        left = analogComponentRect.left;
-        top = analogComponentRect.top;
-      } else {
-        left = weatherComponentRect.left;
-        top = weatherComponentRect.top;
-      }
-
-      double right, bottom;
-
-      if (analogComponentRect.right < weatherComponentRect.right) {
-        right = analogComponentRect.right;
-        bottom = analogComponentRect.bottom;
-      } else {
-        right = weatherComponentRect.right;
-        bottom = weatherComponentRect.bottom;
-      }
-
-      return Rect.fromLTRB(left, top, right, bottom);
-    }();
-
-    final rightRect = () {
-      double right, bottom;
-
-      if (analogComponentRect.right > weatherComponentRect.right) {
-        right = analogComponentRect.right;
-        bottom = analogComponentRect.bottom;
-      } else {
-        right = weatherComponentRect.right;
-        bottom = weatherComponentRect.bottom;
-      }
-
-      double left, top;
-
-      if (analogComponentRect.left > weatherComponentRect.left) {
-        left = analogComponentRect.left;
-        top = analogComponentRect.top;
-      } else {
-        left = weatherComponentRect.left;
-        top = weatherComponentRect.top;
-      }
-
-      return Rect.fromLTRB(left, top, right, bottom);
-    }();
+    final leftCenterLeft = analogComponentRect.left < weatherComponentRect.left ? analogComponentRect.centerLeft : weatherComponentRect.centerLeft,
+        leftBottomLeft = analogComponentRect.left < weatherComponentRect.left ? analogComponentRect.bottomLeft : weatherComponentRect.bottomLeft,
+        leftBottomCenter = analogComponentRect.bottomCenter.dx < weatherComponentRect.bottomCenter.dx ? analogComponentRect.bottomCenter : weatherComponentRect.bottomCenter,
+        leftBottomRight = analogComponentRect.right < weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
+        rightBottomLeft = analogComponentRect.bottomLeft.dx > weatherComponentRect.bottomLeft.dx ? analogComponentRect.bottomLeft : weatherComponentRect.bottomLeft,
+        rightBottomCenter = analogComponentRect.bottomCenter.dx > weatherComponentRect.bottomCenter.dx ? analogComponentRect.bottomCenter : weatherComponentRect.bottomCenter,
+        rightBottomRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
+        rightCenterRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.centerRight : weatherComponentRect.centerLeft,
+        leftCenterRightX = leftBottomRight.dx,
+        rightCenterLeftX = rightBottomLeft.dx;
 
     final canvas = context.canvas;
 
@@ -80,40 +43,40 @@ class RenderBackground extends RenderClockComponent {
     canvas.translate(offset.dx, offset.dy);
 
     // This path is supposed to represent a Bézier curve cutting the background colors.
-    // It is supposed to be dynamically animated in order to convey a relaxed feeling.
-    final startHeight = lerpDouble(leftRect.centerLeft.dy, size.height / 2, 1 / 2),
-        middleHeight = max(leftRect.bottom, rightRect.bottom),
-        endHeight = lerpDouble(rightRect.centerLeft.dy, size.height / 2, 1 / 2);
+    // It is supposed to be dynamically animated in order to convey a relaxing feeling.
+    final startHeight = lerpDouble(leftCenterLeft.dy, size.height / 2, 1 / 2),
+        middleHeight = max(analogComponentRect.bottom, weatherComponentRect.bottom),
+        endHeight = lerpDouble(rightCenterRight.dy, size.height / 2, 1 / 2);
     final curve = Path()
       ..moveTo(0, startHeight)
       ..cubicTo(
-        leftRect.centerLeft.dx,
+        leftCenterLeft.dx,
         startHeight,
-        leftRect.bottomLeft.dx,
-        leftRect.bottomLeft.dy,
-        leftRect.bottomCenter.dx,
-        leftRect.bottomCenter.dy,
+        leftBottomLeft.dx,
+        leftBottomLeft.dy,
+        leftBottomCenter.dx,
+        leftBottomCenter.dy,
       )
       ..cubicTo(
-        leftRect.bottomRight.dx,
-        leftRect.bottomRight.dy,
-        leftRect.centerRight.dx,
+        leftBottomRight.dx,
+        leftBottomRight.dy,
+        leftCenterRightX,
         middleHeight,
         size.width / 2,
         middleHeight,
       )
       ..cubicTo(
-        rightRect.centerLeft.dx,
+        rightCenterLeftX,
         middleHeight,
-        rightRect.bottomLeft.dx,
-        rightRect.bottomLeft.dy,
-        rightRect.bottomCenter.dx,
-        rightRect.bottomCenter.dy,
+        rightBottomLeft.dx,
+        rightBottomLeft.dy,
+        rightBottomCenter.dx,
+        rightBottomCenter.dy,
       )
       ..cubicTo(
-        rightRect.bottomRight.dx,
-        rightRect.bottomRight.dy,
-        rightRect.centerRight.dx,
+        rightBottomRight.dx,
+        rightBottomRight.dy,
+        rightCenterRight.dx,
         endHeight,
         size.width,
         endHeight,

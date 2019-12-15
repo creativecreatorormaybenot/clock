@@ -1,9 +1,5 @@
 ## TODO
 
-  + Use individual variables for all curve points in the background `paint` method instead of `leftRect` & `rightRect` and consider at what point those should be what.
-
-  + Take a break :)
-
   + Rotate disc instead of hand for weather dial.
 
     - However, still rotate whole component when the layout animates.

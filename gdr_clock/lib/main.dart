@@ -4,6 +4,6 @@ import 'package:flutter_clock_helper/customizer.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 void main() {
-//  timeDilation = 11.42; // todo remove
+  timeDilation = 11.42; // todo remove
   runApp(ClockCustomizer((model) => Clock(model: model)));
 }
