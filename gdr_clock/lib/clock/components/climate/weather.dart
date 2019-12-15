@@ -7,23 +7,21 @@ class Weather extends LeafRenderObjectWidget {
   final List<String> conditions;
   final double angle;
   final TextStyle textStyle;
-  final Animation<double> layoutAnimation;
 
   Weather({
     Key key,
     @required this.conditions,
     @required this.angle,
     @required this.textStyle,
-    @required this.layoutAnimation,
   })  : assert(conditions != null),
         assert(angle != null),
         assert(textStyle != null),
-        assert(layoutAnimation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderWeather(conditions: conditions, angle: angle, textStyle: textStyle, layoutAnimation: layoutAnimation);
+    return RenderWeather(
+        conditions: conditions, angle: angle, textStyle: textStyle);
   }
 
   @override
@@ -37,13 +35,10 @@ class Weather extends LeafRenderObjectWidget {
 }
 
 class RenderWeather extends RenderClockComponent {
-  final Animation<double> layoutAnimation;
-
   RenderWeather({
     this.conditions,
     this.angle,
     this.textStyle,
-    this.layoutAnimation,
   }) : super(ClockComponent.weather);
 
   List<String> conditions;
@@ -72,14 +67,14 @@ class RenderWeather extends RenderClockComponent {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    // Apply rotation as part of the CompositedClock layout animation.
-    canvas.rotate(2 * pi * -layoutAnimation.value);
-
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xff3c9aff));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
+        Paint()..color = const Color(0xff3c9aff));
 
     final divisions = conditions.length;
     for (final condition in conditions) {
-      final painter = TextPainter(text: TextSpan(text: '$condition', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+          text: TextSpan(text: '$condition', style: textStyle),
+          textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(
           canvas,

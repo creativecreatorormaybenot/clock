@@ -9,17 +9,15 @@ import 'package:gdr_clock/clock/clock.dart';
 const handBounceDuration = Duration(milliseconds: 274);
 
 class AnimatedAnalogTime extends AnimatedWidget {
-  final Animation<double> animation, layoutAnimation;
+  final Animation<double> animation;
   final ClockModel model;
 
   AnimatedAnalogTime({
     Key key,
     @required this.animation,
     @required this.model,
-    @required this.layoutAnimation,
   })  : assert(animation != null),
         assert(model != null),
-        assert(layoutAnimation != null),
         super(key: key, listenable: animation);
 
   @override
@@ -28,7 +26,6 @@ class AnimatedAnalogTime extends AnimatedWidget {
         time = DateTime.now();
 
     return AnalogTime(
-      layoutAnimation: layoutAnimation,
       textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: -pi / 2 +
           // Regular distance
@@ -91,7 +88,6 @@ class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final TextStyle textStyle;
   final int hourDivisions;
-  final Animation<double> layoutAnimation;
 
   const AnalogTime({
     Key key,
@@ -100,13 +96,11 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
-    @required this.layoutAnimation,
   })  : assert(textStyle != null),
         assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
         assert(hourDivisions != null),
-        assert(layoutAnimation != null),
         super(key: key);
 
   @override
@@ -117,13 +111,11 @@ class AnalogTime extends LeafRenderObjectWidget {
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
-      layoutAnimation: layoutAnimation,
     );
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderAnalogTime renderObject) {
+  void updateRenderObject(BuildContext context, RenderAnalogTime renderObject) {
     renderObject
       ..textStyle = textStyle
       ..secondHandAngle = secondHandAngle
@@ -135,33 +127,17 @@ class AnalogTime extends LeafRenderObjectWidget {
 }
 
 class RenderAnalogTime extends RenderClockComponent {
-  final Animation<double> layoutAnimation;
-
   RenderAnalogTime({
     this.textStyle,
     this.secondHandAngle,
     this.minuteHandAngle,
     this.hourHandAngle,
     this.hourDivisions,
-    this.layoutAnimation,
   }) : super(ClockComponent.analogTime);
 
   double secondHandAngle, minuteHandAngle, hourHandAngle;
   TextStyle textStyle;
   int hourDivisions;
-
-  @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-
-    layoutAnimation.addListener(markNeedsPaint);
-  }
-
-  @override
-  void detach() {
-    layoutAnimation.removeListener(markNeedsPaint);
-    super.detach();
-  }
 
   @override
   bool get sizedByParent => true;
@@ -183,11 +159,8 @@ class RenderAnalogTime extends RenderClockComponent {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    // Apply rotation as part of the CompositedClock layout animation.
-    canvas.rotate(2 * pi * layoutAnimation.value);
-
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
-        Paint()..color = const Color(0xffffd345));
+        Paint()..color = const Color(0xffeaffd8));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
 

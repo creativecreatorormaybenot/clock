@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
@@ -23,20 +22,9 @@ class RenderBackground extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     // Do not need to clip here because CompositedClock already clips the canvas.
 
-    final clockData = parentData as CompositedClockChildrenParentData, analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
-
-    final leftCenterLeft = analogComponentRect.left < weatherComponentRect.left ? analogComponentRect.centerLeft : weatherComponentRect.centerLeft,
-        leftBottomLeft = analogComponentRect.left < weatherComponentRect.left ? analogComponentRect.bottomLeft : weatherComponentRect.bottomLeft,
-        leftBottomCenter = analogComponentRect.bottomCenter.dx < weatherComponentRect.bottomCenter.dx ? analogComponentRect.bottomCenter : weatherComponentRect.bottomCenter,
-        leftBottomRight = analogComponentRect.right < weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
-        rightBottomLeft = analogComponentRect.bottomLeft.dx > weatherComponentRect.bottomLeft.dx ? analogComponentRect.bottomLeft : weatherComponentRect.bottomLeft,
-        rightBottomCenter = analogComponentRect.bottomCenter.dx > weatherComponentRect.bottomCenter.dx ? analogComponentRect.bottomCenter : weatherComponentRect.bottomCenter,
-        rightBottomRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.bottomRight : weatherComponentRect.bottomRight,
-        rightCenterRight = analogComponentRect.right > weatherComponentRect.right ? analogComponentRect.centerRight : weatherComponentRect.centerRight,
-        leftCenterRightX = leftBottomRight.dx,
-        rightCenterLeftX = rightBottomLeft.dx,
-        leftBottomCenterX = leftBottomCenter.dx,
-        leftBottomCenterY = rightBottomLeft.dx < leftBottomRight.dx && rightBottomLeft.dy > leftBottomRight.dy ? rightBottomLeft.dy : leftBottomRight.dy;
+    final clockData = parentData as CompositedClockChildrenParentData,
+        analogComponentRect = clockData.rectOf(ClockComponent.analogTime),
+        weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
     final canvas = context.canvas;
 
@@ -46,43 +34,32 @@ class RenderBackground extends RenderClockComponent {
 
     // This path is supposed to represent a Bézier curve cutting the background colors.
     // It is supposed to be dynamically animated in order to convey a relaxing feeling.
-    final startHeight = lerpDouble(leftCenterLeft.dy, size.height / 2, 1 / 2),
-        middleHeight = max(analogComponentRect.bottom, weatherComponentRect.bottom),
-        endHeight = lerpDouble(rightCenterRight.dy, size.height / 2, 1 / 2);
+    final startHeight = size.height / 2, endHeight = size.height / 2;
     final curve = Path()
       ..moveTo(0, startHeight)
       ..cubicTo(
-        leftCenterLeft.dx,
-        startHeight,
-        leftBottomLeft.dx,
-        leftBottomLeft.dy,
-        leftBottomCenterX,
-        leftBottomCenterY,
+        weatherComponentRect.bottomLeft.dx,
+        weatherComponentRect.bottomLeft.dy,
+        weatherComponentRect.bottomCenter.dx,
+        weatherComponentRect.bottomCenter.dy,
+        weatherComponentRect.bottomCenter.dx + weatherComponentRect.width / 5,
+        analogComponentRect.bottomCenter.dy,
       )
       ..cubicTo(
-        leftBottomRight.dx,
-        leftBottomRight.dy,
-        leftCenterRightX,
-        middleHeight,
-        lerpDouble(leftCenterRightX, rightCenterLeftX, 1 / 2),
-        middleHeight,
+        analogComponentRect.centerLeft.dx,
+        analogComponentRect.centerLeft.dy,
+        analogComponentRect.bottomLeft.dx,
+        analogComponentRect.bottomLeft.dy,
+        analogComponentRect.bottomCenter.dx,
+        analogComponentRect.bottomCenter.dy,
       )
       ..cubicTo(
-        rightCenterLeftX,
-        middleHeight,
-        rightBottomLeft.dx,
-        rightBottomLeft.dy,
-        rightBottomCenter.dx,
-        rightBottomCenter.dy,
-      )
-      ..cubicTo(
-        rightBottomRight.dx,
-        rightBottomRight.dy,
-        rightCenterRight.dx,
-        endHeight,
-        size.width,
-        endHeight,
-      );
+          analogComponentRect.bottomCenter.dx,
+          analogComponentRect.bottomCenter.dy,
+          analogComponentRect.bottomRight.dx,
+          analogComponentRect.bottomRight.dy,
+          size.width,
+          endHeight);
 
     final upperPath = Path()
       ..extendWithPath(curve, Offset.zero)
