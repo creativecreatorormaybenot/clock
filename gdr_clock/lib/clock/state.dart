@@ -91,8 +91,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Widget build(BuildContext context) => false
       ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
-      : Stack(
-        children: <Widget>[
+      : Stack( // todo remove
+          children: <Widget>[
             CompositedClock(
               layoutAnimation: layoutAnimation,
               children: <Widget>[
@@ -106,12 +106,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 AnimatedAnalogTime(layoutAnimation: layoutAnimation, animation: analogBounceController, model: model),
               ],
             ),
-          Slider(value: layoutController.value, onChanged: (value) {
-            print('_ClockState.build $value');
-            setState(() {
-              layoutController.value = value;
-            });
-          },),
+            Slider( // todo remove
+              value: layoutController.value,
+              onChanged: (value) {
+                setState(() {
+                  layoutController.value = value;
+                });
+              },
+            ),
           ],
-      );
+        );
 }

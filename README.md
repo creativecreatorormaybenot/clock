@@ -12,7 +12,9 @@
 
       * Use a single while-loop to loop over children in `performLayout` as they should have their weather condition saved as a property of their parent data.
 
-  + Create weather temperature thermometer.
+  + Create temperature thermometer.
+
+  + Redo the layout animation calculations in background using a completely different concept.
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
