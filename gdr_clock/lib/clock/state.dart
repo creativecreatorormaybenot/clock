@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 import 'package:gdr_clock/clock/components/climate/climate.dart';
+
+import 'components/climate/climate.dart';
 
 class Clock extends StatefulWidget {
   final ClockModel model;
@@ -84,11 +87,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       : CompositedClock(
           children: <Widget>[
             const Background(),
-            Weather(
-              conditions: WeatherCondition.values.map(describeEnum).toList(),
-              angle: 0,
-              textStyle: Theme.of(context).textTheme.body1,
-            ),
+            AnimatedWeather(model: model),
             AnimatedAnalogTime(animation: analogBounceController, model: model),
           ],
         );

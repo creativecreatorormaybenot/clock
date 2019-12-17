@@ -1,7 +1,26 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
+
+class AnimatedWeather extends ImplicitlyAnimatedWidget {
+  final Animation<double> animation;
+  final ClockModel model;
+
+  const AnimatedWeather({Key key,
+    @required this.animation,
+    @required this.model,
+  })  : assert(animation != null),
+        assert(model != null),
+        super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
 
 class Weather extends LeafRenderObjectWidget {
   final List<String> conditions;
@@ -67,6 +86,11 @@ class RenderWeather extends RenderClockComponent {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
+    // Save the initial rotation in order to always draw the arrow pointing straight up.
+    canvas.save();
+    // Rotate the disc by the given angle.
+    canvas.rotate(angle);
+
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
         Paint()..color = const Color(0xff3c9aff));
 
@@ -86,6 +110,9 @@ class RenderWeather extends RenderClockComponent {
 
       canvas.rotate(2 * pi / divisions);
     }
+
+    // Restore initial rotation.
+    canvas.restore();
 
     // Draw tip of the arrow pointing up.
     final h = -size.height / 3.4, s = 13.42;

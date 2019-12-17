@@ -2,7 +2,7 @@
 
   + Rotate disc instead of hand for weather dial.
 
-    - However, still rotate whole component when the layout animates.
+    - Use `ImplicitlyAnimatedWidget`.
 
   + Add some designs to the analog clock's hands.
 
@@ -33,6 +33,8 @@
     - Ball should bounce onto say the analog clock and push it down a bit (analog clock would bounce up again afterwards using elastic out), which would nicely show the gooeyness of the background.
 
   + Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
+
+    - Potentially rotate whole components because it better shows what is an individual part :)
 
   + Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
