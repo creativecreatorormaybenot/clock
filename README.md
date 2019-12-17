@@ -4,6 +4,8 @@
 
     - However, still rotate whole component when the layout animates.
 
+  + Add some designs to the analog clock's hands.
+
   + Create icons for the different weather conditions.
 
     - Pass `WeatherCondition` instead of strings.
