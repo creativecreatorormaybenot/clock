@@ -1,9 +1,5 @@
 ## TODO
 
-  + Rotate disc instead of hand for weather dial.
-
-    - Use `ImplicitlyAnimatedWidget`.
-
   + Add some designs to the analog clock's hands.
 
   + Create icons for the different weather conditions.

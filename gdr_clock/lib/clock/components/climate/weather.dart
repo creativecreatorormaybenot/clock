@@ -1,24 +1,49 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock/clock.dart';
 
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
-  final Animation<double> animation;
   final ClockModel model;
 
-  const AnimatedWeather({Key key,
-    @required this.animation,
-    @required this.model,
-  })  : assert(animation != null),
-        assert(model != null),
-        super(key: key, listenable: animation);
+  const AnimatedWeather({
+    Key key,
+    Curve curve = const ElasticInOutCurve(.6),
+    Duration duration = const Duration(milliseconds: 942),
+    this.model,
+  }) : super(key: key, curve: curve, duration: duration);
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+    return _AnimatedWeatherState();
+  }
+}
+
+class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
+  Tween<double> _angle;
+
+  double get _angleFromModel =>
+      2 *
+      pi /
+      WeatherCondition.values.length *
+      -WeatherCondition.values.indexOf(widget.model.weatherCondition);
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _angle = visitor(
+        _angle, _angleFromModel, (value) => Tween<double>(begin: value));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Weather(
+      conditions: WeatherCondition.values.map(describeEnum).toList(),
+      angle: _angle?.evaluate(animation) ?? 0,
+      textStyle: Theme.of(context).textTheme.body1,
+    );
   }
 }
 
@@ -106,7 +131,7 @@ class RenderWeather extends RenderClockComponent {
               -painter.width / 2,
               -size.height / 2 +
                   // Push the text inwards a bit.
-                  9.6));
+                  32.79));
 
       canvas.rotate(2 * pi / divisions);
     }
