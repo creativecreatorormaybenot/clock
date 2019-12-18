@@ -40,8 +40,7 @@ class CompositedClockChildrenParentData
   void _addRect(RenderBox child) {
     final childParentData =
         child.parentData as CompositedClockChildrenParentData;
-    _rects[childParentData.component] = Rect.fromLTWH(childParentData.offset.dx,
-        childParentData.offset.dy, child.size.width, child.size.height);
+    _rects[childParentData.component] = childParentData.offset & child.size;
   }
 
   Rect rectOf(ClockComponent component) {
@@ -160,7 +159,7 @@ class RenderCompositedClock extends RenderBox
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
     context.pushClipRect(
-        needsCompositing, offset, Rect.fromLTWH(0, 0, size.width, size.height),
+        needsCompositing, offset, Offset.zero & size,
         (context, offset) {
       //<editor-fold desc="Setup">
       final children = <ClockComponent, RenderBox>{},
