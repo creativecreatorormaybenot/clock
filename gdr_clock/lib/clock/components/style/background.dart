@@ -39,7 +39,7 @@ class RenderBackground extends RenderClockComponent {
     const margin = 13.0;
 
     for (final rect in componentAreaInGoo) {
-      canvas.drawRect(rect, Paint()..color = Color(0xff000000));
+      canvas.drawRect(rect, Paint()..color = const Color(0xff000000));
       cut
         ..lineTo(
           rect.left - margin,
@@ -64,8 +64,6 @@ class RenderBackground extends RenderClockComponent {
     }
 
     cut.lineTo(size.width, gooArea.top);
-
-    canvas.drawRect(gooArea, Paint()..color = const Color(0xffffa3f4));
 
 //    final upperPath = Path()
 //      ..extendWithPath(cut, Offset.zero)
