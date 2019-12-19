@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gdr_clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
@@ -29,27 +30,21 @@ enum ClockComponent {
 }
 
 class CompositedClockChildrenParentData
-    extends ContainerBoxParentData<RenderBox> {
-  ClockComponent component;
-
-  /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
-  /// If a child is passed to [CompositedClock] that does not update this to `true`, an error should be thrown.
-  bool valid;
-
+    extends CompositionChildrenParentData {
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
     final childParentData =
         child.parentData as CompositedClockChildrenParentData;
-    _rects[childParentData.component] = childParentData.offset & child.size;
+    _rects[childParentData.child] = childParentData.offset & child.size;
   }
 
   Rect rectOf(ClockComponent component) {
-    assert(this.component == ClockComponent.background,
+    assert(child == ClockComponent.background,
         'Only the background component can access sizes and offsets of the other children.');
     final rect = _rects[component];
     assert(rect != null,
-        'No $Rect was provided for $component. If the rect of this child should be accessible from ${this.component}, this needs to be changed in $RenderCompositedClock.');
+        'No $Rect was provided for $component. If the rect of this child should be accessible from ${this.child}, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 }
@@ -96,11 +91,11 @@ class RenderCompositedClock extends RenderBox
     while (child != null) {
       final childParentData =
               child.parentData as CompositedClockChildrenParentData,
-          component = childParentData.component;
+          component = childParentData.child;
 
-      if (!childParentData.valid) throw ClockCompositionError(child: child);
+      if (!childParentData.valid) throw CompositionError(child: child);
       if (children.containsKey(component)) {
-        throw ClockCompositionError(
+        throw CompositionError(
             message:
                 'The children passed to CompositedClock contain the component type ${describeEnum(component)} more than once. '
                 'Every component can only be passed exactly once.');
@@ -116,7 +111,7 @@ class RenderCompositedClock extends RenderBox
         .where((component) => !children.containsKey(component));
 
     if (missingComponents.isNotEmpty) {
-      throw ClockCompositionError(
+      throw CompositionError(
           message:
               'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
               'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
@@ -184,7 +179,7 @@ class RenderCompositedClock extends RenderBox
       while (child != null) {
         final childParentData =
                 child.parentData as CompositedClockChildrenParentData,
-            component = childParentData.component;
+            component = childParentData.child;
 
         children[component] = child;
         parentData[component] = childParentData;
@@ -225,25 +220,6 @@ class RenderCompositedClock extends RenderBox
   }
 }
 
-class ClockCompositionError extends Error {
-  /// A phrase indicating why the error is being thrown. The message is followed by the [stackTrace].
-  /// This will not be used if [child] is supplied.
-  final String message;
-
-  /// Indicates that the child does not implement [CompositedClockChildrenParentData] correctly.
-  final RenderBox child;
-
-  ClockCompositionError({
-    this.child,
-    this.message,
-  }) : assert(child != null || message != null);
-
-  @override
-  String toString() =>
-      '${message ?? 'A child was passed to CompositedClock which does not set up its RenderObject.parentData '
-          'as CompositedClockChildrenParentData correctly (setting CompositedClockChildrenParentData.valid to `true`).'}\n$stackTrace.';
-}
-
 /// Takes care of validating [RenderObject]s passed to [CompositedClock] and assigning a [ClockComponent].
 /// It also provides easy access to the [CompositedClockChildrenParentData] of this [RenderObject] via [compositedClockData].
 abstract class RenderClockComponent extends RenderBox {
@@ -257,7 +233,7 @@ abstract class RenderClockComponent extends RenderBox {
       parentData as CompositedClockChildrenParentData;
 
   /// Takes care of validating the RenderObject for when it is passed to [CompositedClock]
-  /// and sets [CompositedClockChildrenParentData.component] to the appropriate [ClockComponent].
+  /// and sets [CompositedClockChildrenParentData.child] to the appropriate [ClockComponent].
   /// Thus, this is annotated with [mustCallSuper]. Alternatively, you could ignore this and
   /// implement the validation and setting the component in the sub class, but the whole point of
   /// [RenderClockComponent] is to take care of this step, so you should likely extend [RenderBox] instead.
@@ -267,6 +243,6 @@ abstract class RenderClockComponent extends RenderBox {
     super.attach(owner);
 
     compositedClockData.valid = true;
-    compositedClockData.component = component;
+    compositedClockData.child = component;
   }
 }

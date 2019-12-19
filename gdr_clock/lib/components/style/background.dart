@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-import 'package:gdr_clock/clock/clock.dart';
+import 'package:gdr_clock/clock.dart';
 
 class Background extends LeafRenderObjectWidget {
   const Background({Key key}) : super(key: key);
@@ -44,6 +44,11 @@ class RenderBackground extends RenderClockComponent {
     final cut = Path()..moveTo(0, gooArea.top);
 
     componentsInGoo.sort((a, b) => a.left.compareTo(b.left));
+
+    // Interpolation between paths is not currently possible (see https://github.com/flutter/flutter/issues/12043),
+    // hence, my solution is simply merging the rects if they overlap, which does not produce a visually pleasing
+    // effect, especially because of the harsh transition, but it is better than having points on the curve that
+    // do not work together, causing some parts to wrap back and forth.
     final rects = [];
     Rect previous;
     for (var i = 0; i <= componentsInGoo.length; i++) {

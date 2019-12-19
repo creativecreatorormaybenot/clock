@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:gdr_clock/clock/clock.dart';
-
-import 'components/climate/climate.dart';
+import 'package:gdr_clock/clock.dart';
 
 class Clock extends StatefulWidget {
   final ClockModel model;

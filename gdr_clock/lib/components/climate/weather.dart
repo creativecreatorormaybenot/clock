@@ -2,9 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:gdr_clock/clock/clock.dart';
+import 'package:gdr_clock/clock.dart';
+
+import '../../clock.dart';
 
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
   final ClockModel model;
@@ -47,7 +50,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   }
 }
 
-class Weather extends LeafRenderObjectWidget {
+class Weather extends MultiChildRenderObjectWidget {
   final List<String> conditions;
   final double angle;
   final TextStyle textStyle;
@@ -60,7 +63,7 @@ class Weather extends LeafRenderObjectWidget {
   })  : assert(conditions != null),
         assert(angle != null),
         assert(textStyle != null),
-        super(key: key);
+        super(key: key, children: );
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -78,7 +81,11 @@ class Weather extends LeafRenderObjectWidget {
   }
 }
 
-class RenderWeather extends RenderClockComponent {
+class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {
+
+}
+
+class RenderWeather extends RenderClockComponent  {
   RenderWeather({
     this.conditions,
     this.angle,
@@ -164,4 +171,17 @@ class RenderWeather extends RenderClockComponent {
 
     canvas.restore();
   }
+}
+
+class WeatherIcon extends LeafRenderObjectWidget {
+  WeatherIcon({Key key}) : super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderWeatherIcon();
+  }
+}
+
+class RenderWeatherIcon extends RenderBox {
+
 }
