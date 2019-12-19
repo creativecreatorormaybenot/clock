@@ -222,7 +222,7 @@ class RenderAnalogTime extends RenderClockComponent {
 
     // This prevents polluting the paint scope with variables.
     () {
-      final sh = size.width / 4.7, eh = size.width / 2.8, h = size.width / 2.1, w = size.width / 121, lw = size.width / 31;
+      final sh = size.width / 4.7, eh = size.width / 2.8, h = size.width / 2.1, w = size.width / 121, lw = size.width / 42;
 
       canvas.drawPath(
           Path()

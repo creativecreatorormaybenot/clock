@@ -22,9 +22,7 @@ class RenderBackground extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     // Do not need to clip here because CompositedClock already clips the canvas.
 
-    final clockData = parentData as CompositedClockChildrenParentData,
-        analogComponentRect = clockData.rectOf(ClockComponent.analogTime),
-        weatherComponentRect = clockData.rectOf(ClockComponent.weather);
+    final clockData = parentData as CompositedClockChildrenParentData, analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
 
     final canvas = context.canvas;
 
@@ -32,34 +30,10 @@ class RenderBackground extends RenderClockComponent {
     // Translate to upper left corner of the clock's area.
     canvas.translate(offset.dx, offset.dy);
 
-    // This path is supposed to represent a Bézier curve cutting the background colors.
-    // It is supposed to be dynamically animated in order to convey a relaxing feeling.
-    final startHeight = size.height / 2, endHeight = size.height / 2;
+    // This path is supposed to represent Bézier curves cutting the background colors.
     final curve = Path()
-      ..moveTo(0, startHeight)
-      ..cubicTo(
-        weatherComponentRect.bottomLeft.dx,
-        weatherComponentRect.bottomLeft.dy,
-        weatherComponentRect.bottomCenter.dx,
-        weatherComponentRect.bottomCenter.dy,
-        weatherComponentRect.bottomCenter.dx + weatherComponentRect.width / 5,
-        analogComponentRect.bottomCenter.dy,
-      )
-      ..cubicTo(
-        analogComponentRect.centerLeft.dx,
-        analogComponentRect.centerLeft.dy,
-        analogComponentRect.bottomLeft.dx,
-        analogComponentRect.bottomLeft.dy,
-        analogComponentRect.bottomCenter.dx,
-        analogComponentRect.bottomCenter.dy,
-      )
-      ..cubicTo(
-          analogComponentRect.bottomCenter.dx,
-          analogComponentRect.bottomCenter.dy,
-          analogComponentRect.bottomRight.dx,
-          analogComponentRect.bottomRight.dy,
-          size.width,
-          endHeight);
+      ..moveTo(0, size.height / 2)
+      ..lineTo(size.width, size.height / 2);
 
     final upperPath = Path()
       ..extendWithPath(curve, Offset.zero)
