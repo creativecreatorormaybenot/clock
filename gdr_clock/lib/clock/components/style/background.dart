@@ -22,7 +22,10 @@ class RenderBackground extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     // Do not need to clip here because CompositedClock already clips the canvas.
 
-    final clockData = parentData as CompositedClockChildrenParentData, analogComponentRect = clockData.rectOf(ClockComponent.analogTime), weatherComponentRect = clockData.rectOf(ClockComponent.weather);
+    final clockData = parentData as CompositedClockChildrenParentData;
+
+    final gooArea = Offset(0, size.height / 2) & size / 2;
+    final componentAreaInGoo = [clockData.rectOf(ClockComponent.analogTime), clockData.rectOf(ClockComponent.weather)].map((rect) => rect.intersect(gooArea));
 
     final canvas = context.canvas;
 
@@ -30,34 +33,61 @@ class RenderBackground extends RenderClockComponent {
     // Translate to upper left corner of the clock's area.
     canvas.translate(offset.dx, offset.dy);
 
-    // This path is supposed to represent Bézier curves cutting the background colors.
-    final curve = Path()
-      ..moveTo(0, size.height / 2)
-      ..lineTo(size.width, size.height / 2);
+    // This path is supposed to represent the goo being indented by the components, which is achieved by adding Bézier curves.
+    final cut = Path()..moveTo(0, size.height / 2);
 
-    final upperPath = Path()
-      ..extendWithPath(curve, Offset.zero)
-      // Line to top right, then top left, and then back to start to fill whole upper area.
-      ..lineTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..close();
-    canvas.drawPath(
-        upperPath,
-        Paint()
-          ..color = const Color(0xffffe312)
-          ..style = PaintingStyle.fill);
+    const margin = 13.0;
 
-    final lowerPath = Path()
-      ..extendWithPath(curve, Offset.zero)
-      // Line to bottom right, then bottom left, and then back to start to fill whole lower area.
-      ..lineTo(size.width, size.height)
-      ..lineTo(0, size.height)
-      ..close();
-    canvas.drawPath(
-        lowerPath,
-        Paint()
-          ..color = const Color(0xffff4683)
-          ..style = PaintingStyle.fill);
+    for (final rect in componentAreaInGoo) {
+      canvas.drawRect(rect, Paint()..color = Color(0xff000000));
+      cut
+        ..lineTo(
+          rect.left - margin,
+          gooArea.top,
+        )
+        ..cubicTo(
+          rect.topLeft.dx,
+          rect.topLeft.dy,
+          rect.bottomLeft.dx,
+          rect.bottomLeft.dy,
+          rect.bottomCenter.dx,
+          rect.bottomCenter.dy,
+        )
+        ..cubicTo(
+          rect.bottomRight.dx,
+          rect.bottomRight.dy,
+          rect.topRight.dx,
+          rect.topRight.dy,
+          rect.right + margin,
+          gooArea.top,
+        );
+    }
+
+    cut.lineTo(size.width, gooArea.top);
+
+//    final upperPath = Path()
+//      ..extendWithPath(cut, Offset.zero)
+//      // Line to top right, then top left, and then back to start to fill whole upper area.
+//      ..lineTo(size.width, 0)
+//      ..lineTo(0, 0)
+//      ..close();
+//    canvas.drawPath(
+//        upperPath,
+//        Paint()
+//          ..color = const Color(0xffffe312)
+//          ..style = PaintingStyle.fill);
+//
+//    final lowerPath = Path()
+//      ..extendWithPath(cut, Offset.zero)
+//      // Line to bottom right, then bottom left, and then back to start to fill whole lower area.
+//      ..lineTo(size.width, size.height)
+//      ..lineTo(0, size.height)
+//      ..close();
+//    canvas.drawPath(
+//        lowerPath,
+//        Paint()
+//          ..color = const Color(0xffff4683)
+//          ..style = PaintingStyle.fill);
 
     canvas.restore();
   }
