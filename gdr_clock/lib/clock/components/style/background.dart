@@ -24,7 +24,7 @@ class RenderBackground extends RenderClockComponent {
 
     final clockData = parentData as CompositedClockChildrenParentData;
 
-    final gooArea = Offset(0, size.height / 2) & size / 2;
+    final gooArea = Rect.fromLTWH(0, size.height / 2, size.width, size.height / 2);
     final componentAreaInGoo = [clockData.rectOf(ClockComponent.analogTime), clockData.rectOf(ClockComponent.weather)].map((rect) => rect.intersect(gooArea));
 
     final canvas = context.canvas;
@@ -64,6 +64,8 @@ class RenderBackground extends RenderClockComponent {
     }
 
     cut.lineTo(size.width, gooArea.top);
+
+    canvas.drawRect(gooArea, Paint()..color = const Color(0xffffa3f4));
 
 //    final upperPath = Path()
 //      ..extendWithPath(cut, Offset.zero)
