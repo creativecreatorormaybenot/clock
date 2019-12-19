@@ -33,8 +33,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController =
-        AnimationController(vsync: this, duration: handBounceDuration);
+    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
 
     widget.model.addListener(modelChanged);
 
@@ -70,17 +69,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     analogBounceController.forward(from: 0);
 
     final time = DateTime.now();
-    timer = Timer(
-        Duration(
-            microseconds:
-                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
-        update);
+    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
   }
 
   @override
   Widget build(BuildContext context) => false
-      ? Text(
-          '${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
+      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
           '${model.is24HourFormat}, ${model.highString}, ${model.high}')
       : CompositedClock(
           children: <Widget>[

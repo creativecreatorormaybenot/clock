@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -64,6 +65,20 @@ class RenderCompositedClock extends RenderBox
     if (child.parentData is! CompositedClockChildrenParentData) {
       child.parentData = CompositedClockChildrenParentData()..valid = false;
     }
+  }
+
+  Offset hitPosition;
+
+  @override
+  bool hitTestSelf(Offset position) {
+    return true;
+  }
+
+  @override
+  void handleEvent(PointerEvent event, HitTestEntry entry) {
+    hitPosition = globalToLocal(event.position);
+    markNeedsLayout();
+    super.handleEvent(event, entry);
   }
 
   @override
@@ -133,8 +148,8 @@ class RenderCompositedClock extends RenderBox
       parentUsesSize: true,
     );
     analogTimeData.offset = Offset(
-      size.width / 2 - analogTime.size.width / 2,
-      size.height / 2 - analogTime.size.height / 3,
+      (hitPosition?.dx ?? size.width / 2) - analogTime.size.width / 2,
+      (hitPosition?.dy ?? size.height / 2) - analogTime.size.height / 2, // todo /3 and remove hitPosition
     );
     provideRect(analogTime);
 
