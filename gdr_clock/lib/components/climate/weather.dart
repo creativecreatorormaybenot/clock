@@ -101,6 +101,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
   double _radius;
 
+  List<WeatherCondition> get conditions => children;
+
   @override
   void performLayout() {
     super.performLayout();
@@ -109,7 +111,45 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     _radius = size.width / 2;
 
-    // todo layout icons
+    var angle = 0.0;
+    for (final condition in conditions) {
+      final child = layoutChildren[condition], childParentData = layoutParentData[condition];
+
+      const indentFactor = .16;
+
+      final point = (Offset.zero & size).center + Offset.fromDirection(angle, _radius * (1 - indentFactor));
+
+      // Create a rect to include the area a rotated box would need in the circle in a rectangle.
+      // For this I take the intersections of a line rotated by the specific angle starting at a point along the circle indented by a bit with the circle and include these in the rect.
+      // I am bad at explaining this, but it should be obvious what needs to be done.
+      var rectangularArea = Rect.fromCenter(center: point, width: 0, height: 0);
+
+      // This is -90 degrees plus the angle of the point because the line needs to be perpendicular to a line from the center to the point. Some easy trigonometry will tell you that this is true.
+      final lineAngle = -pi / 2 + angle;
+
+      print('RenderWeather.performLayout $point ${Offset.fromDirection(
+        lineAngle,
+        // The radius fits as the distance because it will be long enough no matter where the point is located inside of the circle.
+        _radius,
+      )}');
+
+      rectangularArea = rectangularArea
+        .expandToIncludePoint(Offset.fromDirection(
+          lineAngle,
+          // The radius fits as the distance because it will be long enough no matter where the point is located inside of the circle.
+          _radius,
+        ))
+        .expandToIncludePoint(Offset.fromDirection(
+          // This simply gives the angle in the other direction for the intersection on the other side.
+          pi / 2 - lineAngle,
+          _radius,
+        ));
+
+      child.layout(BoxConstraints.tight(rectangularArea.size), parentUsesSize: true);
+      childParentData.offset = rectangularArea.topLeft;
+
+      angle += 2 * pi / conditions.length;
+    }
   }
 
   static const arrowColor = Color(0xffffddbb);
@@ -200,4 +240,17 @@ class RenderWeatherIcon extends RenderCompositionChild {
   }) : super(condition);
 
   WeatherCondition get condition => childType;
+
+  @override
+  bool get sizedByParent => true;
+
+  @override
+  void performResize() {
+    size = constraints.biggest;
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    context.canvas.drawRect(offset & size, Paint());
+  }
 }
