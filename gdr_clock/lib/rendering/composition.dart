@@ -1,17 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// [C] is intended to be an enum that indicates which child this parent data belongs to.
-class CompositionChildrenParentData<C> extends ContainerBoxParentData<RenderBox> {
-  C child;
+class CompositionChildrenParentData<C>
+    extends ContainerBoxParentData<RenderBox> {
+  C childType;
 
   /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
   /// If a child is passed to [CompositedClock] that does not update this to `true`, an error should be thrown.
   bool valid;
 }
 
+/// [RenderObject] for [MultiChildRenderObjectWidget]s that are supposed to layout a specific set of children and all of these only exactly once.
+///
 /// [C] is intended to be an enum.
-abstract class RenderComposition<C, D extends CompositionChildrenParentData> extends RenderBox with ContainerRenderObjectMixin<RenderBox, D>, RenderBoxContainerDefaultsMixin<RenderBox, D> {
+abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>>
+    extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, D>,
+        RenderBoxContainerDefaultsMixin<RenderBox, D> {
+  /// All the enum entries for [C] should be passed as [children]. This can be achieved by using `enum.values`.
+  final List<C> children;
+
+  RenderComposition(this.children);
+
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! D) {
@@ -24,39 +37,43 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
     return defaultHitTestChildren(result, position: position);
   }
 
-  Map<C, RenderBox> _layoutChildren;
-  Map<C, D> _layoutParentData;
+  Map<C, RenderBox> layoutChildren;
+  Map<C, D> layoutParentData;
 
-  /// Sets up [_layoutChildren] and [_layoutParentData], so this should be called at the start of [performLayout] in subclasses.
+  /// Sets up [layoutChildren] and [layoutParentData], so this should be called at the start of [performLayout] in subclasses.
   @override
   @mustCallSuper
   void performLayout() {
-    final children = <ClockComponent, RenderBox>{}, parentData = <ClockComponent, CompositedClockChildrenParentData>{};
+    final _layoutChildren = <C, RenderBox>{}, _layoutParentData = <C, D>{};
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as CompositedClockChildrenParentData, component = childParentData.child;
+      final childParentData = child.parentData as D,
+          type = childParentData.childType;
 
       if (!childParentData.valid) throw CompositionError(child: child);
-      if (children.containsKey(component)) {
+      if (_layoutChildren.containsKey(type)) {
         throw CompositionError(
-            message: 'The children passed to CompositedClock contain the component type ${describeEnum(component)} more than once. '
-                'Every component can only be passed exactly once.');
+            message:
+                'The children passed to $RenderComposition contain the child type ${describeEnum(type)} more than once. '
+                'Every child type can only be passed exactly once.');
       }
 
-      children[component] = child;
-      parentData[component] = childParentData;
+      _layoutChildren[type] = child;
+      _layoutParentData[type] = childParentData;
 
       child = childParentData.nextSibling;
     }
 
-    final missingComponents = ClockComponent.values.where((component) => !children.containsKey(component));
+    final missingComponents =
+        children.where((child) => !_layoutChildren.containsKey(child));
 
     if (missingComponents.isNotEmpty) {
       throw CompositionError(
-          message: 'The children passed to CompositedClock do not cover every component of ${ClockComponent.values}. '
-              'You need to pass every component exactly once and specify the component type correctly using CompositedClockChildrenParentData.\n'
-              'Missing components are $missingComponents.');
+          message:
+              'The children passed to $RenderComposition do not cover every child type of $children. '
+              'You need to pass every child type exactly once and specify the child type correctly using $CompositionChildrenParentData.\n'
+              'Missing children are $missingComponents.');
     }
 
     // This should prevent accidental use of child.
@@ -64,7 +81,7 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
     //</editor-fold>
   }
 
-  Function(D child) paintChild;
+  Function(C child) paintChild;
 
   /// Sets up [paintChild] for all children. Hence, this should be called at the start of the [paint] function of subclasses.
   @override
@@ -74,7 +91,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as D, component = childParentData.child;
+      final childParentData = child.parentData as D,
+          component = childParentData.childType;
 
       children[component] = child;
       parentData[component] = childParentData;
@@ -82,7 +100,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
       child = childParentData.nextSibling;
     }
 
-    paintChild = (D child) => context.paintChild(children[child], parentData[child].offset + offset);
+    paintChild = (C child) =>
+        context.paintChild(children[child], parentData[child].offset + offset);
   }
 
   @override
@@ -92,8 +111,12 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
       if (debugPaintSizeEnabled) {
         final painter = TextPainter(
             text: const TextSpan(
-                text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
-                style: TextStyle(fontSize: 42, color: Color(0xffff3456), backgroundColor: Color(0xffffffff))),
+                text:
+                    'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
+                style: TextStyle(
+                    fontSize: 42,
+                    color: Color(0xffff3456),
+                    backgroundColor: Color(0xffffffff))),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         painter.layout(maxWidth: size.width);
@@ -104,20 +127,20 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData> ext
   }
 }
 
-/// Takes care of validating [RenderObject]s passed to [CompositedClock] and assigning a [ClockComponent].
-/// It also provides easy access to the [CompositedClockChildrenParentData] of this [RenderObject] via [compositedClockData].
-abstract class RenderCompositionChild extends RenderBox { // todo
-  final ClockComponent component;
+/// Takes care of validating [RenderObject]s passed to [RenderComposition] and assigning an enum value of type [C].
+/// It also provides easy access to the [CompositionChildrenParentData] of this [RenderObject] via [compositionData].
+abstract class RenderCompositionChild<C,
+    D extends CompositionChildrenParentData<C>> extends RenderBox {
+  final C type;
 
-  RenderClockComponent(
-      this.component,
-      ) : assert(component != null);
+  RenderCompositionChild(
+    this.type,
+  ) : assert(type != null);
 
-  CompositedClockChildrenParentData get compositedClockData =>
-      parentData as CompositedClockChildrenParentData;
+  D get compositionData => parentData as D;
 
   /// Takes care of validating the RenderObject for when it is passed to [CompositedClock]
-  /// and sets [CompositedClockChildrenParentData.child] to the appropriate [ClockComponent].
+  /// and sets [CompositedClockChildrenParentData.childType] to the appropriate [ClockComponent].
   /// Thus, this is annotated with [mustCallSuper]. Alternatively, you could ignore this and
   /// implement the validation and setting the component in the sub class, but the whole point of
   /// [RenderClockComponent] is to take care of this step, so you should likely extend [RenderBox] instead.
@@ -126,12 +149,13 @@ abstract class RenderCompositionChild extends RenderBox { // todo
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    compositedClockData.valid = true;
-    compositedClockData.child = component;
+    compositionData.valid = true;
+    compositionData.childType = type;
   }
 }
 
-class CompositionError<P extends MultiChildRenderObjectWidget, D extends ContainerBoxParentData> extends Error {
+class CompositionError<P extends MultiChildRenderObjectWidget,
+    D extends ContainerBoxParentData> extends Error {
   /// A phrase indicating why the error is being thrown. The message is followed by the [stackTrace].
   /// This will not be used if [child] is supplied.
   final String message;
@@ -145,6 +169,7 @@ class CompositionError<P extends MultiChildRenderObjectWidget, D extends Contain
   }) : assert(child != null || message != null);
 
   @override
-  String toString() => '${message ?? 'A child was passed to $P which does not set up its $RenderObject.parentData '
-      'as $D correctly (setting $D.valid to `true`).'}\n$stackTrace.';
+  String toString() =>
+      '${message ?? 'A child was passed to $P which does not set up its $RenderObject.parentData '
+          'as $D correctly (setting $D.valid to `true`).'}\n$stackTrace.';
 }

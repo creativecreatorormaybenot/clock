@@ -7,8 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
 
-import '../../clock.dart';
-
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
   final ClockModel model;
 
@@ -50,7 +48,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   }
 }
 
-class Weather extends MultiChildRenderObjectWidget {
+class Weather extends LeafRenderObjectWidget {
   final List<String> conditions;
   final double angle;
   final TextStyle textStyle;
@@ -63,7 +61,7 @@ class Weather extends MultiChildRenderObjectWidget {
   })  : assert(conditions != null),
         assert(angle != null),
         assert(textStyle != null),
-        super(key: key, children: );
+        super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -81,16 +79,15 @@ class Weather extends MultiChildRenderObjectWidget {
   }
 }
 
-class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {
+class WeatherChildrenParentData
+    extends CompositionChildrenParentData<WeatherCondition> {}
 
-}
-
-class RenderWeather extends RenderClockComponent  {
+class RenderWeather extends RenderBox {
   RenderWeather({
     this.conditions,
     this.angle,
     this.textStyle,
-  }) : super(ClockComponent.weather);
+  });
 
   List<String> conditions;
   double angle;
@@ -182,6 +179,4 @@ class WeatherIcon extends LeafRenderObjectWidget {
   }
 }
 
-class RenderWeatherIcon extends RenderBox {
-
-}
+class RenderWeatherIcon extends RenderBox {}

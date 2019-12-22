@@ -23,7 +23,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value),
+        time = DateTime.now();
 
     return AnalogTime(
       textStyle: Theme.of(context).textTheme.display1,
@@ -40,7 +41,10 @@ class AnimatedAnalogTime extends AnimatedWidget {
           // Angle equal to 0 starts on the right side and not on the top.
           -pi / 2 +
               // Distance for the hour.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+              pi *
+                  2 /
+                  (model.is24HourFormat ? 24 : 12) *
+                  (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
@@ -156,7 +160,8 @@ class RenderAnalogTime extends RenderClockComponent {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xffeaffd8));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
+        Paint()..color = const Color(0xffeaffd8));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
 
@@ -166,7 +171,10 @@ class RenderAnalogTime extends RenderClockComponent {
       if (n % (smallDivisions / largeDivisions) != 0) {
         final height = 8.3;
         canvas.drawRect(
-            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+            Rect.fromCenter(
+                center: Offset(0, (-size.width + height) / 2),
+                width: 1.3,
+                height: height),
             Paint()
               ..color = const Color(0xff000000)
               ..blendMode = BlendMode.darken);
@@ -179,12 +187,17 @@ class RenderAnalogTime extends RenderClockComponent {
     for (var n = largeDivisions; n > 0; n--) {
       final height = 4.2;
       canvas.drawRect(
-          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 3.1, height: height),
+          Rect.fromCenter(
+              center: Offset(0, (-size.width + height) / 2),
+              width: 3.1,
+              height: height),
           Paint()
             ..color = const Color(0xff000000)
             ..blendMode = BlendMode.darken);
 
-      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+          text: TextSpan(text: '$n', style: textStyle),
+          textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(
           canvas,
@@ -222,7 +235,11 @@ class RenderAnalogTime extends RenderClockComponent {
 
     // This prevents polluting the paint scope with variables.
     () {
-      final sh = size.width / 4.7, eh = size.width / 2.8, h = size.width / 2.1, w = size.width / 121, lw = size.width / 42;
+      final sh = size.width / 4.7,
+          eh = size.width / 2.8,
+          h = size.width / 2.1,
+          w = size.width / 121,
+          lw = size.width / 42;
 
       canvas.drawPath(
           Path()
