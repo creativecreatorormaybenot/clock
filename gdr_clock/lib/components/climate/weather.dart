@@ -70,7 +70,12 @@ class Weather extends MultiChildRenderObjectWidget {
   }
 }
 
-class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {}
+class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {
+  /// Indicates where the icon has its center point, i.e. where the hand points to.
+  Offset center;
+
+  double rotationAngle;
+}
 
 class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenParentData, Weather> {
   RenderWeather({
@@ -117,36 +122,12 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
       const indentFactor = .16;
 
-      final point = (Offset.zero & size).center + Offset.fromDirection(angle, _radius * (1 - indentFactor));
-
-      // Create a rect to include the area a rotated box would need in the circle in a rectangle.
-      // For this I take the intersections of a line rotated by the specific angle starting at a point along the circle indented by a bit with the circle and include these in the rect.
-      // I am bad at explaining this, but it should be obvious what needs to be done.
-      var rectangularArea = Rect.fromCenter(center: point, width: 0, height: 0);
-
-      // This is -90 degrees plus the angle of the point because the line needs to be perpendicular to a line from the center to the point. Some easy trigonometry will tell you that this is true.
-      final lineAngle = -pi / 2 + angle;
-
-      print('RenderWeather.performLayout $point ${Offset.fromDirection(
-        lineAngle,
-        // The radius fits as the distance because it will be long enough no matter where the point is located inside of the circle.
-        _radius,
-      )}');
-
-      rectangularArea = rectangularArea
-        .expandToIncludePoint(Offset.fromDirection(
-          lineAngle,
-          // The radius fits as the distance because it will be long enough no matter where the point is located inside of the circle.
-          _radius,
-        ))
-        .expandToIncludePoint(Offset.fromDirection(
-          // This simply gives the angle in the other direction for the intersection on the other side.
-          pi / 2 - lineAngle,
-          _radius,
-        ));
-
-      child.layout(BoxConstraints.tight(rectangularArea.size), parentUsesSize: true);
-      childParentData.offset = rectangularArea.topLeft;
+      // Give the icons the full area and make them position themselves correctly and not paint over other children in their paint method.
+      childParentData
+        ..offset = Offset.zero
+        ..center = (Offset.zero & size).center + Offset.fromDirection(angle, _radius * (1 - indentFactor))
+        ..rotationAngle = angle;
+      child.layout(BoxConstraints.tight(size), parentUsesSize: false);
 
       angle += 2 * pi / conditions.length;
     }
@@ -234,7 +215,7 @@ class WeatherIcon extends LeafRenderObjectWidget {
   }
 }
 
-class RenderWeatherIcon extends RenderCompositionChild {
+class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
   RenderWeatherIcon({
     WeatherCondition condition,
   }) : super(condition);
@@ -251,6 +232,57 @@ class RenderWeatherIcon extends RenderCompositionChild {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    context.canvas.drawRect(offset & size, Paint());
+    // Clip the area of the parent (weather circle).
+    context.pushClipPath(needsCompositing, offset, offset & size, Path()..addOval(Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: size.width / 2)), (context, offset) {
+      // Position and rotate the canvas according to the values stored in the composition data.
+      context.pushTransform(needsCompositing, offset, Matrix4.translationValues(compositionData.center.dx, compositionData.center.dy, 0)..rotateZ(compositionData.rotationAngle), paintIcon);
+    });
   }
+
+  void paintIcon(PaintingContext context, Offset offset) {
+    final canvas = context.canvas;
+
+    switch (condition) {
+      case WeatherCondition.cloudy:
+        paintCloudy(canvas);
+        break;
+      case WeatherCondition.foggy:
+        paintFoggy(canvas);
+        break;
+      case WeatherCondition.rainy:
+        paintRainy(canvas);
+        break;
+      case WeatherCondition.snowy:
+        paintSnowy(canvas);
+        break;
+      case WeatherCondition.sunny:
+        paintSunny(canvas);
+        break;
+      case WeatherCondition.thunderstorm:
+        paintThunderstorm(canvas);
+        break;
+      case WeatherCondition.windy:
+        paintWindy(canvas);
+        break;
+    }
+  }
+
+  void paintCloudy(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
+
+  void paintFoggy(Canvas canvas) {
+    // Test clipping.
+    canvas.drawPaint(Paint()..color = const Color(0xffffa597));
+  }
+
+  void paintRainy(Canvas canvas) {}
+
+  void paintSnowy(Canvas canvas) {}
+
+  void paintSunny(Canvas canvas) {}
+
+  void paintThunderstorm(Canvas canvas) {}
+
+  void paintWindy(Canvas canvas) {}
 }
