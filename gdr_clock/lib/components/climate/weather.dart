@@ -26,96 +26,98 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
 class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   Tween<double> _angle;
 
-  double get _angleFromModel =>
-      2 *
-      pi /
-      WeatherCondition.values.length *
-      -WeatherCondition.values.indexOf(widget.model.weatherCondition);
+  double get _angleFromModel => 2 * pi / WeatherCondition.values.length * -WeatherCondition.values.indexOf(widget.model.weatherCondition);
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _angle = visitor(
-        _angle, _angleFromModel, (value) => Tween<double>(begin: value));
+    _angle = visitor(_angle, _angleFromModel, (value) => Tween<double>(begin: value));
   }
 
   @override
   Widget build(BuildContext context) {
     return Weather(
-      conditions: WeatherCondition.values.map(describeEnum).toList(),
       angle: _angle?.evaluate(animation) ?? 0,
       textStyle: Theme.of(context).textTheme.body1,
+      children: WeatherCondition.values.map((condition) => WeatherIcon(condition: condition)).toList(),
     );
   }
 }
 
-class Weather extends LeafRenderObjectWidget {
-  final List<String> conditions;
+class Weather extends MultiChildRenderObjectWidget {
   final double angle;
   final TextStyle textStyle;
 
   Weather({
     Key key,
-    @required this.conditions,
+    @required List<Widget> children,
     @required this.angle,
     @required this.textStyle,
-  })  : assert(conditions != null),
-        assert(angle != null),
+  })  : assert(angle != null),
         assert(textStyle != null),
-        super(key: key);
+        super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderWeather(
-        conditions: conditions, angle: angle, textStyle: textStyle);
+    return RenderWeather(angle: angle, textStyle: textStyle);
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderWeather renderObject) {
     renderObject
-      ..conditions = conditions
       ..angle = angle
       ..textStyle = textStyle
       ..markNeedsPaint();
   }
 }
 
-class WeatherChildrenParentData
-    extends CompositionChildrenParentData<WeatherCondition> {}
+class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {}
 
-class RenderWeather extends RenderCompositionChild {
+class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenParentData, Weather> {
   RenderWeather({
-    this.conditions,
     this.angle,
     this.textStyle,
-  }) : super(ClockComponent.weather);
-
-//  @override todo
-//  void setupParentData(RenderObject child) {
-//    if (child.parentData is! WeatherChildrenParentData) {
-//      child.parentData = WeatherChildrenParentData()..valid = false;
-//    }
-//  }
+  }) : super(WeatherCondition.values);
 
   @override
-  bool get sizedByParent => true;
-
-  @override
-  void performResize() {
-    size = constraints.biggest;
-
-    _radius = size.width / 2;
+  void setupParentData(RenderObject child) {
+    if (child.parentData is! WeatherChildrenParentData) {
+      child.parentData = WeatherChildrenParentData()..valid = false;
+    }
   }
 
-  List<String> conditions;
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    final clockCompositionData = parentData as ClockChildrenParentData;
+
+    clockCompositionData
+      ..childType = ClockComponent.weather
+      ..valid = true;
+  }
+
   double angle;
   TextStyle textStyle;
 
   double _radius;
 
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    size = constraints.biggest;
+
+    _radius = size.width / 2;
+
+    // todo layout icons
+  }
+
   static const arrowColor = Color(0xffffddbb);
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    super.paint(context, offset);
+
     final canvas = context.canvas;
 
     canvas.save();
@@ -127,14 +129,12 @@ class RenderWeather extends RenderCompositionChild {
     // Rotate the disc by the given angle.
     canvas.rotate(angle);
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
-        Paint()..color = const Color(0xff3c9aff));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xff3c9aff));
 
-    final divisions = conditions.length;
-    for (final condition in conditions) {
-      final painter = TextPainter(
-          text: TextSpan(text: '$condition', style: textStyle),
-          textDirection: TextDirection.ltr);
+    // todo use children instead
+    final divisions = WeatherCondition.values.length;
+    for (final condition in WeatherCondition.values) {
+      final painter = TextPainter(text: TextSpan(text: '$condition', style: textStyle), textDirection: TextDirection.ltr);
       painter.layout();
       painter.paint(
           canvas,
@@ -178,12 +178,26 @@ class RenderWeather extends RenderCompositionChild {
 }
 
 class WeatherIcon extends LeafRenderObjectWidget {
-  WeatherIcon({Key key}) : super(key: key);
+  final WeatherCondition condition;
+
+  WeatherIcon({
+    Key key,
+    @required this.condition,
+  })  : assert(condition != null),
+        super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderWeatherIcon();
+    return RenderWeatherIcon(
+      condition: condition,
+    );
   }
 }
 
-class RenderWeatherIcon extends RenderBox {}
+class RenderWeatherIcon extends RenderCompositionChild {
+  RenderWeatherIcon({
+    WeatherCondition condition,
+  }) : super(condition);
+
+  WeatherCondition get condition => childType;
+}
