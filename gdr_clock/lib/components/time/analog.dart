@@ -127,7 +127,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogTime extends RenderClockComponent {
+class RenderAnalogTime extends RenderCompositionChild {
   RenderAnalogTime({
     this.textStyle,
     this.secondHandAngle,

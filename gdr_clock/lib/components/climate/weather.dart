@@ -89,14 +89,15 @@ class RenderWeather extends RenderBox {
     this.textStyle,
   });
 
-  List<String> conditions;
-  double angle;
-  TextStyle textStyle;
+//  @override todo
+//  void setupParentData(RenderObject child) {
+//    if (child.parentData is! WeatherChildrenParentData) {
+//      child.parentData = WeatherChildrenParentData()..valid = false;
+//    }
+//  }
 
   @override
   bool get sizedByParent => true;
-
-  double _radius;
 
   @override
   void performResize() {
@@ -104,6 +105,12 @@ class RenderWeather extends RenderBox {
 
     _radius = size.width / 2;
   }
+
+  List<String> conditions;
+  double angle;
+  TextStyle textStyle;
+
+  double _radius;
 
   static const arrowColor = Color(0xffffddbb);
 

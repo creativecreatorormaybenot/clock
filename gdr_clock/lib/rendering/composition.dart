@@ -15,7 +15,7 @@ class CompositionChildrenParentData<C>
 /// [RenderObject] for [MultiChildRenderObjectWidget]s that are supposed to layout a specific set of children and all of these only exactly once.
 ///
 /// [C] is intended to be an enum.
-abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>>
+abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, P extends MultiChildRenderObjectWidget>
     extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, D>,
@@ -24,13 +24,6 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>>
   final List<C> children;
 
   RenderComposition(this.children);
-
-  @override
-  void setupParentData(RenderObject child) {
-    if (child.parentData is! D) {
-      child.parentData = (CompositionChildrenParentData() as D)..valid = false;
-    }
-  }
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
@@ -51,11 +44,11 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>>
       final childParentData = child.parentData as D,
           type = childParentData.childType;
 
-      if (!childParentData.valid) throw CompositionError(child: child);
+      if (!childParentData.valid) throw CompositionError<P, D>(child: child);
       if (_layoutChildren.containsKey(type)) {
-        throw CompositionError(
+        throw CompositionError<P, D>(
             message:
-                'The children passed to $RenderComposition contain the child type ${describeEnum(type)} more than once. '
+                'The children passed to $P contain the child type ${describeEnum(type)} more than once. '
                 'Every child type can only be passed exactly once.');
       }
 
@@ -69,9 +62,9 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>>
         children.where((child) => !_layoutChildren.containsKey(child));
 
     if (missingComponents.isNotEmpty) {
-      throw CompositionError(
+      throw CompositionError<P, D>(
           message:
-              'The children passed to $RenderComposition do not cover every child type of $children. '
+              'The children passed to $P do not cover every child type of $children. '
               'You need to pass every child type exactly once and specify the child type correctly using $CompositionChildrenParentData.\n'
               'Missing children are $missingComponents.');
     }
@@ -140,7 +133,7 @@ abstract class RenderCompositionChild<C,
   D get compositionData => parentData as D;
 
   /// Takes care of validating the RenderObject for when it is passed to [CompositedClock]
-  /// and sets [CompositedClockChildrenParentData.childType] to the appropriate [ClockComponent].
+  /// and sets [ClockChildrenParentData.childType] to the appropriate [ClockComponent].
   /// Thus, this is annotated with [mustCallSuper]. Alternatively, you could ignore this and
   /// implement the validation and setting the component in the sub class, but the whole point of
   /// [RenderClockComponent] is to take care of this step, so you should likely extend [RenderBox] instead.
@@ -155,12 +148,12 @@ abstract class RenderCompositionChild<C,
 }
 
 class CompositionError<P extends MultiChildRenderObjectWidget,
-    D extends ContainerBoxParentData> extends Error {
+    D extends CompositionChildrenParentData> extends Error {
   /// A phrase indicating why the error is being thrown. The message is followed by the [stackTrace].
   /// This will not be used if [child] is supplied.
   final String message;
 
-  /// Indicates that the child does not implement [CompositedClockChildrenParentData] correctly.
+  /// Indicates that the child does not implement [ClockChildrenParentData] correctly.
   final RenderBox child;
 
   CompositionError({

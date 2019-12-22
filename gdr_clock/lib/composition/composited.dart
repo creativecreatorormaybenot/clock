@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
-  /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [CompositedClockChildrenParentData].
+  /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [ClockChildrenParentData].
   /// Every component can only exist exactly once.
   /// Notice that the order of the [children] does not affect the layout or paint order.
   CompositedClock({
@@ -29,36 +29,36 @@ enum ClockComponent {
 //  temperature,
 }
 
-class CompositedClockChildrenParentData
+class ClockChildrenParentData
     extends CompositionChildrenParentData<ClockComponent> {
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
     final childParentData =
-        child.parentData as CompositedClockChildrenParentData;
-    _rects[childParentData.child] = childParentData.offset & child.size;
+        child.parentData as ClockChildrenParentData;
+    _rects[childParentData.childType] = childParentData.offset & child.size;
   }
 
   Rect rectOf(ClockComponent component) {
-    assert(child == ClockComponent.background,
+    assert(childType == ClockComponent.background,
         'Only the background component can access sizes and offsets of the other children.');
     final rect = _rects[component];
     assert(rect != null,
-        'No $Rect was provided for $component. If the rect of this child should be accessible from $child, this needs to be changed in $RenderCompositedClock.');
+        'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 }
 
 class RenderCompositedClock extends RenderComposition<ClockComponent,
-    CompositedClockChildrenParentData> {
+    ClockChildrenParentData, CompositedClock> {
   RenderCompositedClock() : super(ClockComponent.values);
 
-//  @override todo
-//  void setupParentData(RenderObject child) {
-//    if (child.parentData is! CompositedClockChildrenParentData) {
-//      child.parentData = CompositedClockChildrenParentData()..valid = false;
-//    }
-//  }
+  @override
+  void setupParentData(RenderObject child) {
+    if (child.parentData is! ClockChildrenParentData) {
+      child.parentData = ClockChildrenParentData()..valid = false;
+    }
+  }
 
   Offset hitPosition;
 

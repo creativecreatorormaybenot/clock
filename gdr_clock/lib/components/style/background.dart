@@ -12,7 +12,7 @@ class Background extends LeafRenderObjectWidget {
   }
 }
 
-class RenderBackground extends RenderClockComponent {
+class RenderBackground extends RenderCompositionChild {
   RenderBackground() : super(ClockComponent.background);
 
   @override
@@ -22,7 +22,7 @@ class RenderBackground extends RenderClockComponent {
   void paint(PaintingContext context, Offset offset) {
     // Do not need to clip here because CompositedClock already clips the canvas.
 
-    final clockData = parentData as CompositedClockChildrenParentData;
+    final clockData = parentData as ClockChildrenParentData;
 
     final gooArea = Rect.fromLTWH(
       // Infinite width and height ensure that the indentations of the goo caused by components will always consider the complete object, even if some of it is out of view.
