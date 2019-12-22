@@ -82,12 +82,12 @@ class Weather extends LeafRenderObjectWidget {
 class WeatherChildrenParentData
     extends CompositionChildrenParentData<WeatherCondition> {}
 
-class RenderWeather extends RenderBox {
+class RenderWeather extends RenderCompositionChild {
   RenderWeather({
     this.conditions,
     this.angle,
     this.textStyle,
-  });
+  }) : super(ClockComponent.weather);
 
 //  @override todo
 //  void setupParentData(RenderObject child) {

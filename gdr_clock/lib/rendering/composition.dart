@@ -37,7 +37,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
   @override
   @mustCallSuper
   void performLayout() {
-    final _layoutChildren = <C, RenderBox>{}, _layoutParentData = <C, D>{};
+    layoutChildren = <C, RenderBox>{};
+    layoutParentData = <C, D>{};
 
     var child = firstChild;
     while (child != null) {
@@ -45,21 +46,21 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
           type = childParentData.childType;
 
       if (!childParentData.valid) throw CompositionError<P, D>(child: child);
-      if (_layoutChildren.containsKey(type)) {
+      if (layoutChildren.containsKey(type)) {
         throw CompositionError<P, D>(
             message:
                 'The children passed to $P contain the child type ${describeEnum(type)} more than once. '
                 'Every child type can only be passed exactly once.');
       }
 
-      _layoutChildren[type] = child;
-      _layoutParentData[type] = childParentData;
+      layoutChildren[type] = child;
+      layoutParentData[type] = childParentData;
 
       child = childParentData.nextSibling;
     }
 
     final missingComponents =
-        children.where((child) => !_layoutChildren.containsKey(child));
+        children.where((child) => !layoutChildren.containsKey(child));
 
     if (missingComponents.isNotEmpty) {
       throw CompositionError<P, D>(
@@ -163,6 +164,6 @@ class CompositionError<P extends MultiChildRenderObjectWidget,
 
   @override
   String toString() =>
-      '${message ?? 'A child was passed to $P which does not set up its $RenderObject.parentData '
+      '${message ?? 'A child ($child) was passed to $P which does not set up its $RenderObject.parentData '
           'as $D correctly (setting $D.valid to `true`).'}\n$stackTrace.';
 }
