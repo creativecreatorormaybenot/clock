@@ -8,6 +8,8 @@
 
       * Use a single while-loop to loop over children in `performLayout` as they should have their weather condition saved as a property of their parent data.
 
+  + Create background for weather widget.
+
   + Add some designs to the analog clock's hands.
 
   + Create temperature thermometer.

@@ -133,7 +133,7 @@ class RenderWeather extends RenderComposition<WeatherCondition,
     }
   }
 
-  static const arrowColor = Color(0xffffddbb), indentationFactor = .42;
+  static const arrowColor = Color(0xffffddbb), indentationFactor = .48;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -180,7 +180,7 @@ class RenderWeather extends RenderComposition<WeatherCondition,
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     // Draw tip of the arrow pointing up.
-    final h = _radius * (indentationFactor - 1), s = 13.42;
+    final h = _radius * (indentationFactor - 1), s = _radius / 16;
     canvas.drawPath(
         Path()
           // Remember that this is the center of the circle.
@@ -199,7 +199,7 @@ class RenderWeather extends RenderComposition<WeatherCondition,
         Offset(0, h + s),
         Paint()
           ..color = arrowColor
-          ..strokeWidth = 5.2
+          ..strokeWidth = _radius / 42
           ..strokeCap = StrokeCap.round);
 
     canvas.restore();
