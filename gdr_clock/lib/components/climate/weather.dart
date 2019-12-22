@@ -71,10 +71,8 @@ class Weather extends MultiChildRenderObjectWidget {
 }
 
 class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {
-  /// Indicates where the icon has its center point, i.e. where the hand points to.
-  Offset center;
-
-  double rotationAngle;
+  /// [radius] is simply passed for convenience and [angle] & [indentationFactor] together define where the center of the child should be located.
+  double radius, angle, indentationFactor;
 }
 
 class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenParentData, Weather> {
@@ -116,24 +114,16 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     _radius = size.width / 2;
 
-    var angle = 0.0;
     for (final condition in conditions) {
       final child = layoutChildren[condition], childParentData = layoutParentData[condition];
 
-      const indentFactor = .16;
-
-      // Give the icons the full area and make them position themselves correctly and not paint over other children in their paint method.
-      childParentData
-        ..offset = Offset.zero
-        ..center = (Offset.zero & size).center + Offset.fromDirection(angle, _radius * (1 - indentFactor))
-        ..rotationAngle = angle;
+      // Give the icons the full area and make them position themselves correctly and not paint over other children in their paint method (the necessary values are passed in paint).
       child.layout(BoxConstraints.tight(size), parentUsesSize: false);
-
-      angle += 2 * pi / conditions.length;
+      childParentData.offset = Offset.zero;
     }
   }
 
-  static const arrowColor = Color(0xffffddbb);
+  static const arrowColor = Color(0xffffddbb), indentationFactor = .16;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -147,26 +137,11 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     // Save the initial rotation in order to always draw the arrow pointing straight up.
     canvas.save();
-    // Rotate the disc by the given angle.
+    // Rotate the disc by the given angle. This defines how a potential background that can be drawn inside here will look.
     canvas.rotate(angle);
 
+    // Background
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = const Color(0xff3c9aff));
-
-    // todo use children instead
-    final divisions = WeatherCondition.values.length;
-    for (final condition in WeatherCondition.values) {
-      final painter = TextPainter(text: TextSpan(text: '$condition', style: textStyle), textDirection: TextDirection.ltr);
-      painter.layout();
-      painter.paint(
-          canvas,
-          Offset(
-              -painter.width / 2,
-              -size.height / 2 +
-                  // Push the text inwards a bit.
-                  32.79));
-
-      canvas.rotate(2 * pi / divisions);
-    }
 
     // Restore initial rotation.
     canvas.restore();
@@ -195,6 +170,21 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..strokeCap = StrokeCap.round);
 
     canvas.restore();
+
+    // Need the rotation angle of the whole weather widget and the angle by which each condition is offset.
+    var conditionAngle = 0.0;
+    for (final condition in conditions) {
+      final childParentData = layoutParentData[condition];
+
+      childParentData
+        ..indentationFactor = indentationFactor
+        ..radius = _radius
+        ..angle = angle + conditionAngle;
+
+      paintChild(condition);
+
+      conditionAngle += pi * 2 / conditions.length;
+    }
   }
 }
 
@@ -232,11 +222,21 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    final canvas = context.canvas;
+
+    canvas.save();
+    // Translate the canvas to the center of the square.
+    canvas.translate(size.width / 2, size.height / 2);
+
     // Clip the area of the parent (weather circle).
-    context.pushClipPath(needsCompositing, offset, offset & size, Path()..addOval(Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: size.width / 2)), (context, offset) {
-      // Position and rotate the canvas according to the values stored in the composition data.
-      context.pushTransform(needsCompositing, offset, Matrix4.translationValues(compositionData.center.dx, compositionData.center.dy, 0)..rotateZ(compositionData.rotationAngle), paintIcon);
-    });
+    context.canvas.clipPath(Path()..addOval(Rect.fromCircle(center: offset, radius: compositionData.radius)));
+
+    // Position and rotate the canvas according to the values stored in the composition data.
+    final iconPosition = Offset.fromDirection(compositionData.angle, compositionData.radius * (1 - compositionData.indentationFactor));
+
+    context.pushTransform(needsCompositing, offset, Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0), paintIcon);
+
+    canvas.restore();
   }
 
   void paintIcon(PaintingContext context, Offset offset) {
