@@ -146,6 +146,28 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Restore initial rotation.
     canvas.restore();
 
+    // Revert translation before drawing the children.
+    canvas.restore();
+
+    // Need the rotation angle of the whole weather widget and the angle by which each condition is offset.
+    var conditionAngle = -pi / 2;
+    for (final condition in conditions) {
+      final childParentData = layoutParentData[condition];
+
+      childParentData
+        ..indentationFactor = indentationFactor
+        ..radius = _radius
+        ..angle = angle + conditionAngle;
+
+      paintChild(condition);
+
+      conditionAngle += pi * 2 / conditions.length;
+    }
+
+    canvas.save();
+    // Translate the canvas to the center of the square.
+    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+
     // Draw tip of the arrow pointing up.
     final h = -size.height / 3.4, s = 13.42;
     canvas.drawPath(
@@ -170,21 +192,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..strokeCap = StrokeCap.round);
 
     canvas.restore();
-
-    // Need the rotation angle of the whole weather widget and the angle by which each condition is offset.
-    var conditionAngle = 0.0;
-    for (final condition in conditions) {
-      final childParentData = layoutParentData[condition];
-
-      childParentData
-        ..indentationFactor = indentationFactor
-        ..radius = _radius
-        ..angle = angle + conditionAngle;
-
-      paintChild(condition);
-
-      conditionAngle += pi * 2 / conditions.length;
-    }
   }
 }
 
@@ -226,13 +233,15 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
     canvas.save();
     // Translate the canvas to the center of the square.
-    canvas.translate(size.width / 2, size.height / 2);
+    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     // Clip the area of the parent (weather circle).
-    context.canvas.clipPath(Path()..addOval(Rect.fromCircle(center: offset, radius: compositionData.radius)));
+    context.canvas.clipPath(Path()..addOval(Rect.fromCircle(center: Offset.zero, radius: compositionData.radius)));
+
+    canvas.rotate(compositionData.angle);
 
     // Position and rotate the canvas according to the values stored in the composition data.
-    final iconPosition = Offset.fromDirection(compositionData.angle, compositionData.radius * (1 - compositionData.indentationFactor));
+    final iconPosition = Offset.fromDirection(0, compositionData.radius * (1 - compositionData.indentationFactor));
 
     context.pushTransform(needsCompositing, offset, Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0), paintIcon);
 
@@ -268,21 +277,30 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   }
 
   void paintCloudy(Canvas canvas) {
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+    canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: 20, height: 30), Paint()..color = const Color(0xffff4ea9));
   }
 
   void paintFoggy(Canvas canvas) {
-    // Test clipping.
-    canvas.drawPaint(Paint()..color = const Color(0xffffa597));
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
   }
 
-  void paintRainy(Canvas canvas) {}
+  void paintRainy(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
 
-  void paintSnowy(Canvas canvas) {}
+  void paintSnowy(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
 
-  void paintSunny(Canvas canvas) {}
+  void paintSunny(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
 
-  void paintThunderstorm(Canvas canvas) {}
+  void paintThunderstorm(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
 
-  void paintWindy(Canvas canvas) {}
+  void paintWindy(Canvas canvas) {
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: 50), Paint());
+  }
 }
