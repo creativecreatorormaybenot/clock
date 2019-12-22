@@ -34,8 +34,7 @@ class ClockChildrenParentData
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
-    final childParentData =
-        child.parentData as ClockChildrenParentData;
+    final childParentData = child.parentData as ClockChildrenParentData;
     _rects[childParentData.childType] = childParentData.offset & child.size;
   }
 
