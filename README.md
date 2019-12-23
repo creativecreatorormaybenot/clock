@@ -54,16 +54,30 @@
 
   + Remove unnecessary depencies and other stuff. For example, `pedantic` or `uses-material-design` if there are no icons in the final design.
 
-  + Submit submission :)  
+  + Submit submission :)
+
+  + Add GIF to README.
 
   + Make repository public.
 
+  + Write article about the creation process of the submission on Flutter Community.
+
+    - Ideally go into details regarding the different stages of the process providing images and maybe snapshots by linking to a particular commit on GitHub.
+
+    - Share some of the technical details that make this submission special apart from what can be seen looking at it.
+
+    - Add link to it to README.
+
+    - Share on FlutterDev: Twitter, Reddit, and Discord.
+
   + Share with P.
 
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
+
+[Quick screen capture showing the final result of the submission]()
 
 ## Notes
 
