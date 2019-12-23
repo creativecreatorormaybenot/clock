@@ -371,6 +371,8 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   @override
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
+      return true;
+
       final canvas = context.canvas;
 
       canvas.drawPaint(Paint()..color = const Color(0x22000000));
@@ -378,7 +380,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       canvas.save();
       canvas.translate(534, 350);
       canvas.scale(2);
-      paintSnowy(canvas);
+      paintWindy(canvas);
 
       canvas.restore();
       return true;
