@@ -66,6 +66,8 @@
 
     - Share some of the technical details that make this submission special apart from what can be seen looking at it.
 
+    - The title could be something like "How I made a Clock Face using only Flutter's built-in rendering layer", as in no use of prebuilt widgets.
+
     - Add link to it to README.
 
     - Share on FlutterDev: Twitter, Reddit, and Discord.
