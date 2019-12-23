@@ -1,12 +1,6 @@
 ## TODO
 
-  + Create icons for the different weather conditions.
-
-    - Pass `WeatherCondition` instead of strings.
-
-    - Make `WeatherComponent` a `MultiChildRenderObjectWidget` the same way `CompositedClock` is, i.e. with icons instead of components as children but their associated `parentData` .
-
-      * Use a single while-loop to loop over children in `performLayout` as they should have their weather condition saved as a property of their parent data.
+  + Finish temporary weather icons.
 
   + Create background for weather widget.
 
