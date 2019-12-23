@@ -297,7 +297,26 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   void paintRainy(Canvas canvas) {}
 
-  void paintSnowy(Canvas canvas) {}
+  static const snowColor = Color(0xbbfffafa), snowflakes = 61, snow = 23;
+
+  void paintSnowy(Canvas canvas) {
+    final random = Random(815174);
+
+    // Draw snowflakes
+    final paint = Paint()..color = snowColor;
+    for (var i = 0; i < snowflakes; i++) {
+      final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
+
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, radius / 5 * verticalShift), radius: diameter / 2), paint);
+    }
+
+    // Draw some laying on the ground
+    for (var i = 0; i < snow; i++) {
+      final verticalShift = random.nextDouble(), horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 33 * (1 + diameterShift / 2);
+
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 9 + radius / 42 * verticalShift), radius: diameter / 2), paint);
+    }
+  }
 
   static const sunColor = Color(0xfffcd440), sunRays = 12;
 
@@ -359,7 +378,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       canvas.save();
       canvas.translate(534, 350);
       canvas.scale(2);
-      paintThunderstorm(canvas);
+      paintSnowy(canvas);
 
       canvas.restore();
       return true;
