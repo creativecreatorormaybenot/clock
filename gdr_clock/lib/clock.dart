@@ -1,3 +1,4 @@
+export 'animation/animation.dart';
 export 'components/components.dart';
 export 'composition/composition.dart';
 export 'core/core.dart';

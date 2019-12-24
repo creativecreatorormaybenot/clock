@@ -24,22 +24,23 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
 }
 
 class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
-  Tween<double> _angle;
+  AngleTween _angle;
 
   double get _angleValue => _angle?.evaluate(animation) ?? 0;
 
   /// This finds the angle closest to the current angle based on the fact that an angle of `n * pi * 2 + x` produces the same result as the angle `x`.
   double get _angleFromModel {
-    final newAngle = 2 * pi / WeatherCondition.values.length * -WeatherCondition.values.indexOf(widget.model.weatherCondition), oldAngle = _angleValue;
+    final newAngle = 2 * pi / WeatherCondition.values.length * WeatherCondition.values.indexOf(widget.model.weatherCondition), oldAngle = _angleValue;
 
-    if (oldAngle - newAngle < -pi) return newAngle - pi * 2;
-    if (oldAngle - newAngle > pi) return newAngle + pi * 2;
+    if (newAngle.difference(oldAngle) > (newAngle - pi * 2).difference(oldAngle)) return newAngle - pi * 2;
+    if (newAngle.difference(oldAngle) > (newAngle + pi * 2).difference(oldAngle)) return newAngle + pi * 2;
+
     return newAngle;
   }
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _angle = visitor(_angle, _angleFromModel, (value) => Tween<double>(begin: value));
+    _angle = visitor(_angle, _angleFromModel, (value) => AngleTween(begin: value)) as AngleTween;
   }
 
   @override
@@ -170,7 +171,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
       paintChild(condition);
 
-      conditionAngle += pi * 2 / conditions.length;
+      conditionAngle -= pi * 2 / conditions.length;
     }
 
     canvas.save();
