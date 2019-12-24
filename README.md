@@ -32,6 +32,12 @@
 
   + Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
+  + Add animations to every weather conditions.
+
+    - Only animate the current weather condition.
+
+    - Have a looping animation, i.e. every condition has a loop.
+
   + Create spin-up animation for when the widget is created or updated? 
 
   + Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.

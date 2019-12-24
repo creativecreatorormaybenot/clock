@@ -227,6 +227,11 @@ class WeatherIcon extends LeafRenderObjectWidget {
 /// I drew these "by hand", as in I had some actual image or one in my head that I tried to replicate
 /// using geometric shapes, lines, and curves. It involved trial and error sometimes, but I think that
 /// the icons turned out recognizable right away, which surprised me to some degree.
+/// However, I do not really like how they look, i.e. they are all at least a bit off, sometimes more
+/// than that, which is why I plan on coming back to this later and making them look decent - it
+/// might also involve animating them.
+/// It is possible that I forget to remove this section or that I leave it intentionally - in order
+/// to make it easier to find.
 class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
   RenderWeatherIcon({
     WeatherCondition condition,
