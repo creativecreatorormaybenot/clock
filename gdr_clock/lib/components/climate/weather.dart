@@ -424,7 +424,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition,
     // Draw wind symbol consisting of four paths
     final paint = Paint()
           ..color = c
-          ..strokeWidth = radius / 124
+          ..strokeWidth = radius / 114
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.butt,
         paths = [
@@ -507,14 +507,14 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition,
 
   void paintWindy(Canvas canvas) {
     // Primary wind symbol
-    _paintWind(2, 1.8, 1, primaryWindColor, 0, 0, 1, canvas);
+    _paintWind(2, 1.8, 1, primaryWindColor, 0, radius * indentationFactor / 17, .96, canvas);
 
     // Upper wind symbol
     _paintWind(2, 1.8, 1, secondaryWindColor, radius * indentationFactor / -3,
-        radius * indentationFactor / -4, .8, canvas);
+        radius * indentationFactor / -5, .8, canvas);
 
     // Lower wind symbol
-    _paintWind(1, 1, 1, secondaryWindColor, radius * indentationFactor / -8,
+    _paintWind(1, 1, 1, secondaryWindColor, radius * indentationFactor / -6,
         radius * indentationFactor / 3, .7, canvas);
   }
 
