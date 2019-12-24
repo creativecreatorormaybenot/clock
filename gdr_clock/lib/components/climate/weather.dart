@@ -26,11 +26,16 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
 class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   Tween<double> _angle;
 
-  double get _angleFromModel => 2 * pi / WeatherCondition.values.length * -WeatherCondition.values.indexOf(widget.model.weatherCondition);
+  double get _angleFromModel =>
+      2 *
+      pi /
+      WeatherCondition.values.length *
+      -WeatherCondition.values.indexOf(widget.model.weatherCondition);
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _angle = visitor(_angle, _angleFromModel, (value) => Tween<double>(begin: value));
+    _angle = visitor(
+        _angle, _angleFromModel, (value) => Tween<double>(begin: value));
   }
 
   @override
@@ -38,7 +43,9 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
     return Weather(
       angle: _angle?.evaluate(animation) ?? 0,
       textStyle: Theme.of(context).textTheme.body1,
-      children: WeatherCondition.values.map((condition) => WeatherIcon(condition: condition)).toList(),
+      children: WeatherCondition.values
+          .map((condition) => WeatherIcon(condition: condition))
+          .toList(),
     );
   }
 }
@@ -70,12 +77,14 @@ class Weather extends MultiChildRenderObjectWidget {
   }
 }
 
-class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCondition> {
+class WeatherChildrenParentData
+    extends CompositionChildrenParentData<WeatherCondition> {
   /// [radius] is simply passed for convenience and [angle] & [indentationFactor] together define where the center of the child should be located.
   double radius, angle, indentationFactor;
 }
 
-class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenParentData, Weather> {
+class RenderWeather extends RenderComposition<WeatherCondition,
+    WeatherChildrenParentData, Weather> {
   RenderWeather({
     this.angle,
     this.textStyle,
@@ -115,7 +124,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     _radius = size.width / 2;
 
     for (final condition in conditions) {
-      final child = layoutChildren[condition], childParentData = layoutParentData[condition];
+      final child = layoutChildren[condition],
+          childParentData = layoutParentData[condition];
 
       // Give the icons the full area and make them position themselves correctly and not paint over other children in their paint method (the necessary values are passed in paint).
       child.layout(BoxConstraints.tight(size), parentUsesSize: false);
@@ -123,7 +133,9 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
   }
 
-  static const arrowColor = Color(0xffffddbb), backgroundColor = Color(0xff2c6aee), indentationFactor = .48;
+  static const arrowColor = Color(0xffffddbb),
+      backgroundColor = Color(0xff2c6aee),
+      indentationFactor = .48;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -141,7 +153,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     canvas.rotate(angle);
 
     // Background
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius), Paint()..color = backgroundColor);
+    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: _radius),
+        Paint()..color = backgroundColor);
 
     // Restore initial rotation.
     canvas.restore();
@@ -212,7 +225,8 @@ class WeatherIcon extends LeafRenderObjectWidget {
   }
 }
 
-class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
+class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition,
+    WeatherChildrenParentData> {
   RenderWeatherIcon({
     WeatherCondition condition,
   }) : super(condition);
@@ -240,14 +254,19 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     // Clip the area of the parent (weather circle).
-    context.canvas.clipPath(Path()..addOval(Rect.fromCircle(center: Offset.zero, radius: radius)));
+    context.canvas.clipPath(
+        Path()..addOval(Rect.fromCircle(center: Offset.zero, radius: radius)));
 
     canvas.rotate(compositionData.angle);
 
     // Position and rotate the canvas according to the values stored in the composition data.
     final iconPosition = Offset(0, radius * (indentationFactor - 1));
 
-    context.pushTransform(needsCompositing, offset, Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0), paintIcon);
+    context.pushTransform(
+        needsCompositing,
+        offset,
+        Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0),
+        paintIcon);
 
     canvas.restore();
   }
@@ -288,7 +307,8 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   }
 
   void paintCloudy(Canvas canvas) {
-    canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: 20, height: 30), Paint()..color = const Color(0xffff4ea9));
+    canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: 20, height: 30),
+        Paint()..color = const Color(0xffff4ea9));
   }
 
   void paintFoggy(Canvas canvas) {}
@@ -305,16 +325,32 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     // Draw snowflakes
     final paint = Paint()..color = snowColor;
     for (var i = 0; i < snowflakes; i++) {
-      final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
+      final verticalShift = random.nextDouble() - 1 / 2,
+          horizontalShift = random.nextDouble() - 1 / 2,
+          diameterShift = random.nextDouble(),
+          diameter = radius / 49 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, radius / 5 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(
+          Rect.fromCircle(
+              center: Offset(
+                  radius / 3 * horizontalShift, radius / 5 * verticalShift),
+              radius: diameter / 2),
+          paint);
     }
 
     // Draw some laying on the ground
     for (var i = 0; i < snow; i++) {
-      final verticalShift = random.nextDouble(), horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 33 * (1 + diameterShift / 2);
+      final verticalShift = random.nextDouble(),
+          horizontalShift = random.nextDouble() - 1 / 2,
+          diameterShift = random.nextDouble(),
+          diameter = radius / 33 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 9 + radius / 42 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(
+          Rect.fromCircle(
+              center: Offset(radius / 3.5 * horizontalShift,
+                  radius / 9 + radius / 42 * verticalShift),
+              radius: diameter / 2),
+          paint);
     }
   }
 
@@ -325,11 +361,13 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       ..color = sunColor
       ..strokeWidth = radius / 124;
 
-    canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius / 9), paint);
+    canvas.drawOval(
+        Rect.fromCircle(center: Offset.zero, radius: radius / 9), paint);
 
     for (var i = 0; i < sunRays; i++) {
       final direction = pi * 2 / sunRays * i;
-      canvas.drawLine(Offset.fromDirection(direction, radius / 8), Offset.fromDirection(direction, radius / 6), paint);
+      canvas.drawLine(Offset.fromDirection(direction, radius / 8),
+          Offset.fromDirection(direction, radius / 6), paint);
     }
   }
 
@@ -359,13 +397,126 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
           ..strokeWidth = radius / 142;
 
     for (var i = 0; i < thunderstormRaindrops; i++) {
-      final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, verticalShift * radius / 7);
+      final horizontalShift = random.nextDouble() - 1 / 2,
+          verticalShift = random.nextDouble() - 1 / 2,
+          heightShift = random.nextDouble(),
+          start =
+              Offset(horizontalShift * radius / 4, verticalShift * radius / 7);
 
-      canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
+      canvas.drawLine(
+          start,
+          start + Offset(0, radius / 17 * (1 / 2 + heightShift)),
+          raindropPaint);
     }
   }
 
-  void paintWindy(Canvas canvas) {}
+  static const primaryWindColor = Color(0xff96c4e8),
+      secondaryWindColor = Color(0xff008abf);
+
+  void _paintWind(double l1, double l2, double l3, Color c, double tx,
+      double ty, double s, Canvas canvas) {
+    canvas.save();
+    canvas.translate(tx, ty);
+    canvas.scale(s);
+
+    final mf = radius * indentationFactor / 5, hd = mf / 4;
+
+    // Draw wind symbol consisting of four paths
+    final paint = Paint()
+          ..color = c
+          ..strokeWidth = radius / 124
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.butt,
+        paths = [
+      Path()
+        ..moveTo(mf * (1 - l1), -hd)
+        ..lineTo(2 * mf, -hd)
+        ..quadraticBezierTo(
+          2.6 * mf,
+          -hd,
+          2.6 * mf,
+          -hd * 3,
+        )
+        ..cubicTo(
+          2.5 * mf,
+          -hd * 6,
+          1.4 * mf,
+          -hd * 4.2,
+          1.8 * mf,
+          -hd * 2.3,
+        ),
+      Path()
+        ..moveTo(2.542 * mf, -hd)
+        ..lineTo(3 * mf, -hd)
+        ..quadraticBezierTo(
+          3.34 * mf,
+          -hd,
+          3.3 * mf,
+          -hd * 2.3,
+        )
+        ..cubicTo(
+          3.17 * mf,
+          -hd * 3.48,
+          2.77 * mf,
+          -hd * 2.7,
+          2.96 * mf,
+          -hd * 1.83,
+        ),
+      Path()
+        ..moveTo(mf * (1 - l2), 0)
+        ..lineTo(3 * mf, 0)
+        ..quadraticBezierTo(
+          3.48 * mf,
+          0,
+          3.46 * mf,
+          hd * 1.49,
+        )
+        ..cubicTo(
+          3.4 * mf,
+          hd * 3.6,
+          2.56 * mf,
+          hd * 2.4,
+          3 * mf,
+          hd * 1.1,
+        ),
+      Path()
+        ..moveTo(mf * (1 - l3), hd)
+        ..lineTo(2 * mf, hd)
+        ..quadraticBezierTo(
+          2.43 * mf,
+          hd,
+          2.43 * mf,
+          hd * 2.8,
+        )
+        ..cubicTo(
+          2.4 * mf,
+          hd * 4.8,
+          1.6 * mf,
+          hd * 3.99,
+          1.9 * mf,
+          hd * 2.36,
+        ),
+    ];
+
+    for (final path in paths) {
+      canvas.drawPath(path, paint);
+    }
+
+    canvas.restore();
+  }
+
+  void paintWindy(Canvas canvas) {
+    // Primary wind symbol
+    _paintWind(2, 1.8, 1, primaryWindColor, 0, 0, 1, canvas);
+
+    // Upper wind symbol
+    _paintWind(2, 1.8, 1, secondaryWindColor, radius * indentationFactor / -3,
+        radius * indentationFactor / -4, .8, canvas);
+
+    // Lower wind symbol
+    _paintWind(1, 1, 1, secondaryWindColor, radius * indentationFactor / -8,
+        radius * indentationFactor / 3, .7, canvas);
+  }
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override

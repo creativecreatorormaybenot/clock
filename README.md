@@ -10,6 +10,8 @@
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
+    - Add missing components.
+
   + Add wave animation to background.
 
   + Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
@@ -65,6 +67,8 @@
     - Ideally go into details regarding the different stages of the process providing images and maybe snapshots by linking to a particular commit on GitHub.
 
     - Share some of the technical details that make this submission special apart from what can be seen looking at it.
+
+      * For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
 
     - Add link to it to README.
 
