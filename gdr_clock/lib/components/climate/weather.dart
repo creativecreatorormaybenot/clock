@@ -222,6 +222,11 @@ class WeatherIcon extends LeafRenderObjectWidget {
   }
 }
 
+/// Doodle-like icons based on geometric shapes and paths that represent the different weather conditions.
+///
+/// I drew these "by hand", as in I had some actual image or one in my head that I tried to replicate
+/// using geometric shapes, lines, and curves. It involved trial and error sometimes, but I think that
+/// the icons turned out recognizable right away, which surprised me to some degree.
 class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
   RenderWeatherIcon({
     WeatherCondition condition,
@@ -344,6 +349,12 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   }
 
   void paintCloudy(Canvas canvas) {
+    // I could also achieve this by passing different values to _paintCloud,
+    // but I only realized that I wanted a different position later and it is easier to
+    // adjust it like this.
+    canvas.translate(0, radius * indentationFactor / 6);
+    canvas.scale(1.1);
+
     _paintCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
     _paintCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
     _paintCloud(canvas, 0, 0, 1.3);
@@ -543,6 +554,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   @override
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
+      return true;
       final canvas = context.canvas;
 
       canvas.drawPaint(Paint()..color = const Color(0x22000000));
