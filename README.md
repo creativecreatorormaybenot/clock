@@ -70,6 +70,8 @@
 
       * For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
 
+    - The title could be something like "How I made a Clock Face using only Flutter's built-in rendering layer", as in no use of prebuilt widgets.
+
     - Add link to it to README.
 
     - Share on FlutterDev: Twitter, Reddit, and Discord.
