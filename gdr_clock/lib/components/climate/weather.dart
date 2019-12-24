@@ -26,15 +26,15 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
 class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   Tween<double> _angle;
 
-  /// This will always choose the shortest distance to the new angle, i.e. not loop completely around when going from length - 1 to 0.
-  /// The idea is based on the fact that an angle of `2 * pi + x` produces the same result as the angle `x`.
+  double get _angleValue => _angle?.evaluate(animation) ?? 0;
+
+  /// This finds the angle closest to the current angle based on the fact that an angle of `n * pi * 2 + x` produces the same result as the angle `x`.
   double get _angleFromModel {
-    final angle = 2 * pi / WeatherCondition.values.length * -WeatherCondition.values.indexOf(widget.model.weatherCondition), cAngle = 2 * pi + angle;
+    final newAngle = 2 * pi / WeatherCondition.values.length * -WeatherCondition.values.indexOf(widget.model.weatherCondition), oldAngle = _angleValue;
 
-    if (_angle == null) return angle;
-
-    if ((_angle.evaluate(animation) - cAngle).abs() > (_angle.evaluate(animation) - angle).abs()) return angle;
-    return cAngle;
+    if (oldAngle - newAngle < -pi) return newAngle - pi * 2;
+    if (oldAngle - newAngle > pi) return newAngle + pi * 2;
+    return newAngle;
   }
 
   @override
@@ -45,7 +45,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   @override
   Widget build(BuildContext context) {
     return Weather(
-      angle: _angle?.evaluate(animation) ?? 0,
+      angle: _angleValue,
       textStyle: Theme.of(context).textTheme.body1,
       children: WeatherCondition.values.map((condition) => WeatherIcon(condition: condition)).toList(),
     );
