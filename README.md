@@ -6,12 +6,6 @@
 
   + Create background for weather widget.
 
-  + Add some designs to the analog clock's hands.
-
-  + Get fully familiar with the mock data and design hierarchy to work with the clock data.
-
-    - Add missing components.
-
   + Add wave animation to background.
 
   + Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.

@@ -137,6 +137,7 @@ class RenderTemperature extends RenderCompositionChild {
         lines = Line.fromTBI(top: brackets.top, bottom: brackets.bottom, indent: -mount.height / 3);
 
     // Glass tube
+    // todo
 
     canvas.restore();
   }
