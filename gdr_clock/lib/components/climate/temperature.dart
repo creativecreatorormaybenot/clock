@@ -71,6 +71,8 @@ class RenderTemperature extends RenderCompositionChild {
     size = Size(constraints.biggest.width, constraints.biggest.height / 1.2);
   }
 
+  static const tubeColor = Color(0xffffe3d1), mountColor = Color(0xff996515);
+
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
@@ -130,14 +132,42 @@ class RenderTemperature extends RenderCompositionChild {
     unitPainter.paint(canvas, Offset(unitIndent + (freeUnitWidth / 2 - unitPainter.width / 2), unitIndent + bradIndent));
 
     // Constraints for the positioning of the numbers, lines, brackets, and tube.
-    final addedIndentFactor = 2.7,
-        mount = Line.fromBH(bottom: size.height - bradIndent * addedIndentFactor, height: size.height / 13),
-        tube = Line(bottom: mount.top, top: unitIndent + bradIndent * addedIndentFactor),
-        brackets = Line.fromTBI(top: tube.top, bottom: tube.bottom, indent: tube.height / 6.42),
-        lines = Line.fromTBI(top: brackets.top, bottom: brackets.bottom, indent: -mount.height / 3);
+    final addedIndentFactor = 3.2,
+        mount = Line.fromEE(end: size.height - bradIndent * addedIndentFactor, extent: size.height / 13),
+        tube = Line(end: mount.start, start: unitIndent + unitPainter.height / 1.4 + bradIndent * addedIndentFactor),
+        brackets = Line.fromSEI(start: tube.start, end: tube.end, indent: tube.extent / 6.42),
+        lines = Line.fromSEI(start: brackets.start, end: brackets.end, indent: -mount.extent / 3);
 
     // Glass tube
-    // todo
+    canvas.drawLine(
+        tube.startOffset(dx: size.width / 2),
+        tube.endOffset(dx: size.width / 2),
+        Paint()
+          ..color = tubeColor
+          ..strokeWidth = bradRadius * 1.2
+          ..strokeCap = StrokeCap.round);
+
+    // Mount
+    () {
+      final paint = Paint()
+            ..color = mountColor
+            ..strokeWidth = bradRadius * 1.33
+            ..strokeCap = StrokeCap.round,
+          start = mount.startOffset(dx: size.width / 2);
+
+      canvas.drawLine(
+        start,
+        mount.endOffset(dx: size.width / 2),
+        paint,
+      );
+
+      // Add square cap at the top
+      canvas.drawLine(
+        start,
+        start,
+        paint..strokeCap = StrokeCap.square,
+      );
+    }();
 
     canvas.restore();
   }
