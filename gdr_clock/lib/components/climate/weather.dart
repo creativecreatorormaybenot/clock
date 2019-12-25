@@ -366,7 +366,26 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     _paintCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
   }
 
-  void paintFoggy(Canvas canvas) {}
+  static const fogColor = Color(0xc5cdc8be);
+
+  void paintFoggy(Canvas canvas) {
+    final g = radius * indentationFactor / 14;
+
+    // Once again, it is easier to adjust it like this afterwards.
+    canvas.translate(g * .71, g * .62);
+    canvas.scale(.96);
+
+    final paint = Paint()
+      ..color = fogColor
+      ..strokeWidth = g
+      ..strokeCap = StrokeCap.round;
+
+    canvas
+      ..drawLine(Offset(-g * 5, -3 * g), Offset(-g, -3 * g), paint)
+      ..drawLine(Offset(-g * 3, -g), Offset(g * 4, -g), paint)
+      ..drawLine(Offset(g * -6, g), Offset(g * 2, g), paint)
+      ..drawLine(Offset(g * -5, g * 3), Offset(g * 4, g * 3), paint);
+  }
 
   static const raindropColor = Color(0xdda1c6cc), raindrops = 42;
 
@@ -559,7 +578,9 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
   @override
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
+      // Leaving this as an option for now as I want to be able to come back later to improve the icons.
       return true;
+
       final canvas = context.canvas;
 
       canvas.drawPaint(Paint()..color = const Color(0x22000000));
@@ -567,7 +588,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       canvas.save();
       canvas.translate(534, 350);
       canvas.scale(2);
-      paintCloudy(canvas);
+      paintFoggy(canvas);
 
       canvas.restore();
       return true;

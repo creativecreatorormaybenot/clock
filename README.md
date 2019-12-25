@@ -1,12 +1,10 @@
 ## TODO
 
-  + Finish temporary weather icons.
+  + Create temperature thermometer.
 
   + Create background for weather widget.
 
   + Add some designs to the analog clock's hands.
-
-  + Create temperature thermometer.
 
   + Get fully familiar with the mock data and design hierarchy to work with the clock data.
 
