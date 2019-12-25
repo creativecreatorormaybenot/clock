@@ -25,12 +25,11 @@ enum ClockComponent {
   analogTime,
   background,
   weather,
+  temperature,
 //  digitalTime,
-//  temperature,
 }
 
-class ClockChildrenParentData
-    extends CompositionChildrenParentData<ClockComponent> {
+class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
@@ -39,17 +38,14 @@ class ClockChildrenParentData
   }
 
   Rect rectOf(ClockComponent component) {
-    assert(childType == ClockComponent.background,
-        'Only the background component can access sizes and offsets of the other children.');
+    assert(childType == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
     final rect = _rects[component];
-    assert(rect != null,
-        'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
+    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 }
 
-class RenderCompositedClock extends RenderComposition<ClockComponent,
-    ClockChildrenParentData, CompositedClock> {
+class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
   RenderCompositedClock() : super(ClockComponent.values);
 
   @override
@@ -82,8 +78,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
 
     //<editor-fold desc="Laying out children">
     // Background
-    final background = layoutChildren[ClockComponent.background],
-        backgroundData = layoutParentData[ClockComponent.background];
+    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background];
 
     backgroundData._rects = {};
     final provideRect = backgroundData._addRect;
@@ -91,22 +86,19 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     background.layout(BoxConstraints.tight(constraints.biggest));
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
-    final analogTime = layoutChildren[ClockComponent.analogTime],
-        analogTimeData = layoutParentData[ClockComponent.analogTime];
+    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
     analogTime.layout(
       BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 2.9)),
       parentUsesSize: true,
     );
     analogTimeData.offset = Offset(
       (hitPosition?.dx ?? size.width / 2) - analogTime.size.width / 2,
-      (hitPosition?.dy ?? size.height / 2) -
-          analogTime.size.height / 2, // todo /3 and remove hitPosition
+      (hitPosition?.dy ?? size.height / 2) - analogTime.size.height / 2, // todo /3 and remove hitPosition
     );
     provideRect(analogTime);
 
     // Weather
-    final weather = layoutChildren[ClockComponent.weather],
-        weatherData = layoutParentData[ClockComponent.weather];
+    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather];
     weather.layout(
       BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)),
       parentUsesSize: true,
@@ -124,8 +116,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
   @override
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
-    context.pushClipRect(needsCompositing, offset, Offset.zero & size,
-        (context, offset) {
+    context.pushClipRect(needsCompositing, offset, Offset.zero & size, (context, offset) {
       super.paint(context, offset);
 
       // Draw components.
