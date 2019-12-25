@@ -24,9 +24,10 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 enum ClockComponent {
   analogTime,
   background,
-  weather,
-  temperature,
 //  digitalTime,
+  location,
+  temperature,
+  weather,
 }
 
 class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
@@ -116,6 +117,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       );
     }();
     provideRect(temperature);
+
+    // Location
+    final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
+
+    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
+    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
     //</editor-fold>
   }
 
@@ -127,6 +134,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       // Draw components.
       paintChild(ClockComponent.background);
+      paintChild(ClockComponent.location);
       paintChild(ClockComponent.weather);
       paintChild(ClockComponent.temperature);
       paintChild(ClockComponent.analogTime);

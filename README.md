@@ -46,6 +46,8 @@
 
   + Checkout https://twitter.com/Joey_Dunivan/status/1204710943772557312?s=20 and consider doing something like that.
 
+  + Handle dark and light modes properly.
+
   + Finish clock first.
 
   + Implement accessibility.

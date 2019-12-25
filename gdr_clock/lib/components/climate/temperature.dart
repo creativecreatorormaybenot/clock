@@ -40,7 +40,8 @@ class Temperature extends LeafRenderObjectWidget {
       ..unitString = unitString
       ..temperature = temperature
       ..low = low
-      ..high = high;
+      ..high = high
+      ..markNeedsPaint();
   }
 }
 

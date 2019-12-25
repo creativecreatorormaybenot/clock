@@ -71,21 +71,22 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) => false
-      ? Text('${model.weatherString}, ${model.weatherCondition}, ${model.unitString}, ${model.unit}, ${model.temperatureString}, ${model.temperature}, ${model.lowString}, ${model.low}, ${model.location}, '
-          '${model.is24HourFormat}, ${model.highString}, ${model.high}')
-      : CompositedClock(
-          children: <Widget>[
-            const Background(),
-            AnimatedWeather(model: model),
-            Temperature(
-              unit: model.unit,
-              unitString: model.unitString,
-              temperature: model.temperature,
-              low: model.low,
-              high: model.high,
-            ),
-            AnimatedAnalogTime(animation: analogBounceController, model: model),
-          ],
-        );
+  Widget build(BuildContext context) => CompositedClock(
+        children: <Widget>[
+          const Background(),
+          Location(
+            text: model.location,
+            textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),
+          ),
+          AnimatedWeather(model: model),
+          Temperature(
+            unit: model.unit,
+            unitString: model.unitString,
+            temperature: model.temperature,
+            low: model.low,
+            high: model.high,
+          ),
+          AnimatedAnalogTime(animation: analogBounceController, model: model),
+        ],
+      );
 }
