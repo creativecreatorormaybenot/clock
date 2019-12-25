@@ -118,14 +118,14 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature];
 
     () {
-      final width = size.width / 7;
+      final width = size.width / 6;
       temperature.layout(
-        BoxConstraints(maxWidth: width, minHeight: width),
+        BoxConstraints(maxWidth: width, minHeight: width, maxHeight: size.height),
         parentUsesSize: true,
       );
 
-      weatherData.offset = Offset(
-        size.width - temperature.size.width,
+      temperatureData.offset = Offset(
+        size.width - temperature.size.width - size.width / 21,
         size.height / 2 - temperature.size.height / 2,
       );
     }();
@@ -142,6 +142,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       // Draw components.
       paintChild(ClockComponent.background);
       paintChild(ClockComponent.weather);
+      paintChild(ClockComponent.temperature);
       paintChild(ClockComponent.analogTime);
     });
   }

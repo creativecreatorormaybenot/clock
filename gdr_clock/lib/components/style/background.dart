@@ -34,11 +34,9 @@ class RenderBackground extends RenderCompositionChild {
     );
     final componentsInGoo = [
       clockData.rectOf(ClockComponent.analogTime),
-      clockData.rectOf(ClockComponent.weather)
-    ]
-        .where((rect) => rect.overlaps(gooArea))
-        .map((rect) => gooArea.intersect(rect))
-        .toList();
+      clockData.rectOf(ClockComponent.weather),
+      clockData.rectOf(ClockComponent.temperature),
+    ].where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
 
     final canvas = context.canvas;
 
@@ -96,12 +94,8 @@ class RenderBackground extends RenderCompositionChild {
           rect.bottomRight.dy,
           rect.centerRight.dx,
           rect.centerRight.dy,
-          i == rects.length - 1
-              ? size.width
-              : (rect.right + rects[i + 1].left) / 2,
-          i == rects.length - 1
-              ? gooArea.top
-              : (rect.center.dy + rects[i + 1].center.dy) / 2,
+          i == rects.length - 1 ? size.width : (rect.right + rects[i + 1].left) / 2,
+          i == rects.length - 1 ? gooArea.top : (rect.center.dy + rects[i + 1].center.dy) / 2,
         );
     }
 
