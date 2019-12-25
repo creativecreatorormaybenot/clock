@@ -92,10 +92,10 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     // The anonymous function hides the clearanceFactor variable later on.
     () {
-      final clearanceFactor = 1 / 17;
+      final clearanceFactor = 1 / 31;
       weatherData.offset = Offset(
         weather.size.width * clearanceFactor,
-        weather.size.height * clearanceFactor,
+        weather.size.height * clearanceFactor + size.height / 7,
       );
     }();
     provideRect(weather);
