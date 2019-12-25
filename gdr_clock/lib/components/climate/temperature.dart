@@ -14,5 +14,5 @@ class Temperature extends LeafRenderObjectWidget {
 class RenderTemperature extends RenderCompositionChild {
   RenderTemperature() : super(ClockComponent.temperature);
 
-  
+
 }

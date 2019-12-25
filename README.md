@@ -2,6 +2,8 @@
 
   + Create temperature thermometer.
 
+    - Include it in background curve calculation.
+
   + Create background for weather widget.
 
   + Add some designs to the analog clock's hands.

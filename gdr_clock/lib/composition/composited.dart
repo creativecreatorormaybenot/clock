@@ -83,12 +83,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     backgroundData._rects = {};
     final provideRect = backgroundData._addRect;
 
-    background.layout(BoxConstraints.tight(constraints.biggest));
+    background.layout(BoxConstraints.tight(size));
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
     analogTime.layout(
-      BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 2.9)),
+      BoxConstraints.tight(Size.fromRadius(size.height / 2.9)),
       parentUsesSize: true,
     );
     analogTimeData.offset = Offset(
@@ -100,16 +100,36 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Weather
     final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather];
     weather.layout(
-      BoxConstraints.tight(Size.fromRadius(constraints.biggest.height / 4)),
+      BoxConstraints.tight(Size.fromRadius(size.height / 4)),
       parentUsesSize: true,
     );
 
-    final clearanceFactor = 1 / 17;
-    weatherData.offset = Offset(
-      weather.size.width * clearanceFactor,
-      weather.size.height * clearanceFactor,
-    );
+    // The anonymous function hides the clearanceFactor variable later on.
+    () {
+      final clearanceFactor = 1 / 17;
+      weatherData.offset = Offset(
+        weather.size.width * clearanceFactor,
+        weather.size.height * clearanceFactor,
+      );
+    }();
     provideRect(weather);
+
+    // Temperature
+    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature];
+
+    () {
+      final width = size.width / 7;
+      temperature.layout(
+        BoxConstraints(maxWidth: width, minHeight: width),
+        parentUsesSize: true,
+      );
+
+      weatherData.offset = Offset(
+        size.width - temperature.size.width,
+        size.height / 2 - temperature.size.height / 2,
+      );
+    }();
+    provideRect(temperature);
     //</editor-fold>
   }
 
