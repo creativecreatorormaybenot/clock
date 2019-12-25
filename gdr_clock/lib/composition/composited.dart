@@ -55,20 +55,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     }
   }
 
-  Offset hitPosition;
-
-  @override
-  bool hitTestSelf(Offset position) {
-    return true;
-  }
-
-  @override
-  void handleEvent(PointerEvent event, HitTestEntry entry) {
-    hitPosition = globalToLocal(event.position);
-    markNeedsLayout();
-    super.handleEvent(event, entry);
-  }
-
   @override
   void performLayout() {
     super.performLayout();
@@ -92,8 +78,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       parentUsesSize: true,
     );
     analogTimeData.offset = Offset(
-      (hitPosition?.dx ?? size.width / 2) - analogTime.size.width / 2,
-      (hitPosition?.dy ?? size.height / 2) - analogTime.size.height / 2, // todo /3 and remove hitPosition
+      size.width / 2 - analogTime.size.width / 2.36,
+      size.height / 2 - analogTime.size.height / 3,
     );
     provideRect(analogTime);
 
