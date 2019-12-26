@@ -48,6 +48,10 @@
 
     - Watch "Building in Accessibility with Flutter" from Flutter Interact for this. 
 
+  + Potentially consider https://api.flutter.dev/flutter/painting/ShaderWarmUp/warmUpOnCanvas.html and https://api.flutter.dev/flutter/painting/ShaderWarmUp-class.html.
+
+    - Even if performance does not need to be optimized, https://debugger.skia.org/ could be a nice tool to visualize the painting process for the article.
+
   + Make clock available on web via GitHub pages.
 
     - Watch "Designing for the Web with Flutter" from Flutter Interact for this. 
@@ -73,6 +77,8 @@
       * For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
 
     - The title could be something like "How I made a Clock Face using only Flutter's built-in rendering layer", as in no use of prebuilt widgets.
+
+    - Consider embedding some visualizations made by https://debugger.skia.org/.
 
     - Add link to it to README.
 
