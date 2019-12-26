@@ -17,6 +17,8 @@ class Line {
 
   factory Line.fromSEI({double start, double end, double indent}) => Line(start: start + indent, end: end - indent);
 
+  factory Line.fromCenter({double center, double extent}) => Line(start: center - extent / 2, end: center + extent / 2);
+
   double get extent => end - start;
 
   /// Takes [start] as either [dx] or [dy] based on what is not supplied to construct an offset.
