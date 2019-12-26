@@ -76,6 +76,8 @@
 
       * For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
 
+      * Mention that people can, if they are interested in doing custom layouts but `MultiChildRenderObjectWidget` seems too complicated for them, check out https://stackoverflow.com/a/59483482/6509751 to get started with `CustomMultiChildLayout`.
+
     - The title could be something like "How I made a Clock Face using only Flutter's built-in rendering layer", as in no use of prebuilt widgets.
 
     - Consider embedding some visualizations made by https://debugger.skia.org/.
