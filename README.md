@@ -1,12 +1,12 @@
 ## TODO
 
-  + Create temperature thermometer.
-
-    - Include it in background curve calculation.
+  + Finish thermometer.
 
   + Create background for weather widget.
 
   + Add wave animation to background.
+
+  + Use end-of-hand design from GDR clock.
 
   + Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
 
