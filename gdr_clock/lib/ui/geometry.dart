@@ -4,6 +4,12 @@ extension ExtendedOffset on Offset {
   Offset operator +(Size size) => Offset(dx + size.width, dy + size.height);
 }
 
+extension ExtendedSize on Size {
+  Size get onlyWidth => Size(width, 0);
+
+  Size get onlyHeight => Size(0, height);
+}
+
 /// Line with functionality tailored to the needs of this clock challenge entry.
 class Line {
   final double start, end;

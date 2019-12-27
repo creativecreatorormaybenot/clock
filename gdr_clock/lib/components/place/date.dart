@@ -44,7 +44,7 @@ class _UpdatedDateState extends State<UpdatedDate> {
 
   @override
   Widget build(BuildContext context) => Date(
-        text: '$time',
+        text: '${time.month}/${time.day}/${time.year}',
         textStyle: const TextStyle(
             color: Color(0xff000000), fontWeight: FontWeight.bold),
       );

@@ -145,7 +145,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     date.layout(
         BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
         parentUsesSize: false);
-    dateData.offset = ExtendedOffset(locationData.offset) + location.size;
+    dateData.offset = ExtendedOffset(locationData.offset) + location.size.onlyHeight;
     //</editor-fold>
   }
 
