@@ -1,10 +1,10 @@
 ## TODO
 
+  + Add date below location.
+
   + Finish thermometer.
 
     - Write colored "min" and "max" next to the colored min and max value respectively.
-
-  + Add date below location.
 
   + Create background for weather widget.
 

@@ -1,4 +1,4 @@
 export 'climate/climate.dart';
-export 'location/location.dart';
+export 'place/place.dart';
 export 'style/style.dart';
 export 'time/time.dart';

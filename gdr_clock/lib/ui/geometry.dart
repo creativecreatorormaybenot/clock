@@ -1,9 +1,8 @@
 import 'dart:ui';
 
-/// Adds shorthand functions.
-///
-/// Needs a name in order to be accessible from within other files.
-extension ExtendedRect on Rect {}
+extension ExtendedOffset on Offset {
+  Offset operator +(Size size) => Offset(dx + size.width, dy + size.height);
+}
 
 /// Line with functionality tailored to the needs of this clock challenge entry.
 class Line {
@@ -11,13 +10,17 @@ class Line {
 
   const Line({this.start, this.end});
 
-  factory Line.fromSE({double start, double extent}) => Line(start: start, end: start + extent);
+  factory Line.fromSE({double start, double extent}) =>
+      Line(start: start, end: start + extent);
 
-  factory Line.fromEE({double end, double extent}) => Line(start: end - extent, end: end);
+  factory Line.fromEE({double end, double extent}) =>
+      Line(start: end - extent, end: end);
 
-  factory Line.fromSEI({double start, double end, double indent}) => Line(start: start + indent, end: end - indent);
+  factory Line.fromSEI({double start, double end, double indent}) =>
+      Line(start: start + indent, end: end - indent);
 
-  factory Line.fromCenter({double center, double extent}) => Line(start: center - extent / 2, end: center + extent / 2);
+  factory Line.fromCenter({double center, double extent}) =>
+      Line(start: center - extent / 2, end: center + extent / 2);
 
   double get extent => end - start;
 

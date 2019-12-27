@@ -31,7 +31,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
+    analogBounceController =
+        AnimationController(vsync: this, duration: handBounceDuration);
 
     widget.model.addListener(modelChanged);
 
@@ -67,7 +68,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     analogBounceController.forward(from: 0);
 
     final time = DateTime.now();
-    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+    timer = Timer(
+        Duration(
+            microseconds:
+                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
+        update);
   }
 
   @override
@@ -76,8 +81,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           const Background(),
           Location(
             text: model.location,
-            textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),
+            textStyle: const TextStyle(
+                color: Color(0xff000000), fontWeight: FontWeight.bold),
           ),
+          const UpdatedDate(),
           AnimatedWeather(model: model),
           Temperature(
             unit: model.unit,

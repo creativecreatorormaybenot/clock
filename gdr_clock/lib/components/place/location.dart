@@ -48,7 +48,10 @@ class RenderLocation extends RenderCompositionChild {
   void performLayout() {
     final width = constraints.biggest.width;
 
-    textPainter = TextPainter(text: TextSpan(text: text, style: textStyle.copyWith(fontSize: width / 14)), textDirection: TextDirection.ltr);
+    textPainter = TextPainter(
+        text: TextSpan(
+            text: text, style: textStyle.copyWith(fontSize: width / 14)),
+        textDirection: TextDirection.ltr);
     textPainter.layout(maxWidth: width);
 
     size = Size(width, textPainter.height);
