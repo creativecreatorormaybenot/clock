@@ -157,22 +157,23 @@ class RenderTemperature extends RenderCompositionChild {
     _paintTemperature(
       canvas,
       tube,
-      tubeWidth,
+      tubeWidth * .56,
       high,
       const Color(0x9cff3a4b),
       text: 'max',
+      textLeft: false,
     );
     _paintTemperature(
       canvas,
       tube,
-      tubeWidth,
+      tubeWidth * .85,
       temperature,
       const Color(0xde6ab7ff),
     );
     _paintTemperature(
       canvas,
       tube,
-      tubeWidth,
+      tubeWidth * .56,
       low,
       const Color(0xae2a42ff),
       text: 'min',
@@ -290,7 +291,7 @@ class RenderTemperature extends RenderCompositionChild {
     }
   }
 
-  void _paintTemperature(Canvas canvas, Line tube, double strokeWidth, double temperature, Color color, {String text}) {
+  void _paintTemperature(Canvas canvas, Line tube, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
     final tubePaint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
@@ -308,7 +309,23 @@ class RenderTemperature extends RenderCompositionChild {
     );
 
     if (text != null) {
-      // todo draw text
+      final painter = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(
+            color: color,
+            fontSize: size.width / 13,
+            fontWeight: FontWeight.bold,
+            backgroundColor: tubeColor.withOpacity(.42),
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      painter.layout(maxWidth: size.width);
+
+      final textPadding = size.width / 12;
+
+      painter.paint(canvas, offset + Offset(textLeft ? -painter.width - textPadding : textPadding, -painter.height / 2));
     }
   }
 }
