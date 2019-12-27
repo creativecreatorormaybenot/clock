@@ -18,7 +18,7 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
   }) : super(key: key, curve: curve, duration: duration);
 
   @override
-  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+  _AnimatedWeatherState createState() {
     return _AnimatedWeatherState();
   }
 }
@@ -46,6 +46,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
+    print('_AnimatedWeatherState.forEachTween ${DateTime.now()}');
     _angle =
         visitor(_angle, _angleFromModel, (value) => AngleTween(begin: value))
             as AngleTween;

@@ -78,6 +78,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => CompositedClock(
         children: <Widget>[
+          AnimatedAnalogTime(animation: analogBounceController, model: model),
+          AnimatedTemperature(model: model),
+          AnimatedWeather(model: model),
           const Background(),
           Location(
             text: model.location,
@@ -85,9 +88,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 color: Color(0xff000000), fontWeight: FontWeight.bold),
           ),
           const UpdatedDate(),
-          AnimatedWeather(model: model),
-          AnimatedTemperature(model: model),
-          AnimatedAnalogTime(animation: analogBounceController, model: model),
         ],
       );
 }

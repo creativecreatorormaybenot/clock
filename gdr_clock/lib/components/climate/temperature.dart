@@ -16,7 +16,7 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
   }) : super(key: key, curve: curve, duration: duration);
 
   @override
-  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+  _AnimatedTemperatureState createState() {
     return _AnimatedTemperatureState();
   }
 }
@@ -32,6 +32,7 @@ class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTe
 
   @override
   void forEachTween(visitor) {
+    print('_AnimatedTemperatureState.forEachTween ${DateTime.now()}');
     _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value));
     _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value));
     _high = visitor(_high, widget.model.high, (value) => Tween<double>(begin: value));

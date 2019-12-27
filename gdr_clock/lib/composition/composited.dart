@@ -145,7 +145,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     date.layout(
         BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
         parentUsesSize: false);
-    dateData.offset = ExtendedOffset(locationData.offset) + location.size.onlyHeight;
+    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
     //</editor-fold>
   }
 
@@ -160,8 +160,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
       paintChild(ClockComponent.background);
       paintChild(ClockComponent.location);
       paintChild(ClockComponent.date);
-      paintChild(ClockComponent.weather);
       paintChild(ClockComponent.temperature);
+      paintChild(ClockComponent.weather);
       paintChild(ClockComponent.analogTime);
     });
   }
