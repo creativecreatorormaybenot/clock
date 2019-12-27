@@ -8,6 +8,10 @@
 
   + Create background for weather widget.
 
+    - Add gradients.
+
+    - Add flower like shape about the center (see inspiration).
+
   + Add wave animation to background.
 
   + Use end-of-hand design from GDR clock.
