@@ -323,7 +323,7 @@ class RenderTemperature extends RenderCompositionChild {
       );
       painter.layout(maxWidth: size.width);
 
-      final textPadding = size.width / 12;
+      final textPadding = size.width / 21;
 
       painter.paint(canvas, offset + Offset(textLeft ? -painter.width - textPadding : textPadding, -painter.height / 2));
     }

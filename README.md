@@ -1,9 +1,5 @@
 ## TODO
 
-  + Finish thermometer.
-
-    - Write colored "min" and "max" next to the colored min and max value respectively.
-
   + Create background for weather widget.
 
   + Add wave animation to background.
