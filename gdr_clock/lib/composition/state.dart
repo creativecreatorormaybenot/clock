@@ -86,13 +86,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ),
           const UpdatedDate(),
           AnimatedWeather(model: model),
-          Temperature(
-            unit: model.unit,
-            unitString: model.unitString,
-            temperature: model.temperature,
-            low: model.low,
-            high: model.high,
-          ),
+          AnimatedTemperature(model: model),
           AnimatedAnalogTime(animation: analogBounceController, model: model),
         ],
       );

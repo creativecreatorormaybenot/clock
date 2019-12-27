@@ -1,5 +1,9 @@
 ## TODO
 
+  + Clamp temperature widget values.
+
+  + Add animations to temperature widget changes.
+
   + Create background for weather widget.
 
   + Add wave animation to background.

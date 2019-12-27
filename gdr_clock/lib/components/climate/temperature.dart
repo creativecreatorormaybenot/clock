@@ -1,7 +1,53 @@
+import 'dart:math';
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
+
+class AnimatedTemperature extends ImplicitlyAnimatedWidget {
+  final ClockModel model;
+
+  const AnimatedTemperature({
+    Key key,
+    Curve curve = Curves.decelerate,
+    Duration duration = const Duration(milliseconds: 942),
+    this.model,
+  }) : super(key: key, curve: curve, duration: duration);
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+    return _AnimatedTemperatureState();
+  }
+}
+
+class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTemperature> {
+  Tween<double> _temperature, _low, _high;
+
+  double get _temperatureValue => _temperature?.evaluate(animation) ?? 0;
+
+  double get _lowValue => _low?.evaluate(animation) ?? 0;
+
+  double get _highValue => _high?.evaluate(animation) ?? 0;
+
+  @override
+  void forEachTween(visitor) {
+    _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value));
+    _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value));
+    _high = visitor(_high, widget.model.high, (value) => Tween<double>(begin: value));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Temperature(
+      unit: widget.model.unit,
+      unitString: widget.model.unitString,
+      temperature: _temperatureValue,
+      low: _lowValue,
+      high: _highValue,
+    );
+  }
+}
 
 class Temperature extends LeafRenderObjectWidget {
   final TemperatureUnit unit;
@@ -156,6 +202,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _paintTemperature(
       canvas,
+      tube,
       lines,
       tubeWidth * .56,
       high,
@@ -165,6 +212,7 @@ class RenderTemperature extends RenderCompositionChild {
     );
     _paintTemperature(
       canvas,
+      tube,
       lines,
       tubeWidth * .85,
       temperature,
@@ -172,6 +220,7 @@ class RenderTemperature extends RenderCompositionChild {
     );
     _paintTemperature(
       canvas,
+      tube,
       lines,
       tubeWidth * .56,
       low,
@@ -291,7 +340,7 @@ class RenderTemperature extends RenderCompositionChild {
     }
   }
 
-  void _paintTemperature(Canvas canvas, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
+  void _paintTemperature(Canvas canvas, Line tube, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
     final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
@@ -299,14 +348,23 @@ class RenderTemperature extends RenderCompositionChild {
 
     final currentScale = temperatureScale[unit],
         temperatureRange = currentScale[0].difference(currentScale[1]),
-        currentTemperature = temperature.difference(currentScale[0]),
+        currentTemperature = temperature - currentScale[0],
         offset = lines.startOffset(dx: size.width / 2) + Offset(0, lines.extent / temperatureRange * (temperatureRange - currentTemperature));
 
+    // Bars
     canvas.drawLine(
-      offset,
-      lines.endOffset(dx: size.width / 2),
+      Offset(
+        offset.dx,
+        // Clamp the value in order to not exceed the tube's bounds.
+        min(tube.end, max(tube.start, offset.dy)),
+      ),
+      // Go to the end of the tube, just so it is filled.
+      tube.endOffset(dx: size.width / 2),
       paint,
     );
+
+    // Do not show ticks nor text if the values exceed the thermometers scale.
+    if (offset.dy < lines.start || offset.dy > lines.end) return;
 
     if (text != null) {
       final painter = TextPainter(
@@ -328,12 +386,13 @@ class RenderTemperature extends RenderCompositionChild {
       painter.paint(canvas, offset + Offset(textLeft ? -painter.width - textPadding : textPadding, -painter.height / 2));
     }
 
+    // Add little tick marks to make it more clear what value this bar indicates.
     final horizontalLine = Line.fromCenter(center: offset.dx, extent: strokeWidth);
     canvas.drawLine(
         horizontalLine.startOffset(dy: offset.dy),
         horizontalLine.endOffset(dy: offset.dy),
         Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = 1 + size.height / 534);
+          ..strokeWidth = 1 + size.height / 792);
   }
 }
