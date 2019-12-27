@@ -156,7 +156,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _paintTemperature(
       canvas,
-      tube,
+      lines,
       tubeWidth * .56,
       high,
       const Color(0x9cff3a4b),
@@ -165,14 +165,14 @@ class RenderTemperature extends RenderCompositionChild {
     );
     _paintTemperature(
       canvas,
-      tube,
+      lines,
       tubeWidth * .85,
       temperature,
       const Color(0xde6ab7ff),
     );
     _paintTemperature(
       canvas,
-      tube,
+      lines,
       tubeWidth * .56,
       low,
       const Color(0xae2a42ff),
@@ -291,8 +291,8 @@ class RenderTemperature extends RenderCompositionChild {
     }
   }
 
-  void _paintTemperature(Canvas canvas, Line tube, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
-    final tubePaint = Paint()
+  void _paintTemperature(Canvas canvas, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
+    final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.butt;
@@ -300,12 +300,12 @@ class RenderTemperature extends RenderCompositionChild {
     final currentScale = temperatureScale[unit],
         temperatureRange = currentScale[0].difference(currentScale[1]),
         currentTemperature = temperature.difference(currentScale[0]),
-        offset = tube.startOffset(dx: size.width / 2) + Offset(0, tube.extent / temperatureRange * (temperatureRange - currentTemperature));
+        offset = lines.startOffset(dx: size.width / 2) + Offset(0, lines.extent / temperatureRange * (temperatureRange - currentTemperature));
 
     canvas.drawLine(
       offset,
-      tube.endOffset(dx: size.width / 2),
-      tubePaint,
+      lines.endOffset(dx: size.width / 2),
+      paint,
     );
 
     if (text != null) {
@@ -316,7 +316,7 @@ class RenderTemperature extends RenderCompositionChild {
             color: color,
             fontSize: size.width / 13,
             fontWeight: FontWeight.bold,
-            backgroundColor: tubeColor.withOpacity(.42),
+            backgroundColor: tubeColor.withOpacity(.52),
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -327,5 +327,13 @@ class RenderTemperature extends RenderCompositionChild {
 
       painter.paint(canvas, offset + Offset(textLeft ? -painter.width - textPadding : textPadding, -painter.height / 2));
     }
+
+    final horizontalLine = Line.fromCenter(center: offset.dx, extent: strokeWidth);
+    canvas.drawLine(
+        horizontalLine.startOffset(dy: offset.dy),
+        horizontalLine.endOffset(dy: offset.dy),
+        Paint()
+          ..color = const Color(0xff000000)
+          ..strokeWidth = 1 + size.height / 534);
   }
 }
