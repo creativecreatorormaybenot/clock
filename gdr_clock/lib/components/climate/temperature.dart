@@ -288,16 +288,16 @@ class RenderTemperature extends RenderCompositionChild {
 
         // The TextPainters will return slightly larger sizes than actually visible and
         // this is supposed to compensate exactly that.
-        final heightReduction = 1.14;
+        final reduction = 1.14;
 
         leftPainter.paint(
             canvas,
             Offset(line.start + fontIndent,
-                h - leftPainter.height / heightReduction));
+                h - leftPainter.height / reduction));
         rightPainter.paint(
             canvas,
-            Offset(line.end - fontIndent - rightPainter.width,
-                h - rightPainter.height / heightReduction));
+            Offset(line.end - fontIndent - rightPainter.width / reduction,
+                h - rightPainter.height / reduction));
       } else if (i % intermediateValue == 0) {
         final line =
             Line.fromCenter(center: size.width / 2, extent: size.width / 2.1);
