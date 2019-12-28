@@ -1,9 +1,5 @@
 ## TODO
 
-  + Fix temperature animations.
-
-    - Values only update to the previous value after changing the value again and there is no animation.
-
   + Use gradient shader for petals as well.
 
   + Make analog component also scale with size.

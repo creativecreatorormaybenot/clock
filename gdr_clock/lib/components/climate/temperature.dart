@@ -21,10 +21,8 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
   }
 }
 
-class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTemperature> {
+class _AnimatedTemperatureState extends AnimatedWidgetBaseState<AnimatedTemperature> {
   Tween<double> _temperature, _low, _high;
-
-
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
