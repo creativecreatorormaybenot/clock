@@ -2,6 +2,8 @@
 
   + Use paths for larger clock hands.
 
+    - Use end-of-hand design from GDR clock.
+
   + Add shadow for at least one hand to give a sense of depth.
 
     - Look at [ `Canvas.drawShadow` ](https://api.flutter.dev/flutter/dart-ui/Canvas/drawShadow.html).
@@ -9,8 +11,6 @@
       * See how it handles rotation and if there is a way to make the direction of the light source consistent.
 
   + Add wave animation to background.
-
-  + Use end-of-hand design from GDR clock.
 
   + Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
 
