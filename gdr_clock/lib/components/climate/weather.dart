@@ -230,50 +230,21 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     canvas.restore();
   }
 
-  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2;
+  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2.0;
 
   void _paintPetals(Canvas canvas, Shader shader, double radius) {
-    final paint = Paint()
-      ..shader = shader
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _radius / 107;
-
-    for (var i = 0; i < petals; i++) {
-      canvas.save();
-
-      canvas.rotate(2 * pi / petals * i);
-      _paintPetal(canvas, paint, radius);
-
-      canvas.restore();
-    }
-  }
-
-  void _paintPetal(Canvas canvas, Paint paint, double radius) {
     canvas.save();
 
     // The petals should rotate with the icons to make it seem like
     // the whole disc but the arrow is rotating.
     canvas.rotate(angle);
 
-    final path = Path()
-      ..moveTo(0, 0)
-      // Could use conicTo instead and pass a weight there, but
-      // it works better for me doing it this way.
-      ..quadraticBezierTo(
-        -radius / petalWeightDivisor,
-        radius / 2,
-        0,
-        radius,
-      )
-      ..quadraticBezierTo(
-        radius / petalWeightDivisor,
-        radius / 2,
-        0,
-        0,
-      )
-      ..close();
+    final paint = Paint()
+      ..shader = shader
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _radius / 107;
 
-    canvas.drawPath(path, paint);
+    canvas.paintPetals(paint, radius, petalWeightDivisor, petals);
 
     canvas.restore();
   }
