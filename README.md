@@ -4,9 +4,7 @@
 
     - Values only update to the previous value after changing the value again and there is no animation.
 
-      * This probably happens because `forEachTween` is called twice for `_AnimatedTemperatureState` .
-
-  + Create background for weather widget.
+      * This probably happens because `forEachTween` is called twice for `_AnimatedTemperatureState`.
 
   + Make analog component also scale with size.
 
