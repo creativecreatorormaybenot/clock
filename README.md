@@ -1,10 +1,10 @@
 ## TODO
 
+* Add wave animation to background.
+
 * Use path for hour clock hand.
 
   + Use end-of-hand design from GDR clock for a hand.
-
-* Add wave animation to background.
 
 * Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
 
