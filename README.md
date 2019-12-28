@@ -6,6 +6,8 @@
 
       * This probably happens because `forEachTween` is called twice for `_AnimatedTemperatureState` .
 
+  + Use gradient shader for petals as well.
+
   + Make analog component also scale with size.
 
     - Use paths for larger clock hands.

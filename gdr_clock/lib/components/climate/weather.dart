@@ -40,7 +40,6 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    print('_AnimatedWeatherState.forEachTween ${DateTime.now()}');
     _angle = visitor(_angle, _angleFromModel, (value) => AngleTween(begin: value)) as AngleTween;
   }
 
