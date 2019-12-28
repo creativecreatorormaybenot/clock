@@ -139,7 +139,10 @@ class RenderTemperature extends RenderCompositionChild {
         area,
         Paint()
           ..style = PaintingStyle.stroke
-          ..color = const Color(0xff000000));
+          ..color = const Color(0xff000000)
+          // Not using strokeWidth 0.0 because that does not seem to scale with smaller canvas size,
+          // i.e. 0 < strokeWidth < 1 is actually thinner than strokeWidth = 0.0, strangely.
+          ..strokeWidth = size.height / 1e3);
 
     //<editor-fold desc="Some kind of brad nails at the top and bottom">
     final bradRadius = size.width / 29,
@@ -270,7 +273,9 @@ class RenderTemperature extends RenderCompositionChild {
   }
 
   void _paintLines(Canvas canvas, Line constraints) {
-    final paint = Paint()..color = const Color(0xff000000);
+    final paint = Paint()
+      ..color = const Color(0xff000000)
+      ..strokeWidth = size.height / 1e3;
 
     final majorValue = unit == TemperatureUnit.fahrenheit ? 20 : 10, intermediateValue = majorValue / 2, minorValue = intermediateValue / 5;
 
@@ -387,6 +392,6 @@ class RenderTemperature extends RenderCompositionChild {
         horizontalLine.endOffset(dy: offset.dy),
         Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = 1 + size.height / 792);
+          ..strokeWidth = size.height / 368);
   }
 }

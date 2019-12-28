@@ -36,9 +36,7 @@ class _UpdatedDateState extends State<UpdatedDate> {
       // DateTime handles passing e.g. 32 as the day just fine, i.e. even when the day should actually roll over,
       // passing the previous day + 1 is fine because DateTime will convert it into the correct date anyway,
       // which means that the time difference here will always be correct.
-      timer = Timer(
-          DateTime(time.year, time.month, time.day + 1).difference(time),
-          update);
+      timer = Timer(DateTime(time.year, time.month, time.day + 1).difference(time), update);
     });
   }
 
@@ -46,7 +44,9 @@ class _UpdatedDateState extends State<UpdatedDate> {
   Widget build(BuildContext context) => Date(
         text: '${time.month}/${time.day}/${time.year}',
         textStyle: const TextStyle(
-            color: Color(0xff000000), fontWeight: FontWeight.bold),
+          color: Color(0xff000000),
+          fontWeight: FontWeight.bold,
+        ),
       );
 }
 
@@ -92,9 +92,14 @@ class RenderDate extends RenderCompositionChild {
     final width = constraints.biggest.width;
 
     textPainter = TextPainter(
-        text: TextSpan(
-            text: text, style: textStyle.copyWith(fontSize: width / 14)),
-        textDirection: TextDirection.ltr);
+      text: TextSpan(
+        text: text,
+        style: textStyle.copyWith(
+          fontSize: width / 14,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
     textPainter.layout(maxWidth: width);
 
     size = Size(width, textPainter.height);

@@ -173,9 +173,13 @@ class RenderAnalogTime extends RenderCompositionChild {
     for (var n = smallDivisions; n > 0; n--) {
       // Do not draw small ticks when large ones will be drawn afterwards anyway.
       if (n % (smallDivisions / largeDivisions) != 0) {
-        final height = 8.3;
+        final height = _radius / 31;
         canvas.drawRect(
-            Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 1.3, height: height),
+            Rect.fromCenter(
+              center: Offset(0, (-size.width + height) / 2),
+              width: _radius / 195,
+              height: height,
+            ),
             Paint()
               ..color = const Color(0xff000000)
               ..blendMode = BlendMode.darken);
@@ -186,22 +190,33 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     // Ticks and numbers indicating hours.
     for (var n = largeDivisions; n > 0; n--) {
-      final height = 4.2;
+      final height = _radius / 65;
       canvas.drawRect(
-          Rect.fromCenter(center: Offset(0, (-size.width + height) / 2), width: 3.1, height: height),
+          Rect.fromCenter(
+            center: Offset(0, (-size.width + height) / 2),
+            width: _radius / 86,
+            height: height,
+          ),
           Paint()
             ..color = const Color(0xff000000)
             ..blendMode = BlendMode.darken);
 
-      final painter = TextPainter(text: TextSpan(text: '$n', style: textStyle), textDirection: TextDirection.ltr);
+      final painter = TextPainter(
+        text: TextSpan(
+          text: '$n',
+          style: textStyle.copyWith(fontSize: _radius / 8.2),
+        ),
+        textDirection: TextDirection.ltr,
+      );
       painter.layout();
       painter.paint(
           canvas,
           Offset(
-              -painter.width / 2,
-              -size.height / 2 +
-                  // Push the numbers inwards a bit.
-                  9.6));
+            -painter.width / 2,
+            -size.height / 2 +
+                // Push the numbers inwards a bit.
+                _radius / 24,
+          ));
 
       canvas.rotate(-pi * 2 / largeDivisions);
     }
@@ -212,7 +227,7 @@ class RenderAnalogTime extends RenderCompositionChild {
         Offset.fromDirection(hourHandAngle, size.width / 3.1),
         Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = 13.7
+          ..strokeWidth = _radius / 19
           ..strokeCap = StrokeCap.butt);
 
     // Hand displaying the current minute.
@@ -221,7 +236,7 @@ class RenderAnalogTime extends RenderCompositionChild {
         Offset.fromDirection(minuteHandAngle, size.width / 2.3),
         Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = 8.4
+          ..strokeWidth = _radius / 29
           ..strokeCap = StrokeCap.square);
 
     // Hand displaying the current second.

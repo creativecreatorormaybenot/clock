@@ -1,10 +1,12 @@
 ## TODO
 
-  + Make analog component also scale with size.
+  + Use paths for larger clock hands.
 
-    - Use paths for larger clock hands.
+  + Add shadow for at least one hand to give a sense of depth.
 
-    - Add shadow for at least one hand to give a sense of depth.
+    - Look at [ `Canvas.drawShadow` ](https://api.flutter.dev/flutter/dart-ui/Canvas/drawShadow.html).
+
+      * See how it handles rotation and if there is a way to make the direction of the light source consistent.
 
   + Add wave animation to background.
 
