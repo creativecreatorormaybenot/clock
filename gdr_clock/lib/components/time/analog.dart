@@ -230,14 +230,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..strokeWidth = _radius / 19
           ..strokeCap = StrokeCap.butt);
 
-    // Hand displaying the current minute.
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(minuteHandAngle, size.width / 2.3),
-        Paint()
-          ..color = const Color(0xff000000)
-          ..strokeWidth = _radius / 29
-          ..strokeCap = StrokeCap.square);
+    _paintMinuteHand(canvas);
 
     // Hand displaying the current second.
     canvas.save();
@@ -281,5 +274,20 @@ class RenderAnalogTime extends RenderCompositionChild {
     canvas.restore();
 
     canvas.restore();
+  }
+
+  void _paintMinuteHand(Canvas canvas) {
+    // todo use path instead
+
+    canvas.drawLine(
+        Offset.zero,
+        Offset.fromDirection(minuteHandAngle, size.width / 2.3),
+        Paint()
+          ..color = const Color(0xff000000)
+          ..strokeWidth = _radius / 29
+          ..strokeCap = StrokeCap.square);
+
+    // todo draw shadow
+//    canvas.drawShadow(path, color, elevation, false);
   }
 }
