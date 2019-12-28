@@ -1,5 +1,7 @@
 ## TODO
 
+* Draw petals onto analog component as well for consistency :) (inspiration)
+
 * Add wave animation to background.
 
 * Use path for hour clock hand.
