@@ -4,9 +4,13 @@
 
     - Values only update to the previous value after changing the value again and there is no animation.
 
-      * This probably happens because `forEachTween` is called twice for `_AnimatedTemperatureState`.
+      * This probably happens because `forEachTween` is called twice for `_AnimatedTemperatureState` .
 
   + Make analog component also scale with size.
+
+    - Use paths for larger clock hands.
+
+    - Add shadow for at least one hand to give a sense of depth.
 
   + Add wave animation to background.
 
