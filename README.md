@@ -1,14 +1,8 @@
 ## TODO
 
-* Add shadow for at least one hand to give a sense of depth.
+* Use path for hour clock hand.
 
-  + Look at [ `Canvas.drawShadow` ](https://api.flutter.dev/flutter/dart-ui/Canvas/drawShadow.html).
-
-    - See how it handles rotation and if there is a way to make the direction of the light source consistent.
-
-* Use paths for larger clock hands.
-
-  + Use end-of-hand design from GDR clock.
+  + Use end-of-hand design from GDR clock for a hand.
 
 * Add wave animation to background.
 

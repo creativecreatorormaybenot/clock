@@ -243,20 +243,29 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     final paint = Paint()
           ..color = const Color(0xff000000)
-          ..style = PaintingStyle.fill,
+          ..style = PaintingStyle.fill
+          ..isAntiAlias = true,
         h = _radius / 1.15,
-        w = _radius / 29,
+        w = _radius / 18,
         path = Path()
           ..moveTo(0, 0)
-          ..lineTo(-w / 2, h / 2)
-          ..lineTo(0, h)
-          ..lineTo(w / 2, h / 2)
-          ..lineTo(0, 0)
+          ..quadraticBezierTo(
+            -w,
+            h / 4,
+            0,
+            h,
+          )
+          ..quadraticBezierTo(
+            w,
+            h / 4,
+            0,
+            0,
+          )
           ..close();
 
     canvas.drawPath(path, paint);
 
-    canvas.drawShadow(path, const Color(0xff000000), _radius / 42, false);
+    canvas.drawShadow(path, const Color(0xff000000), _radius / 12, false);
 
     canvas.restore();
   }
@@ -302,6 +311,8 @@ class RenderAnalogTime extends RenderCompositionChild {
         Paint()
           ..color = const Color(0xff000000)
           ..style = PaintingStyle.fill);
+
+//    canvas.drawShadow(path, const Color(0xff000000), _radius / 12, false);
 
     canvas.restore();
   }
