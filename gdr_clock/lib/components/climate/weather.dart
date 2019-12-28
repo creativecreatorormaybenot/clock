@@ -151,7 +151,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     canvas.rotate(angle);
 
     //<editor-fold desc="Background">
-    final fullCirceRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
+    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
         backgroundShader = RadialGradient(
       colors: [
         Color.lerp(const Color(0xffffffff), backgroundColor, 3 / 5),
@@ -161,8 +161,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
         0,
         1,
       ],
-    ).createShader(fullCirceRect);
-    canvas.drawOval(fullCirceRect, Paint()..shader = backgroundShader);
+    ).createShader(fullCircleRect);
+    canvas.drawOval(fullCircleRect, Paint()..shader = backgroundShader);
     //</editor-fold>
 
     // Restore initial rotation.
@@ -190,7 +190,17 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    _paintPetals(canvas, petalColor, _radius / 4.2);
+    final petalShader = const RadialGradient(
+      colors: [
+        Color(0xffffffff),
+        petalColor,
+      ],
+      stops: [
+        0,
+        .3,
+      ],
+    ).createShader(fullCircleRect);
+    _paintPetals(canvas, petalShader, _radius / 4.2);
 
     //<editor-fold desc="Arrow">
     // Draw tip of the arrow pointing up.
@@ -220,11 +230,11 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     canvas.restore();
   }
 
-  static const petalColor = Color(0xffffff9c), petals = 14, petalWeightDivisor = 2;
+  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2;
 
-  void _paintPetals(Canvas canvas, Color color, double radius) {
+  void _paintPetals(Canvas canvas, Shader shader, double radius) {
     final paint = Paint()
-      ..color = color
+      ..shader = shader
       ..style = PaintingStyle.stroke
       ..strokeWidth = _radius / 107;
 

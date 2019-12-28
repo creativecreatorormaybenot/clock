@@ -1,7 +1,5 @@
 ## TODO
 
-  + Use gradient shader for petals as well.
-
   + Make analog component also scale with size.
 
     - Use paths for larger clock hands.
