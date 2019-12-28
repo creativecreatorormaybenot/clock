@@ -109,7 +109,7 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
 
 ### Implementation
 
-* I used only the Flutter rendering layer to create this clock face, i.e.<>no plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
+* I used only the Flutter rendering layer to create this clock face, i.e.</div>no plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
 
 * No premade widgets from the standard library were used in my own code, i.e. I mostly avoided the widget layer in order to have the most control over the layout.
 
