@@ -8,6 +8,8 @@
 
   + Create background for weather widget.
 
+  + Make analog component also scale with size.
+
   + Add wave animation to background.
 
   + Use end-of-hand design from GDR clock.
