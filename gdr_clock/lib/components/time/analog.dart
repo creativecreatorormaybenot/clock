@@ -231,47 +231,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..strokeCap = StrokeCap.butt);
 
     _paintMinuteHand(canvas);
-
-    // Hand displaying the current second.
-    canvas.save();
-    // Second hand design parts: rotate in order to easily draw the parts facing straight up.
-    canvas.transform(Matrix4.rotationZ(secondHandAngle).storage);
-
-    // This prevents polluting the paint scope with variables.
-    () {
-      final sh = size.width / 4.7, eh = size.width / 2.8, h = size.width / 2.1, w = size.width / 121, lw = size.width / 42;
-
-      canvas.drawPath(
-          Path()
-            ..moveTo(0, 0)
-            ..lineTo(-w / 2, 0)
-            ..lineTo(-w / 2, sh)
-            ..lineTo(w / 2, sh)
-            ..lineTo(w / 2, 0)
-            ..close()
-            // Left side of the design part in the middle
-            ..moveTo(-w / 2, sh)
-            ..lineTo(-lw / 2, sh)
-            ..lineTo(-lw / 2, eh)
-            ..lineTo(-w / 2, eh)
-            ..close()
-            // Other side of the part
-            ..moveTo(w / 2, sh)
-            ..lineTo(lw / 2, sh)
-            ..lineTo(lw / 2, eh)
-            ..lineTo(w / 2, eh)
-            ..close()
-            // End of hand
-            ..moveTo(-w / 2, eh)
-            ..lineTo(-w / 2, h)
-            ..lineTo(w / 2, h)
-            ..lineTo(w / 2, eh)
-            ..close(),
-          Paint()
-            ..color = const Color(0xff000000)
-            ..style = PaintingStyle.fill);
-    }();
-    canvas.restore();
+    _paintSecondHand(canvas);
 
     canvas.restore();
   }
@@ -296,8 +256,52 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     canvas.drawPath(path, paint);
 
-    // todo draw shadow
-//    canvas.drawShadow(path, color, elevation, false);
+    canvas.drawShadow(path, const Color(0xff000000), _radius / 42, false);
+
+    canvas.restore();
+  }
+
+  void _paintSecondHand(Canvas canvas) {
+    canvas.save();
+    // Second hand design parts: rotate in order to easily draw the parts facing straight up.
+    canvas.transform(Matrix4.rotationZ(secondHandAngle).storage);
+
+    final sh = size.width / 4.7,
+        eh = size.width / 2.8,
+        h = size.width / 2.1,
+        w = size.width / 121,
+        lw = size.width / 42,
+        path = Path()
+          ..moveTo(0, 0)
+          ..lineTo(-w / 2, 0)
+          ..lineTo(-w / 2, sh)
+          ..lineTo(w / 2, sh)
+          ..lineTo(w / 2, 0)
+          ..close()
+          // Left side of the design part in the middle
+          ..moveTo(-w / 2, sh)
+          ..lineTo(-lw / 2, sh)
+          ..lineTo(-lw / 2, eh)
+          ..lineTo(-w / 2, eh)
+          ..close()
+          // Other side of the part
+          ..moveTo(w / 2, sh)
+          ..lineTo(lw / 2, sh)
+          ..lineTo(lw / 2, eh)
+          ..lineTo(w / 2, eh)
+          ..close()
+          // End of hand
+          ..moveTo(-w / 2, eh)
+          ..lineTo(-w / 2, h)
+          ..lineTo(w / 2, h)
+          ..lineTo(w / 2, eh)
+          ..close();
+
+    canvas.drawPath(
+        path,
+        Paint()
+          ..color = const Color(0xff000000)
+          ..style = PaintingStyle.fill);
 
     canvas.restore();
   }
