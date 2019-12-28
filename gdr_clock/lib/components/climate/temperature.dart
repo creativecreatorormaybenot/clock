@@ -24,12 +24,13 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
 class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTemperature> {
   Tween<double> _temperature, _low, _high;
 
+
+
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    print('_AnimatedTemperatureState.forEachTween ${DateTime.now()}');
-    _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value));
-    _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value));
-    _high = visitor(_high, widget.model.high, (value) => Tween<double>(begin: value));
+    _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value as double)) as Tween<double>;
+    _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value as double)) as Tween<double>;
+    _high = visitor(_high, widget.model.high, (value) => Tween<double>(begin: value as double)) as Tween<double>;
   }
 
   @override
