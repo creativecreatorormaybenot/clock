@@ -221,6 +221,8 @@ class RenderAnalogTime extends RenderCompositionChild {
       canvas.rotate(-pi * 2 / largeDivisions);
     }
 
+    canvas.paintPetals(_radius);
+
     // Hand displaying the current hour.
     canvas.drawLine(
         Offset.zero,

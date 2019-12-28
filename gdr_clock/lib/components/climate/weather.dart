@@ -190,17 +190,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    final petalShader = const RadialGradient(
-      colors: [
-        Color(0xffffffff),
-        petalColor,
-      ],
-      stops: [
-        0,
-        .3,
-      ],
-    ).createShader(fullCircleRect);
-    _paintPetals(canvas, petalShader, _radius / 4.2);
+    canvas.paintPetals(_radius);
 
     //<editor-fold desc="Arrow">
     // Draw tip of the arrow pointing up.
@@ -226,25 +216,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..strokeWidth = _radius / 42
           ..strokeCap = StrokeCap.round);
     //</editor-fold>
-
-    canvas.restore();
-  }
-
-  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2.0;
-
-  void _paintPetals(Canvas canvas, Shader shader, double radius) {
-    canvas.save();
-
-    // The petals should rotate with the icons to make it seem like
-    // the whole disc but the arrow is rotating.
-    canvas.rotate(angle);
-
-    final paint = Paint()
-      ..shader = shader
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _radius / 107;
-
-    canvas.paintPetals(paint, radius, petalWeightDivisor, petals);
 
     canvas.restore();
   }
