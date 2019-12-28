@@ -277,17 +277,28 @@ class RenderAnalogTime extends RenderCompositionChild {
   }
 
   void _paintMinuteHand(Canvas canvas) {
-    // todo use path instead
+    canvas.save();
 
-    canvas.drawLine(
-        Offset.zero,
-        Offset.fromDirection(minuteHandAngle, size.width / 2.3),
-        Paint()
+    canvas.rotate(minuteHandAngle);
+
+    final paint = Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = _radius / 29
-          ..strokeCap = StrokeCap.square);
+          ..style = PaintingStyle.fill,
+        h = _radius / 1.15,
+        w = _radius / 29,
+        path = Path()
+          ..moveTo(0, 0)
+          ..lineTo(-w / 2, h / 2)
+          ..lineTo(0, h)
+          ..lineTo(w / 2, h / 2)
+          ..lineTo(0, 0)
+          ..close();
+
+    canvas.drawPath(path, paint);
 
     // todo draw shadow
 //    canvas.drawShadow(path, color, elevation, false);
+
+    canvas.restore();
   }
 }
