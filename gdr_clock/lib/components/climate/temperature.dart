@@ -11,8 +11,8 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
   const AnimatedTemperature({
     Key key,
     Curve curve = Curves.decelerate,
-    Duration duration = const Duration(milliseconds: 942),
-    this.model,
+    Duration duration = const Duration(seconds: 1),
+    @required this.model,
   }) : super(key: key, curve: curve, duration: duration);
 
   @override
@@ -24,14 +24,8 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
 class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTemperature> {
   Tween<double> _temperature, _low, _high;
 
-  double get _temperatureValue => _temperature?.evaluate(animation) ?? 0;
-
-  double get _lowValue => _low?.evaluate(animation) ?? 0;
-
-  double get _highValue => _high?.evaluate(animation) ?? 0;
-
   @override
-  void forEachTween(visitor) {
+  void forEachTween(TweenVisitor<dynamic> visitor) {
     print('_AnimatedTemperatureState.forEachTween ${DateTime.now()}');
     _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value));
     _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value));
@@ -43,9 +37,9 @@ class _AnimatedTemperatureState extends ImplicitlyAnimatedWidgetState<AnimatedTe
     return Temperature(
       unit: widget.model.unit,
       unitString: widget.model.unitString,
-      temperature: _temperatureValue,
-      low: _lowValue,
-      high: _highValue,
+      temperature: _temperature?.evaluate(animation) ?? 0,
+      low: _low?.evaluate(animation) ?? 0,
+      high: _high?.evaluate(animation) ?? 0,
     );
   }
 }

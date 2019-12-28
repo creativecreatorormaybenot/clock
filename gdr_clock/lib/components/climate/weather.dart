@@ -13,7 +13,7 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
   const AnimatedWeather({
     Key key,
     Curve curve = const ElasticInOutCurve(.6),
-    Duration duration = const Duration(milliseconds: 942),
+    Duration duration = const Duration(seconds: 1),
     this.model,
   }) : super(key: key, curve: curve, duration: duration);
 
