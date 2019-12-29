@@ -1,12 +1,12 @@
 ## TODO
 
+* Add shadows like [shown here](https://twitter.com/FlutterDev/status/1136312503397421058?s=20) at the beginning for all hands.
+
 * Add wave animation to background.
 
 * Use path for hour clock hand.
 
   + Use end-of-hand design from GDR clock for a hand.
-
-* Add shadows like [shown here](https://twitter.com/FlutterDev/status/1136312503397421058?s=20) for the red hands.
 
 * Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
 
