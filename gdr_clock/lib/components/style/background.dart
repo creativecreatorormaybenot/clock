@@ -1,19 +1,48 @@
 import 'dart:ui';
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
+const waveDuration = Duration(seconds: 1);
+
 class Background extends LeafRenderObjectWidget {
-  const Background({Key key}) : super(key: key);
+  final Animation<double> animation;
+
+  const Background({
+    Key key,
+    @required this.animation,
+  })  : assert(animation != null),
+        super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBackground();
+    return RenderBackground(
+      animation: animation,
+    );
   }
 }
 
 class RenderBackground extends RenderCompositionChild {
-  RenderBackground() : super(ClockComponent.background);
+  final Animation<double> animation;
+
+  RenderBackground({
+    this.animation,
+  }) : super(ClockComponent.background);
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    animation.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    animation.removeListener(markNeedsPaint);
+
+    super.detach();
+  }
 
   @override
   bool get sizedByParent => true;
@@ -28,7 +57,7 @@ class RenderBackground extends RenderCompositionChild {
       // Infinite width and height ensure that the indentations of the goo caused by components will always consider the complete object, even if some of it is out of view.
       // Using maxFinite because negativeInfinity for the left value throws NaN errors.
       -double.maxFinite,
-      size.height / 2,
+      size.height / 2 + (animation.value - 1 / 2).abs() * size.height / 5,
       double.infinity,
       double.maxFinite,
     );
@@ -36,10 +65,7 @@ class RenderBackground extends RenderCompositionChild {
       clockData.rectOf(ClockComponent.analogTime),
       clockData.rectOf(ClockComponent.weather),
       clockData.rectOf(ClockComponent.temperature),
-    ]
-        .where((rect) => rect.overlaps(gooArea))
-        .map((rect) => gooArea.intersect(rect))
-        .toList();
+    ].where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
 
     final canvas = context.canvas;
 
@@ -97,12 +123,8 @@ class RenderBackground extends RenderCompositionChild {
           rect.bottomRight.dy,
           rect.centerRight.dx,
           rect.centerRight.dy,
-          i == rects.length - 1
-              ? size.width
-              : (rect.right + rects[i + 1].left) / 2,
-          i == rects.length - 1
-              ? gooArea.top
-              : (rect.center.dy + rects[i + 1].center.dy) / 2,
+          i == rects.length - 1 ? size.width : (rect.right + rects[i + 1].left) / 2,
+          i == rects.length - 1 ? gooArea.top : (rect.center.dy + rects[i + 1].center.dy) / 2,
         );
     }
 

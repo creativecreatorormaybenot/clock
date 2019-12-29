@@ -23,7 +23,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer timer;
 
-  AnimationController analogBounceController, layoutController;
+  AnimationController analogBounceController, backgroundWaveController;
 
   @override
   void initState() {
@@ -31,12 +31,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController =
-        AnimationController(vsync: this, duration: handBounceDuration);
+    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
+    backgroundWaveController = AnimationController(vsync: this, duration: waveDuration);
 
     widget.model.addListener(modelChanged);
 
-    update();
+    update(true);
   }
 
   @override
@@ -44,7 +44,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     timer?.cancel();
 
     analogBounceController.dispose();
-    layoutController.dispose();
+    backgroundWaveController.dispose();
     super.dispose();
   }
 
@@ -64,15 +64,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     });
   }
 
-  void update() {
-    analogBounceController.forward(from: 0);
-
+  void update([bool initial = false]) {
     final time = DateTime.now();
-    timer = Timer(
-        Duration(
-            microseconds:
-                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
-        update);
+    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+
+    if (initial) return;
+
+    analogBounceController.forward(from: 0);
+    backgroundWaveController.forward(from: 0);
   }
 
   @override
@@ -81,11 +80,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           AnimatedAnalogTime(animation: analogBounceController, model: model),
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
-          const Background(),
+          Background(animation: CurvedAnimation(parent: backgroundWaveController, curve: Curves.bounceInOut)),
           Location(
             text: model.location,
-            textStyle: const TextStyle(
-                color: Color(0xff000000), fontWeight: FontWeight.bold),
+            textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),
           ),
           const UpdatedDate(),
         ],
