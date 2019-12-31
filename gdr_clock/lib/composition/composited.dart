@@ -24,6 +24,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 enum ClockComponent {
   analogTime,
   background,
+  ball,
   date,
 //  digitalTime,
   location,
@@ -31,8 +32,7 @@ enum ClockComponent {
   weather,
 }
 
-class ClockChildrenParentData
-    extends CompositionChildrenParentData<ClockComponent> {
+class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
@@ -41,17 +41,14 @@ class ClockChildrenParentData
   }
 
   Rect rectOf(ClockComponent component) {
-    assert(childType == ClockComponent.background,
-        'Only the background component can access sizes and offsets of the other children.');
+    assert(childType == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
     final rect = _rects[component];
-    assert(rect != null,
-        'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
+    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 }
 
-class RenderCompositedClock extends RenderComposition<ClockComponent,
-    ClockChildrenParentData, CompositedClock> {
+class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
   RenderCompositedClock() : super(ClockComponent.values);
 
   @override
@@ -70,17 +67,21 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
 
     //<editor-fold desc="Laying out children">
     // Background
-    final background = layoutChildren[ClockComponent.background],
-        backgroundData = layoutParentData[ClockComponent.background];
+    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background];
 
     backgroundData._rects = {};
     final provideRect = backgroundData._addRect;
 
     background.layout(BoxConstraints.tight(size));
 
+    // Ball
+    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
+    ball.layout(constraints, parentUsesSize: true);
+    ballData.offset = Offset(size.width * 2 / 3, size.height / 5);
+    provideRect(ball);
+
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
-    final analogTime = layoutChildren[ClockComponent.analogTime],
-        analogTimeData = layoutParentData[ClockComponent.analogTime];
+    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
     analogTime.layout(
       BoxConstraints.tight(Size.fromRadius(size.height / 2.9)),
       parentUsesSize: true,
@@ -92,8 +93,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     provideRect(analogTime);
 
     // Weather
-    final weather = layoutChildren[ClockComponent.weather],
-        weatherData = layoutParentData[ClockComponent.weather];
+    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather];
     weather.layout(
       BoxConstraints.tight(Size.fromRadius(size.height / 4)),
       parentUsesSize: true,
@@ -110,14 +110,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     provideRect(weather);
 
     // Temperature
-    final temperature = layoutChildren[ClockComponent.temperature],
-        temperatureData = layoutParentData[ClockComponent.temperature];
+    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature];
 
     () {
       final width = size.width / 6;
       temperature.layout(
-        BoxConstraints(
-            maxWidth: width, minHeight: width, maxHeight: size.height),
+        BoxConstraints(maxWidth: width, minHeight: width, maxHeight: size.height),
         parentUsesSize: true,
       );
 
@@ -129,22 +127,15 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
     provideRect(temperature);
 
     // Location
-    final location = layoutChildren[ClockComponent.location],
-        locationData = layoutParentData[ClockComponent.location];
+    final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
 
-    location.layout(
-        BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
-        parentUsesSize: true);
-    locationData.offset = Offset(weatherData.offset.dx,
-        weatherData.offset.dy / 3 - location.size.height / 2);
+    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
+    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
 
     // Date
-    final date = layoutChildren[ClockComponent.date],
-        dateData = layoutParentData[ClockComponent.date];
+    final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
 
-    date.layout(
-        BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
-        parentUsesSize: false);
+    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
     dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
     //</editor-fold>
   }
@@ -152,17 +143,19 @@ class RenderCompositedClock extends RenderComposition<ClockComponent,
   @override
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
-    context.pushClipRect(needsCompositing, offset, Offset.zero & size,
-        (context, offset) {
+    context.pushClipRect(needsCompositing, offset, Offset.zero & size, (context, offset) {
       super.paint(context, offset);
 
-      // Draw components.
+      // Draw components in the actual draw order.
+      // The order in which the children are passed to the widget does not matter
+      // and is alphabetical, i.e. the following is the draw order.
       paintChild(ClockComponent.background);
       paintChild(ClockComponent.location);
       paintChild(ClockComponent.date);
       paintChild(ClockComponent.temperature);
       paintChild(ClockComponent.weather);
       paintChild(ClockComponent.analogTime);
+      paintChild(ClockComponent.ball);
     });
   }
 }

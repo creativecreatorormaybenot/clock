@@ -81,6 +81,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
           Background(animation: CurvedAnimation(parent: backgroundWaveController, curve: Curves.bounceInOut)),
+          const Ball(),
           Location(
             text: model.location,
             textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),

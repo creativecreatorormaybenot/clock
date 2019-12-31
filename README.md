@@ -18,7 +18,11 @@
 
     - The curve could slowly change over time like the background does for relaxation.
 
+    - This curve should be drawn in background - or if the background changes frequently but the curve does not, in another render object.
+
   + Ball should bounce onto say the analog clock and push it down a bit (analog clock would bounce up again afterwards using elastic out), which would nicely show the gooeyness of the background.
+
+  + Maybe draw radial gradient about the ball's location on the background.
 
 * Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
 
