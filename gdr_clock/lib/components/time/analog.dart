@@ -28,15 +28,21 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
     return AnalogTime(
       textStyle: Theme.of(context).textTheme.display1,
-      secondHandAngle:
+      secondHandAngle: true
+          ? pi * 4 / 3
+          :
           // Regular distance
           pi * 2 / 60 * time.second +
               // Bounce
               pi * 2 / 60 * (bounce - 1),
-      minuteHandAngle: pi * 2 / 60 * time.minute +
-          // Bounce only when the minute changes.
-          (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
-      hourHandAngle:
+      minuteHandAngle: true
+          ? pi / 4
+          : pi * 2 / 60 * time.minute +
+              // Bounce only when the minute changes.
+              (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
+      hourHandAngle: true
+          ? pi * 3 / 4
+          :
           // Distance for the hour.
           pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
@@ -251,6 +257,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
+    drawShadow(canvas, path, Hand.second);
 
     canvas.restore();
   }
@@ -283,8 +290,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-
-    canvas.drawShadow(path, const Color(0xff000000), _radius / 12, false);
+    drawShadow(canvas, path, Hand.minute);
 
     canvas.restore();
   }
@@ -330,9 +336,32 @@ class RenderAnalogTime extends RenderCompositionChild {
         Paint()
           ..color = const Color(0xff000000)
           ..style = PaintingStyle.fill);
-
-//    canvas.drawShadow(path, const Color(0xff000000), _radius / 12, false);
+    drawShadow(canvas, path, Hand.second);
 
     canvas.restore();
   }
+
+  void drawShadow(Canvas canvas, Path path, Hand hand) {
+    double elevation;
+
+    switch (hand) {
+      case Hand.hour:
+        elevation = _radius / 14;
+        break;
+      case Hand.minute:
+        elevation = _radius / 28;
+        break;
+      case Hand.second:
+        elevation = _radius / 17;
+        break;
+    }
+
+    canvas.drawShadow(path, const Color(0xff000000), elevation, false);
+  }
+}
+
+enum Hand {
+  hour,
+  minute,
+  second,
 }
