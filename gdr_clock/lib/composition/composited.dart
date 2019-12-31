@@ -76,8 +76,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     // Ball
     final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
-    ball.layout(constraints, parentUsesSize: true);
-    ballData.offset = Offset(size.width * 2 / 3, size.height / 5);
+    ball.layout(constraints.loosen(), parentUsesSize: true);
+    ballData.offset = Offset(size.width * 5 / 8, size.height / 9);
     provideRect(ball);
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).

@@ -1,5 +1,7 @@
 ## TODO
 
+* Fix position of minute and second hand.
+
 * Add shadows like [shown here](https://twitter.com/FlutterDev/status/1136312503397421058?s=20) at the beginning for all hands.
 
 * Add wave animation to background.

@@ -71,7 +71,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     if (initial) return;
 
     analogBounceController.forward(from: 0);
-    backgroundWaveController.forward(from: 0);
+    if (time.second == 0) backgroundWaveController.forward(from: 0);
   }
 
   @override

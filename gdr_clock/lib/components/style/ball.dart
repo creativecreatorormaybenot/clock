@@ -4,42 +4,28 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class Ball extends LeafRenderObjectWidget {
-  final double radius;
-
-  Ball({
+  const Ball({
     Key key,
-    this.radius,
   }) : super(key: key);
 
   @override
   RenderBall createRenderObject(BuildContext context) {
-    return RenderBall(
-      radius: radius,
-    );
-  }
-
-  @override
-  void updateRenderObject(BuildContext context, RenderBall renderObject) {
-    renderObject..radius = radius;
+    return RenderBall();
   }
 }
 
 class RenderBall extends RenderCompositionChild {
-  RenderBall({
-    double radius,
-  })  : _radius = radius,
-        super(ClockComponent.ball);
+  RenderBall() : super(ClockComponent.ball);
+
+  @override
+  bool get sizedByParent => true;
 
   double _radius;
 
-  set radius(double radius) {
-    if (_radius != radius) markNeedsLayout();
-
-    _radius = radius;
-  }
-
   @override
-  void performLayout() {
+  void performResize() {
+    _radius = constraints.biggest.height / 18;
+
     size = Size.fromRadius(_radius);
   }
 
