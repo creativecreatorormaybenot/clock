@@ -31,7 +31,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     model = widget.model;
 
-    analogBounceController = AnimationController(vsync: this, duration: handBounceDuration);
+    analogBounceController = AnimationController(
+      vsync: this,
+      duration: handBounceDuration,
+      // The default state has the value at 1.
+      value: 1,
+    );
     backgroundWaveController = AnimationController(vsync: this, duration: waveDuration);
 
     widget.model.addListener(modelChanged);

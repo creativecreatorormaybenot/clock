@@ -27,20 +27,17 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
     return AnalogTime(
       textStyle: Theme.of(context).textTheme.display1,
-      secondHandAngle: -pi / 2 +
+      secondHandAngle:
           // Regular distance
           pi * 2 / 60 * time.second +
-          // Bounce
-          pi * 2 / 60 * (bounce - 1),
-      minuteHandAngle: -pi / 2 +
-          pi * 2 / 60 * time.minute +
+              // Bounce
+              pi * 2 / 60 * (bounce - 1),
+      minuteHandAngle: pi * 2 / 60 * time.minute +
           // Bounce only when the minute changes.
           (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
       hourHandAngle:
-          // Angle equal to 0 starts on the right side and not on the top.
-          -pi / 2 +
-              // Distance for the hour.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+          // Distance for the hour.
+          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
@@ -185,6 +182,8 @@ class RenderAnalogTime extends RenderCompositionChild {
               ..blendMode = BlendMode.darken);
       }
 
+      // This will go back to 0 at the end of loop,
+      // i.e. at `-pi * 2` which is rendered as the same.
       canvas.rotate(-pi * 2 / smallDivisions);
     }
 
@@ -218,27 +217,38 @@ class RenderAnalogTime extends RenderCompositionChild {
                 _radius / 24,
           ));
 
+      // Like above, this will go back to 0 at the end of loop,
+      // i.e. at `-pi * 2` which is rendered as the same.
       canvas.rotate(-pi * 2 / largeDivisions);
     }
 
-    canvas.paintPetals(_radius);
+    canvas.drawPetals(_radius);
 
-    // Hand displaying the current hour.
+    _drawHourHand(canvas);
+    _drawMinuteHand(canvas);
+    _drawSecondHand(canvas);
+
+    canvas.restore();
+  }
+
+  void _drawHourHand(Canvas canvas) {
+    canvas.save();
+
+    canvas.rotate(hourHandAngle);
+
+    // todo use path instead
     canvas.drawLine(
         Offset.zero,
-        Offset.fromDirection(hourHandAngle, size.width / 3.1),
+        Offset(0, -size.width / 3.1),
         Paint()
           ..color = const Color(0xff000000)
           ..strokeWidth = _radius / 19
           ..strokeCap = StrokeCap.butt);
 
-    _paintMinuteHand(canvas);
-    _paintSecondHand(canvas);
-
     canvas.restore();
   }
 
-  void _paintMinuteHand(Canvas canvas) {
+  void _drawMinuteHand(Canvas canvas) {
     canvas.save();
 
     canvas.rotate(minuteHandAngle);
@@ -247,7 +257,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..color = const Color(0xff000000)
           ..style = PaintingStyle.fill
           ..isAntiAlias = true,
-        h = _radius / 1.15,
+        h = -_radius / 1.15,
         w = _radius / 18,
         path = Path()
           ..moveTo(0, 0)
@@ -272,14 +282,14 @@ class RenderAnalogTime extends RenderCompositionChild {
     canvas.restore();
   }
 
-  void _paintSecondHand(Canvas canvas) {
+  void _drawSecondHand(Canvas canvas) {
     canvas.save();
     // Second hand design parts: rotate in order to easily draw the parts facing straight up.
     canvas.transform(Matrix4.rotationZ(secondHandAngle).storage);
 
-    final sh = size.width / 4.7,
-        eh = size.width / 2.8,
-        h = size.width / 2.1,
+    final sh = -size.width / 4.7,
+        eh = -size.width / 2.8,
+        h = -size.width / 2.1,
         w = size.width / 121,
         lw = size.width / 42,
         path = Path()

@@ -190,7 +190,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    canvas.paintPetals(_radius);
+    canvas.drawPetals(_radius);
 
     //<editor-fold desc="Arrow">
     // Draw tip of the arrow pointing up.
@@ -288,6 +288,8 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.restore();
   }
 
+  /// Paints (`paintX` because of [PaintingContext]) the appropriate icon.
+  /// Information on the naming scheme I chose can be found at [ExtendedCanvas.drawPetals].
   void paintIcon(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
 
@@ -298,25 +300,25 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
     switch (condition) {
       case WeatherCondition.cloudy:
-        paintCloudy(canvas);
+        drawCloudy(canvas);
         break;
       case WeatherCondition.foggy:
-        paintFoggy(canvas);
+        drawFoggy(canvas);
         break;
       case WeatherCondition.rainy:
-        paintRainy(canvas);
+        drawRainy(canvas);
         break;
       case WeatherCondition.snowy:
-        paintSnowy(canvas);
+        drawSnowy(canvas);
         break;
       case WeatherCondition.sunny:
-        paintSunny(canvas);
+        drawSunny(canvas);
         break;
       case WeatherCondition.thunderstorm:
-        paintThunderstorm(canvas);
+        drawThunderstorm(canvas);
         break;
       case WeatherCondition.windy:
-        paintWindy(canvas);
+        drawWindy(canvas);
         break;
     }
 
@@ -325,7 +327,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   static const cloudColor = Color(0xcbc1beba);
 
-  void _paintCloud(Canvas canvas, double tx, double ty, double s) {
+  void _drawCloud(Canvas canvas, double tx, double ty, double s) {
     canvas.save();
 
     canvas.translate(tx, ty);
@@ -369,22 +371,22 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.restore();
   }
 
-  void paintCloudy(Canvas canvas) {
-    // I could also achieve this by passing different values to _paintCloud,
+  void drawCloudy(Canvas canvas) {
+    // I could also achieve this by passing different values to _drawCloud,
     // but I only realized that I wanted a different position later and it is easier to
     // adjust it like this.
     canvas.translate(0, radius * indentationFactor / 6);
     canvas.scale(1.1);
 
-    _paintCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
-    _paintCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
-    _paintCloud(canvas, 0, 0, 1.3);
-    _paintCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
+    _drawCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
+    _drawCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
+    _drawCloud(canvas, 0, 0, 1.3);
+    _drawCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
   }
 
   static const fogColor = Color(0xc5cdc8be);
 
-  void paintFoggy(Canvas canvas) {
+  void drawFoggy(Canvas canvas) {
     final g = radius * indentationFactor / 14;
 
     // Once again, it is easier to adjust it like this afterwards.
@@ -405,7 +407,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   static const raindropColor = Color(0xdda1c6cc), raindrops = 42;
 
-  void _paintRain(Canvas canvas, int r, int n, double s) {
+  void _drawRain(Canvas canvas, int r, int n, double s) {
     canvas.save();
     canvas.scale(s);
 
@@ -423,13 +425,13 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.restore();
   }
 
-  void paintRainy(Canvas canvas) {
-    _paintRain(canvas, 0, raindrops, 1.42);
+  void drawRainy(Canvas canvas) {
+    _drawRain(canvas, 0, raindrops, 1.42);
   }
 
   static const snowColor = Color(0xbbfffafa), snowflakes = 61, snow = 23;
 
-  void paintSnowy(Canvas canvas) {
+  void drawSnowy(Canvas canvas) {
     final random = Random(815174);
 
     // Draw snowflakes
@@ -450,7 +452,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   static const sunColor = Color(0xfffcd440), sunRays = 12;
 
-  void paintSunny(Canvas canvas) {
+  void drawSunny(Canvas canvas) {
     final paint = Paint()
       ..color = sunColor
       ..strokeWidth = radius / 124;
@@ -465,7 +467,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
 
   static const lightningColor = Color(0xfffdd023), thunderstormRaindrops = 11;
 
-  void paintThunderstorm(Canvas canvas) {
+  void drawThunderstorm(Canvas canvas) {
     // Draw lightning
     final lightningPath = Path()
       ..moveTo(radius * -indentationFactor / 4, radius * -indentationFactor / 4)
@@ -483,12 +485,12 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
           ..style = PaintingStyle.fill);
 
     // Draw raindrops
-    _paintRain(canvas, 435, thunderstormRaindrops, 1);
+    _drawRain(canvas, 435, thunderstormRaindrops, 1);
   }
 
   static const primaryWindColor = Color(0xff96c4e8), secondaryWindColor = Color(0xff008abf);
 
-  void _paintWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3) {
+  void _drawWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3) {
     canvas.save();
     canvas.translate(tx, ty);
     canvas.scale(s);
@@ -579,15 +581,15 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.restore();
   }
 
-  void paintWindy(Canvas canvas) {
+  void drawWindy(Canvas canvas) {
     // Primary wind symbol
-    _paintWind(canvas, primaryWindColor, 0, radius * indentationFactor / 17, .96, 2, 1.8, 1);
+    _drawWind(canvas, primaryWindColor, 0, radius * indentationFactor / 17, .96, 2, 1.8, 1);
 
     // Upper wind symbol
-    _paintWind(canvas, secondaryWindColor, radius * indentationFactor / -3, radius * indentationFactor / -5, .8, 2, 1.8, 1);
+    _drawWind(canvas, secondaryWindColor, radius * indentationFactor / -3, radius * indentationFactor / -5, .8, 2, 1.8, 1);
 
     // Lower wind symbol
-    _paintWind(canvas, secondaryWindColor, radius * indentationFactor / -6, radius * indentationFactor / 3, .7, 1, 1, 1);
+    _drawWind(canvas, secondaryWindColor, radius * indentationFactor / -6, radius * indentationFactor / 3, .7, 1, 1, 1);
   }
 
   /// Paints icon in neutral orientation in big in order to easily design it.
@@ -604,7 +606,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       canvas.save();
       canvas.translate(534, 350);
       canvas.scale(2);
-      paintFoggy(canvas);
+      drawFoggy(canvas);
 
       canvas.restore();
       return true;

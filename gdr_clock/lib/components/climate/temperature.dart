@@ -185,7 +185,7 @@ class RenderTemperature extends RenderCompositionChild {
         brackets = Line.fromSEI(start: tube.start, end: tube.end, indent: tube.extent / 7.42),
         lines = Line.fromSEI(start: brackets.start, end: brackets.end, indent: -mount.extent / 3);
 
-    _paintLines(canvas, lines);
+    _drawLines(canvas, lines);
 
     final tubeWidth = bradRadius * 1.2;
 
@@ -197,7 +197,7 @@ class RenderTemperature extends RenderCompositionChild {
     canvas.drawLine(tube.startOffset(dx: size.width / 2), tube.endOffset(dx: size.width / 2), tubePaint);
     //</editor-fold>
 
-    _paintTemperature(
+    _drawTemperature(
       canvas,
       tube,
       lines,
@@ -207,7 +207,7 @@ class RenderTemperature extends RenderCompositionChild {
       text: 'max',
       textLeft: false,
     );
-    _paintTemperature(
+    _drawTemperature(
       canvas,
       tube,
       lines,
@@ -215,7 +215,7 @@ class RenderTemperature extends RenderCompositionChild {
       temperature,
       const Color(0xde6ab7ff),
     );
-    _paintTemperature(
+    _drawTemperature(
       canvas,
       tube,
       lines,
@@ -272,7 +272,7 @@ class RenderTemperature extends RenderCompositionChild {
     canvas.restore();
   }
 
-  void _paintLines(Canvas canvas, Line constraints) {
+  void _drawLines(Canvas canvas, Line constraints) {
     final paint = Paint()
       ..color = const Color(0xff000000)
       ..strokeWidth = size.height / 1e3;
@@ -339,7 +339,7 @@ class RenderTemperature extends RenderCompositionChild {
     }
   }
 
-  void _paintTemperature(Canvas canvas, Line tube, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
+  void _drawTemperature(Canvas canvas, Line tube, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
     final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
