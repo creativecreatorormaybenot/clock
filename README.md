@@ -4,6 +4,8 @@
 
 * Add shadows like [shown here](https://twitter.com/FlutterDev/status/1136312503397421058?s=20) at the beginning for all hands.
 
+  - Adjust the shadow's position to not be as far away as it is right now.
+
 * Add wave animation to background.
 
 * Use path for hour clock hand.
