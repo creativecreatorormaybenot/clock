@@ -4,11 +4,9 @@
 
   + Adjust the shadow's position to not be as far away as it is right now.
 
+* Use end-of-hand design from GDR clock for a hand.
+
 * Add wave animation to background.
-
-* Use path for hour clock hand.
-
-  + Use end-of-hand design from GDR clock for a hand.
 
 * Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
 

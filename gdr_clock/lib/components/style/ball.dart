@@ -42,14 +42,15 @@ class RenderBall extends RenderCompositionChild {
     canvas.drawOval(
         rect,
         Paint()
-          ..shader = const SweepGradient(
-                  endAngle: pi / 2,
-                  colors: [
-                    Color(0xffd3d3ff),
-                    Color(0xff9a9aff),
-                  ],
-                  tileMode: TileMode.mirror)
-              .createShader(rect));
+//          ..shader = const SweepGradient(
+//                  endAngle: pi / 2,
+//                  colors: [
+//                    Color(0xffd3d3ff),
+//                    Color(0xff9a9aff),
+//                  ],
+//                  tileMode: TileMode.mirror) todo unsupported in web
+//              .createShader(rect)
+    );
 
     canvas.restore();
   }

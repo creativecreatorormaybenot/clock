@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -236,14 +237,20 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     canvas.rotate(hourHandAngle);
 
-    // todo use path instead
-    canvas.drawLine(
-        Offset.zero,
-        Offset(0, -size.width / 3.1),
-        Paint()
+    final paint = Paint()
           ..color = const Color(0xff000000)
-          ..strokeWidth = _radius / 19
-          ..strokeCap = StrokeCap.butt);
+          ..style = PaintingStyle.fill,
+        w = _radius / 19,
+        h = -size.width / 3.1,
+        path = Path()
+          ..moveTo(0, 0)
+          ..lineTo(-w / 2, 0)
+          ..lineTo(-w / 2, h)
+          ..lineTo(w / 2, h)
+          ..lineTo(w / 2, 0)
+          ..close();
+
+    canvas.drawPath(path, paint);
 
     canvas.restore();
   }
