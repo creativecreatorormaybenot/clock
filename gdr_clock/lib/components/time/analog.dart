@@ -239,13 +239,26 @@ class RenderAnalogTime extends RenderCompositionChild {
     final paint = Paint()
           ..color = const Color(0xff000000)
           ..style = PaintingStyle.fill,
-        w = _radius / 19,
-        h = -size.width / 3.16,
+        w = _radius / 42,
+        h = -_radius / 2.29,
+        bw = _radius / 6.3,
+        bh = _radius / 7,
         path = Path()
           ..moveTo(0, 0)
           ..lineTo(-w / 2, 0)
           ..lineTo(-w / 2, h)
-          ..lineTo(w / 2, h)
+          ..quadraticBezierTo(
+            -bw / 2,
+            h - bh / 4,
+            0,
+            h - bh,
+          )
+          ..quadraticBezierTo(
+            bw / 2,
+            h - bh / 4,
+            w / 2,
+            h,
+          )
           ..lineTo(w / 2, 0)
           ..close();
 
