@@ -1,9 +1,5 @@
 ## TODO
 
-* Adjust draw order of hands to match up with the shadow elevations.
-
-  + Color the hands slightly differently.
-
 * Add ball that bounces about scene, e.g.off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
   + This should ideally be relaxing -> not fast.

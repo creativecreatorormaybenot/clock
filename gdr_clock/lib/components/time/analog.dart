@@ -224,9 +224,11 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     canvas.drawPetals(_radius);
 
-    _drawHourHand(canvas);
+    // This is the order of the shadow elevations as well, i.e.
+    // hour hand is located highest and the minute hand lowest.
     _drawMinuteHand(canvas);
     _drawSecondHand(canvas);
+    _drawHourHand(canvas);
 
     canvas.restore();
   }
@@ -237,7 +239,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     canvas.rotate(hourHandAngle);
 
     final paint = Paint()
-          ..color = const Color(0xff000000)
+          ..color = const Color(0xff3a1009)
           ..style = PaintingStyle.fill,
         w = _radius / 42,
         h = -_radius / 2.29,
@@ -263,7 +265,14 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-    drawShadow(canvas, path, Hand.hour);
+
+    // I have open questions about Canvas.drawShadow (see
+    // https://github.com/flutter/flutter/issues/48027 and
+    // https://stackoverflow.com/q/59549244/6509751).
+    // I also just noticed that I opened that issue exactly on
+    // New Year's first minute - was not on purpose, but this
+    // should show something about my relationship to this project :)
+    canvas.drawShadow(path, const Color(0xff000000), _radius / 57, false);
 
     canvas.restore();
   }
@@ -296,7 +305,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-    drawShadow(canvas, path, Hand.minute);
+    canvas.drawShadow(path, const Color(0xff000000), _radius / 89, false);
 
     canvas.restore();
   }
@@ -306,7 +315,10 @@ class RenderAnalogTime extends RenderCompositionChild {
     // Second hand design parts: rotate in order to easily draw the parts facing straight up.
     canvas.transform(Matrix4.rotationZ(secondHandAngle).storage);
 
-    final sh = -size.width / 4.7,
+    final paint = Paint()
+          ..color = const Color(0xff09103a)
+          ..style = PaintingStyle.fill,
+        sh = -size.width / 4.7,
         eh = -size.width / 2.8,
         h = -size.width / 2.1,
         w = size.width / 205,
@@ -337,43 +349,9 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..lineTo(w / 2, eh)
           ..close();
 
-    canvas.drawPath(
-        path,
-        Paint()
-          ..color = const Color(0xff000000)
-          ..style = PaintingStyle.fill);
-    drawShadow(canvas, path, Hand.second);
+    canvas.drawPath(path, paint);
+    canvas.drawShadow(path, const Color(0xff000000), _radius / 64, false);
 
     canvas.restore();
   }
-
-  void drawShadow(Canvas canvas, Path path, Hand hand) {
-    double elevation;
-
-    switch (hand) {
-      case Hand.hour:
-        elevation = _radius / 57;
-        break;
-      case Hand.minute:
-        elevation = _radius / 89;
-        break;
-      case Hand.second:
-        elevation = _radius / 64;
-        break;
-    }
-
-    // I have open questions about Canvas.drawShadow (see
-    // https://github.com/flutter/flutter/issues/48027 and
-    // https://stackoverflow.com/q/59549244/6509751).
-    // I also just noticed that I opened that issue exactly on
-    // New Year's first minute - was not on purpose, but this
-    // should show something about my relationship to this project :)
-    canvas.drawShadow(path, const Color(0xff000000), elevation, false);
-  }
-}
-
-enum Hand {
-  hour,
-  minute,
-  second,
 }
