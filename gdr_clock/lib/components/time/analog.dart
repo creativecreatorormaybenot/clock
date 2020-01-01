@@ -309,8 +309,8 @@ class RenderAnalogTime extends RenderCompositionChild {
     final sh = -size.width / 4.7,
         eh = -size.width / 2.8,
         h = -size.width / 2.1,
-        w = size.width / 121,
-        lw = size.width / 42,
+        w = size.width / 205,
+        lw = size.width / 71,
         path = Path()
           ..moveTo(0, 0)
           ..lineTo(-w / 2, 0)

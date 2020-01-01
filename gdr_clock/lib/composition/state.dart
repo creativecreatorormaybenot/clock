@@ -37,7 +37,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // The default state has the value at 1.
       value: 1,
     );
-    backgroundWaveController = AnimationController(vsync: this, duration: waveDuration);
+    backgroundWaveController = AnimationController(
+      vsync: this,
+      duration: waveDuration,
+    );
 
     widget.model.addListener(modelChanged);
 
@@ -76,7 +79,17 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     if (initial) return;
 
     analogBounceController.forward(from: 0);
-    if (time.second == 0) backgroundWaveController.forward(from: 0);
+
+    () {
+      // This requires the duration to be less than one minute long, but it also ensures consistent behavior.
+      final progress = 1 / waveDuration.inSeconds * time.second;
+
+      if ((backgroundWaveController.status == AnimationStatus.reverse || (time.second == 0 && backgroundWaveController.value > 1 / 2)) && !(time.second == 0 && backgroundWaveController.value < 1 / 2)) {
+        backgroundWaveController.reverse(from: 1 - progress);
+      } else {
+        backgroundWaveController.forward(from: progress);
+      }
+    }();
   }
 
   @override
@@ -85,7 +98,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           AnimatedAnalogTime(animation: analogBounceController, model: model),
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
-          Background(animation: CurvedAnimation(parent: backgroundWaveController, curve: Curves.bounceInOut)),
+          Background(
+              animation: CurvedAnimation(
+            parent: backgroundWaveController,
+            curve: waveCurve,
+            reverseCurve: waveCurve.flipped,
+          )),
           const Ball(),
           Location(
             text: model.location,

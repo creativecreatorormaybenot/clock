@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
-const waveDuration = Duration(seconds: 1);
+const waveDuration = Duration(minutes: 1), waveCurve = Curves.easeInOut;
 
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
@@ -57,7 +57,7 @@ class RenderBackground extends RenderCompositionChild {
       // Infinite width and height ensure that the indentations of the goo caused by components will always consider the complete object, even if some of it is out of view.
       // Using maxFinite because negativeInfinity for the left value throws NaN errors.
       -double.maxFinite,
-      size.height / 2 + (animation.value - 1 / 2).abs() * size.height / 5,
+      size.height / 2 + (animation.value - 1 / 2) * size.height / 5,
       double.infinity,
       double.maxFinite,
     );

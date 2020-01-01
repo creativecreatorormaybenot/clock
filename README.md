@@ -1,8 +1,8 @@
 ## TODO
 
-* Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
+* Adjust draw order of hands to match up with the shadow elevations.
 
- + Try to make a relaxing version that takes, say, a minute.
+  + Color the hands slightly differently.
 
 * Add ball that bounces about scene, e.g.off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
