@@ -28,21 +28,14 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
     return AnalogTime(
       textStyle: Theme.of(context).textTheme.display1,
-      secondHandAngle: true
-          ? pi * 4 / 3
-          :
-          // Regular distance
+      secondHandAngle: // Regular distance
           pi * 2 / 60 * time.second +
               // Bounce
               pi * 2 / 60 * (bounce - 1),
-      minuteHandAngle: true
-          ? pi / 4
-          : pi * 2 / 60 * time.minute +
-              // Bounce only when the minute changes.
-              (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
-      hourHandAngle: true
-          ? pi * 3 / 4
-          :
+      minuteHandAngle: pi * 2 / 60 * time.minute +
+          // Bounce only when the minute changes.
+          (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
+      hourHandAngle:
           // Distance for the hour.
           pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
@@ -247,7 +240,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..color = const Color(0xff000000)
           ..style = PaintingStyle.fill,
         w = _radius / 19,
-        h = -size.width / 3.1,
+        h = -size.width / 3.16,
         path = Path()
           ..moveTo(0, 0)
           ..lineTo(-w / 2, 0)
@@ -257,7 +250,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-    drawShadow(canvas, path, Hand.second);
+    drawShadow(canvas, path, Hand.hour);
 
     canvas.restore();
   }
@@ -346,16 +339,22 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     switch (hand) {
       case Hand.hour:
-        elevation = _radius / 14;
+        elevation = _radius / 57;
         break;
       case Hand.minute:
-        elevation = _radius / 28;
+        elevation = _radius / 89;
         break;
       case Hand.second:
-        elevation = _radius / 17;
+        elevation = _radius / 64;
         break;
     }
 
+    // I have open questions about Canvas.drawShadow (see
+    // https://github.com/flutter/flutter/issues/48027 and
+    // https://stackoverflow.com/q/59549244/6509751).
+    // I also just noticed that I opened that issue exactly on
+    // New Year's first minute - was not on purpose, but this
+    // should show something about my relationship to this project :)
     canvas.drawShadow(path, const Color(0xff000000), elevation, false);
   }
 }

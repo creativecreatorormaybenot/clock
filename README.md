@@ -1,11 +1,5 @@
 ## TODO
 
-* Add shadows like [shown here](https://twitter.com/FlutterDev/status/1136312503397421058?s=20) at the beginning for all hands.
-
-  + Adjust the shadow's position to not be as far away as it is right now.
-
-    - Hour hand shadow should be furthest away because it is furthest up, then second hand, and the minute hand at the bottom.
-
 * Use end-of-hand design from GDR clock for a hand.
 
 * Add wave animation to background.
