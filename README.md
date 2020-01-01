@@ -1,8 +1,8 @@
 ## TODO
 
-* Add wave animation to background.
-
 * Background curve should be adjusted by the model dynamically, e.g.the height of the cut or w/e and always animate in a relaxing fashion.
+
+ + Try to make a relaxing version that takes, say, a minute.
 
 * Add ball that bounces about scene, e.g.off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
 
