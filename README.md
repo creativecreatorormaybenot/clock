@@ -1,10 +1,10 @@
 ## TODO
 
-* Add ball that bounces about scene, e.g.off the second hand. Maybe only show it sometimes or make it slow and show other balls for special events.
+* Add ball that bounces about scene.
 
-  + This should ideally be relaxing -> not fast.
+  + It should rolling down a Bézier curve every second.
 
-  + Easy one would be a ball rolling down a Bézier curve every second, calculating the acceleration and velocity of the ball based on the slope of the curve.
+    - Forget about the calculus part for this project.
 
     - The curve could slowly change over time like the background does for relaxation.
 
@@ -12,7 +12,9 @@
 
   + Ball should bounce onto say the analog clock and push it down a bit (analog clock would bounce up again afterwards using elastic out), which would nicely show the gooeyness of the background.
 
-  + Maybe draw radial gradient about the ball's location on the background.
+  + Maybe draw radial gradient about the ball's location in the background.
+
+  + This should ideally be relaxing -> not fast.
 
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
