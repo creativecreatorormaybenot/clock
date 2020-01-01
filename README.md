@@ -18,11 +18,17 @@
 
   + Maybe draw radial gradient about the ball's location on the background.
 
+* Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
+
+  + https://youtu.be/i60HG1TtKJo
+
+* Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.
+
+  + Use concepts from there to add that sparkle to the submission.
+
 * Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
 
   + Potentially rotate whole components because it better shows what is an individual part :)
-
-* Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
 * Add animations to every weather conditions.
 
@@ -31,10 +37,6 @@
   + Have a looping animation, i.e.every condition has a loop.
 
 * Create spin-up animation for when the widget is created or updated? 
-
-* Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.
-
-  + Use concepts from there to add that sparkle to the submission.
 
 * Checkout https://twitter.com/Joey_Dunivan/status/1204710943772557312?s=20 and consider doing something like that.
 
