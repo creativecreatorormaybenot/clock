@@ -122,9 +122,16 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         size.height / 2 - analogTime.size.height / 3,
       );
 
-      final ballStartPosition = Offset(size.width * 5 / 8, -ball.size.height),
+      final ballStartPosition = Offset(
+        size.width * 5 / 8,
+        // It should fly into view faster than it leaves the view again.
+        -ball.size.height * 3,
+      ),
           ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - (ball.size / 2).offset,
-          ballEndPosition = Offset(size.width * 3.3 / 8, -ball.size.height);
+          ballEndPosition = Offset(
+        size.width * 3.3 / 8,
+        -ball.size.height * 2,
+      );
 
       if (ballDepartureAnimation.status != AnimationStatus.forward) {
         ballData.offset = Offset.lerp(ballStartPosition, ballDestination, ballArrivalAnimation.value);

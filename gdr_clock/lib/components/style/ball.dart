@@ -5,7 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
-const arrivalDuration = Duration(milliseconds: 353), departureDuration = Duration(milliseconds: 401);
+const arrivalDuration = Duration(milliseconds: 420), departureDuration = Duration(milliseconds: 509), arrivalCurve = AccelerateCurve(), departureCurve = Curves.decelerate;
+
+/// Based on [Curves.decelerate].
+/// I could have used [Curve.flipped], but that is not a `const` value.
+class AccelerateCurve extends Curve {
+  const AccelerateCurve();
+
+  @override
+  double transformInternal(double t) {
+    return 1 - t * t;
+  }
+}
 
 class Ball extends LeafRenderObjectWidget {
   const Ball({

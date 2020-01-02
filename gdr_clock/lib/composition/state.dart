@@ -117,14 +117,22 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   void ball() {
+    if (ballArrivalController.isAnimating || ballDepartureController.isAnimating) return;
+
     ballDepartureController.reset();
     ballArrivalController.forward(from: 0);
   }
 
   @override
   Widget build(BuildContext context) => CompositedClock(
-        ballArrivalAnimation: ballArrivalController,
-        ballDepartureAnimation: ballDepartureController,
+        ballArrivalAnimation: CurvedAnimation(
+          parent: ballArrivalController,
+          curve: Curves.decelerate.flipped,
+        ),
+        ballDepartureAnimation: CurvedAnimation(
+          parent: ballDepartureController,
+          curve: Curves.decelerate,
+        ),
         children: <Widget>[
           AnimatedAnalogTime(animation: analogBounceController, model: model),
           AnimatedTemperature(model: model),
