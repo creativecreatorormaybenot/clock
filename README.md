@@ -2,15 +2,13 @@
 
 * Add ball that bounces about scene.
 
+  + Maybe draw radial gradient about the ball's location in the background.
+
   + Fix that the elastic bounce is completely stuck or w/e.
 
   + A curve should be drawn in background - or if the background changes frequently but the curve does not, in another render object.
 
     - The curve could slowly change over time like the background does for relaxation.
-
-  + Maybe draw radial gradient about the ball's location in the background.
-
-  + This should ideally be relaxing -> not fast.
 
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
