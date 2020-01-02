@@ -169,7 +169,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       Offset offset;
 
-      if (intersection.dy > animatedBounce.dy && bounceBackAnimation.status != AnimationStatus.forward) {
+      if (intersection.dy > animatedBounce.dy && bounceAwayAnimation.status == AnimationStatus.forward) {
         offset = intersection;
       } else {
         offset = animatedBounce;
