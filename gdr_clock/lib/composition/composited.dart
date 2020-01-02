@@ -155,11 +155,27 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       var intersection = Offset.zero;
 
-      if (analogClockBaseRect.overlaps(ballRect)) {
+      if (ballDepartureAnimation.status == AnimationStatus.forward) {
+        // This is not really the intersection anymore, but it ensures
+        // that the analog component is not dragged back when the animation
+        // has not caught up to the intersection and the ball is already
+        // departing again.
+        intersection = Offset(0, ball.size.height);
+      } else if (analogClockBaseRect.overlaps(ballRect)) {
         intersection = ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
       }
 
-      analogTimeData.offset = analogClockBasePosition + ExtendedOffset.max(intersection, ball.size.onlyHeight.offset * (bounceAwayAnimation.value - bounceBackAnimation.value));
+      final animatedBounce = ball.size.onlyHeight.offset * (bounceAwayAnimation.value - bounceBackAnimation.value);
+
+      Offset offset;
+
+      if (intersection.distance > animatedBounce.distance) {
+        offset = intersection;
+      } else {
+        offset = animatedBounce;
+      }
+
+      analogTimeData.offset = analogClockBasePosition + offset;
     }();
     provideRect(ball);
 

@@ -2,11 +2,7 @@
 
 * Add ball that bounces about scene.
 
-  + Add curves to the arrival and departure.
-
-  + Make the ball roll while in the air.
-
-  + Ball should bounce onto say the analog clock and push it down a bit (analog clock would bounce up again afterwards using elastic out), which would nicely show the gooeyness of the background.
+  + Fix that the elastic bounce is completely stuck or w/e.
 
   + A curve should be drawn in background - or if the background changes frequently but the curve does not, in another render object.
 
