@@ -94,11 +94,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   void update([bool initial = false]) {
-    final time = DateTime.now(), nextSecond = Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1);
+    final time = DateTime.now();
 
-    updateTimer = Timer(nextSecond, update);
+    updateTimer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
-    if (ballTimer?.isActive != true) ballTimer = Timer(nextSecond - arrivalDuration, ball);
+    if (ballTimer?.isActive != true) {
+      ballTimer = Timer(
+        Duration(microseconds: 5e6 ~/ 1 - (time.second % 5) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1) - arrivalDuration,
+        ball,
+      );
+    }
 
     if (initial) return;
 
@@ -123,28 +128,43 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballArrivalController.forward(from: 0);
   }
 
+  Animation<double> get analogBounceAnimation => analogBounceController;
+
+  Animation<double> get backgroundWaveAnimation {
+    return CurvedAnimation(
+      parent: backgroundWaveController,
+      curve: waveCurve,
+      reverseCurve: waveCurve.flipped,
+    );
+  }
+
+  Animation<double> get ballArrivalAnimation {
+    return CurvedAnimation(
+      parent: ballArrivalController,
+      curve: arrivalCurve,
+    );
+  }
+
+  Animation<double> get ballDepartureAnimation {
+    return CurvedAnimation(
+      parent: ballDepartureController,
+      curve: departureCurve,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => CompositedClock(
-        ballArrivalAnimation: CurvedAnimation(
-          parent: ballArrivalController,
-          curve: Curves.decelerate.flipped,
-        ),
-        ballDepartureAnimation: CurvedAnimation(
-          parent: ballDepartureController,
-          curve: Curves.decelerate,
-        ),
+        ballArrivalAnimation: ballArrivalAnimation,
+        ballDepartureAnimation: ballDepartureAnimation,
         children: <Widget>[
-          AnimatedAnalogTime(animation: analogBounceController, model: model),
+          AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
-          Background(
-            animation: CurvedAnimation(
-              parent: backgroundWaveController,
-              curve: waveCurve,
-              reverseCurve: waveCurve.flipped,
-            ),
+          Background(animation: backgroundWaveAnimation),
+          Ball(
+            arrivalAnimation: ballArrivalAnimation,
+            departureAnimation: ballDepartureAnimation,
           ),
-          const Ball(),
           Location(
             text: model.location,
             textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),

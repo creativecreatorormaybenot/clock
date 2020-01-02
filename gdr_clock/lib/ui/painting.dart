@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
-  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2.0;
+  static const petalColor = Color(0xffbab33c),
+      petals = 14,
+      petalWeightDivisor = 2.0;
 
   /// Paints a petals design based on a full [radius], that is not the radius of the petals.
   ///

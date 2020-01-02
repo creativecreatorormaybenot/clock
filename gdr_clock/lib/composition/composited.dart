@@ -41,7 +41,8 @@ enum ClockComponent {
   weather,
 }
 
-class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
+class ClockChildrenParentData
+    extends CompositionChildrenParentData<ClockComponent> {
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
@@ -50,14 +51,17 @@ class ClockChildrenParentData extends CompositionChildrenParentData<ClockCompone
   }
 
   Rect rectOf(ClockComponent component) {
-    assert(childType == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
+    assert(childType == ClockComponent.background,
+        'Only the background component can access sizes and offsets of the other children.');
     final rect = _rects[component];
-    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
+    assert(rect != null,
+        'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 }
 
-class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
+class RenderCompositedClock extends RenderComposition<ClockComponent,
+    ClockChildrenParentData, CompositedClock> {
   final Animation<double> ballArrivalAnimation, ballDepartureAnimation;
 
   RenderCompositedClock({
@@ -97,7 +101,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     //<editor-fold desc="Laying out children">
     // Background
-    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background];
+    final background = layoutChildren[ClockComponent.background],
+        backgroundData = layoutParentData[ClockComponent.background];
 
     backgroundData._rects = {};
     final provideRect = backgroundData._addRect;
@@ -105,11 +110,13 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     background.layout(BoxConstraints.tight(size));
 
     // Ball
-    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
+    final ball = layoutChildren[ClockComponent.ball],
+        ballData = layoutParentData[ClockComponent.ball];
     ball.layout(constraints.loosen(), parentUsesSize: true);
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
-    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
+    final analogTime = layoutChildren[ClockComponent.analogTime],
+        analogTimeData = layoutParentData[ClockComponent.analogTime];
     analogTime.layout(
       BoxConstraints.tight(Size.fromRadius(size.height / 2.9)),
       parentUsesSize: true,
@@ -123,28 +130,34 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       );
 
       final ballStartPosition = Offset(
-        size.width * 5 / 8,
+        size.width * 3 / 4,
         // It should fly into view faster than it leaves the view again.
         -ball.size.height * 3,
       ),
-          ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - (ball.size / 2).offset,
+          ballDestination = analogClockBasePosition +
+              analogTime.size.onlyWidth.offset / 2 -
+              (ball.size / 2).offset,
           ballEndPosition = Offset(
-        size.width * 3.3 / 8,
+        size.width * 1.2 / 4,
         -ball.size.height * 2,
       );
 
       if (ballDepartureAnimation.status != AnimationStatus.forward) {
-        ballData.offset = Offset.lerp(ballStartPosition, ballDestination, ballArrivalAnimation.value);
+        ballData.offset = Offset.lerp(
+            ballStartPosition, ballDestination, ballArrivalAnimation.value);
       } else {
-        ballData.offset = Offset.lerp(ballDestination, ballEndPosition, ballDepartureAnimation.value);
+        ballData.offset = Offset.lerp(
+            ballDestination, ballEndPosition, ballDepartureAnimation.value);
       }
 
-      final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
+      final ballRect = ballData.offset & ball.size,
+          analogClockBaseRect = analogClockBasePosition & analogTime.size;
 
       var intersection = Offset.zero;
 
       if (analogClockBaseRect.overlaps(ballRect)) {
-        intersection = ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
+        intersection =
+            ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
       }
 
       analogTimeData.offset = analogClockBasePosition + intersection;
@@ -154,7 +167,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     provideRect(analogTime);
 
     // Weather
-    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather];
+    final weather = layoutChildren[ClockComponent.weather],
+        weatherData = layoutParentData[ClockComponent.weather];
     weather.layout(
       BoxConstraints.tight(Size.fromRadius(size.height / 4)),
       parentUsesSize: true,
@@ -171,12 +185,14 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     provideRect(weather);
 
     // Temperature
-    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature];
+    final temperature = layoutChildren[ClockComponent.temperature],
+        temperatureData = layoutParentData[ClockComponent.temperature];
 
     () {
       final width = size.width / 6;
       temperature.layout(
-        BoxConstraints(maxWidth: width, minHeight: width, maxHeight: size.height),
+        BoxConstraints(
+            maxWidth: width, minHeight: width, maxHeight: size.height),
         parentUsesSize: true,
       );
 
@@ -188,23 +204,32 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     provideRect(temperature);
 
     // Location
-    final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
+    final location = layoutChildren[ClockComponent.location],
+        locationData = layoutParentData[ClockComponent.location];
 
-    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
-    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
+    location.layout(
+        BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+        parentUsesSize: true);
+    locationData.offset = Offset(weatherData.offset.dx,
+        weatherData.offset.dy / 3 - location.size.height / 2);
 
     // Date
-    final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
+    final date = layoutChildren[ClockComponent.date],
+        dateData = layoutParentData[ClockComponent.date];
 
-    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
-    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
+    date.layout(
+        BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+        parentUsesSize: false);
+    dateData.offset =
+        ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
     //</editor-fold>
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
-    context.pushClipRect(needsCompositing, offset, Offset.zero & size, (context, offset) {
+    context.pushClipRect(needsCompositing, offset, Offset.zero & size,
+        (context, offset) {
       super.paint(context, offset);
 
       // Draw components in the actual draw order.

@@ -24,7 +24,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value),
+        time = DateTime.now();
 
     return AnalogTime(
       textStyle: Theme.of(context).textTheme.display1,
@@ -37,7 +38,10 @@ class AnimatedAnalogTime extends AnimatedWidget {
           (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
       hourHandAngle:
           // Distance for the hour.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+          pi *
+                  2 /
+                  (model.is24HourFormat ? 24 : 12) *
+                  (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
@@ -160,9 +164,11 @@ class RenderAnalogTime extends RenderCompositionChild {
       0,
       .7,
     ]);
-    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius);
+    final fullCircleRect =
+        Rect.fromCircle(center: Offset.zero, radius: _radius);
 
-    canvas.drawOval(fullCircleRect, Paint()..shader = backgroundGradient.createShader(fullCircleRect));
+    canvas.drawOval(fullCircleRect,
+        Paint()..shader = backgroundGradient.createShader(fullCircleRect));
 
     final largeDivisions = hourDivisions, smallDivisions = 60;
 

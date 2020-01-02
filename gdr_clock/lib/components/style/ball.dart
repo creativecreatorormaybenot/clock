@@ -2,10 +2,11 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
-const arrivalDuration = Duration(milliseconds: 420), departureDuration = Duration(milliseconds: 509), arrivalCurve = AccelerateCurve(), departureCurve = Curves.decelerate;
+const arrivalDuration = Duration(milliseconds: 920), departureDuration = Duration(milliseconds: 1242), arrivalCurve = AccelerateCurve(), departureCurve = Curves.decelerate;
 
 /// Based on [Curves.decelerate].
 /// I could have used [Curve.flipped], but that is not a `const` value.
@@ -14,23 +15,53 @@ class AccelerateCurve extends Curve {
 
   @override
   double transformInternal(double t) {
-    return 1 - t * t;
+    return t * t;
   }
 }
 
 class Ball extends LeafRenderObjectWidget {
+  final Animation<double> arrivalAnimation, departureAnimation;
+
   const Ball({
     Key key,
-  }) : super(key: key);
+    @required this.arrivalAnimation,
+    @required this.departureAnimation,
+  })  : assert(arrivalAnimation != null),
+        assert(departureAnimation != null),
+        super(key: key);
 
   @override
   RenderBall createRenderObject(BuildContext context) {
-    return RenderBall();
+    return RenderBall(
+      arrivalAnimation: arrivalAnimation,
+      departureAnimation: departureAnimation,
+    );
   }
 }
 
 class RenderBall extends RenderCompositionChild {
-  RenderBall() : super(ClockComponent.ball);
+  final Animation<double> arrivalAnimation, departureAnimation;
+
+  RenderBall({
+    this.arrivalAnimation,
+    this.departureAnimation,
+  }) : super(ClockComponent.ball);
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    arrivalAnimation.addListener(markNeedsPaint);
+    departureAnimation.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    arrivalAnimation.removeListener(markNeedsPaint);
+    departureAnimation.removeListener(markNeedsPaint);
+
+    super.detach();
+  }
 
   @override
   bool get sizedByParent => true;
