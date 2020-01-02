@@ -23,7 +23,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer updateTimer, ballTimer;
 
-  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController;
+  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, bounceAwayController, bounceBackController;
 
   @override
   void initState() {
@@ -50,11 +50,27 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         if (status == AnimationStatus.completed) {
           ballDepartureController.forward(from: 0);
           ballArrivalController.reset();
+
+          bounceBackController.reset();
+          bounceAwayController.forward(from: 0);
         }
       });
     ballDepartureController = AnimationController(
       vsync: this,
       duration: departureDuration,
+    );
+
+    bounceAwayController = AnimationController(
+      vsync: this,
+      duration: bounceAwayDuration,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          bounceBackController.forward(from: 0);
+        }
+      });
+    bounceBackController = AnimationController(
+      vsync: this,
+      duration: bounceBackDuration,
     );
 
     widget.model.addListener(modelChanged);
@@ -73,6 +89,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     ballArrivalController.dispose();
     ballDepartureController.dispose();
+
+    bounceAwayController.dispose();
+    bounceBackController.dispose();
 
     super.dispose();
   }
@@ -152,10 +171,26 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
+  Animation<double> get bounceAwayAnimation {
+    return CurvedAnimation(
+      parent: bounceAwayController,
+      curve: bounceAwayCurve,
+    );
+  }
+
+  Animation<double> get bounceBackAnimation {
+    return CurvedAnimation(
+      parent: bounceBackController,
+      curve: bounceBackCurve,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => CompositedClock(
         ballArrivalAnimation: ballArrivalAnimation,
         ballDepartureAnimation: ballDepartureAnimation,
+        bounceAwayAnimation: bounceAwayAnimation,
+        bounceBackAnimation: bounceBackAnimation,
         children: <Widget>[
           AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
           AnimatedTemperature(model: model),

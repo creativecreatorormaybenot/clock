@@ -6,7 +6,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
-const arrivalDuration = Duration(milliseconds: 920), departureDuration = Duration(milliseconds: 1242), arrivalCurve = AccelerateCurve(), departureCurve = Curves.decelerate;
+const arrivalDuration = Duration(milliseconds: 920),
+    departureDuration = Duration(milliseconds: 1242),
+    arrivalCurve = AccelerateCurve(),
+    departureCurve = Curves.decelerate,
+    bounceAwayDuration = Duration(milliseconds: 236),
+    bounceBackDuration = Duration(milliseconds: 270),
+    bounceAwayCurve = Curves.bounceOut,
+    bounceBackCurve = Curves.elasticOut;
 
 /// Based on [Curves.decelerate].
 /// I could have used [Curve.flipped], but that is not a `const` value.
@@ -88,7 +95,10 @@ class RenderBall extends RenderCompositionChild {
     // Translate to the center of the ball.
     canvas.translate(offset.dx, offset.dy);
 
-    final rect = Offset.zero & Size.fromRadius(_radius);
+    final rect = Offset.zero & Size.fromRadius(_radius),
+        // Rotate the ball as if it rolled when it falls down and
+        // flies back up.
+        angle = 2 * pi * (1 - (arrivalAnimation.status == AnimationStatus.forward ? arrivalAnimation.value : departureAnimation.value));
 
     canvas.drawOval(
       rect,
@@ -98,8 +108,9 @@ class RenderBall extends RenderCompositionChild {
             // but I want to be able to host the clock face as a demo using
             // Flutter web and Flutter web does not currently support sweep gradients.
             ? ui.Gradient.radial(rect.center, rect.shortestSide / 2, shaderColors)
-            : const SweepGradient(
-                endAngle: pi / 2,
+            : SweepGradient(
+                startAngle: angle,
+                endAngle: angle + pi / 2,
                 colors: shaderColors,
                 tileMode: TileMode.mirror,
               ).createShader(rect),

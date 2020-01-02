@@ -5,6 +5,8 @@ extension ExtendedOffset on Offset {
 
   /// This exists because of a web compiler error: https://github.com/dart-lang/sdk/issues/39938#issue-542985784
   Offset plus(Size size) => ExtendedOffset(this) + size;
+
+  static Offset max(Offset a, Offset b) => a > b ? a : b;
 }
 
 extension ExtendedSize on Size {
