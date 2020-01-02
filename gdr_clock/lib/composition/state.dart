@@ -4,14 +4,42 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
+import 'package:gdr_clock/main.dart';
+
+enum ClockColor {
+  text,
+  weatherBackground,
+  petals,
+  analogClockBackground,
+  thermometerBackground,
+  backgroundTop,
+  backgroundBottom,
+}
+
+Map<ClockColor, Color> resolvePalette(BuildContext context) {
+  if (Theme.of(context).brightness == Brightness.light) {
+    if (useVibrantPalette) return Clock.vibrantLightPalette;
+    return Clock.subtleLightPalette;
+  } else {
+    if (useVibrantPalette) return Clock.vibrantDarkPalette;
+    return Clock.subtleDarkPalette;
+  }
+}
 
 class Clock extends StatefulWidget {
+  static const vibrantLightPalette = {}, vibrantDarkPalette = {}, subtleLightPalette = {}, subtleDarkPalette = {};
+
   final ClockModel model;
+
+  /// Predefined palettes are [vibrantLightPalette] and [subtleLightPalette] or [vibrantDarkPalette] and [subtleDarkPalette].
+  final Map<ClockColor, Color> palette;
 
   const Clock({
     Key key,
     @required this.model,
+    @required this.palette,
   })  : assert(model != null),
+        assert(palette != null),
         super(key: key);
 
   @override
