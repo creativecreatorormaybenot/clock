@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
+const arrivalDuration = Duration(milliseconds: 701), departureDuration = Duration(milliseconds: 420);
+
 class Ball extends LeafRenderObjectWidget {
   const Ball({
     Key key,

@@ -21,9 +21,9 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
   ClockModel model;
 
-  Timer timer;
+  Timer updateTimer, ballTimer;
 
-  AnimationController analogBounceController, backgroundWaveController;
+  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController;
 
   @override
   void initState() {
@@ -37,9 +37,21 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // The default state has the value at 1.
       value: 1,
     );
+
     backgroundWaveController = AnimationController(
       vsync: this,
       duration: waveDuration,
+    );
+
+    ballArrivalController = AnimationController(
+      vsync: this,
+      duration: arrivalDuration,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) ballDepartureController.forward(from: 0);
+      });
+    ballDepartureController = AnimationController(
+      vsync: this,
+      duration: departureDuration,
     );
 
     widget.model.addListener(modelChanged);
@@ -49,10 +61,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    timer?.cancel();
+    updateTimer?.cancel();
+    ballTimer?.cancel();
 
     analogBounceController.dispose();
+
     backgroundWaveController.dispose();
+
+    ballArrivalController.dispose();
+    ballDepartureController.dispose();
+
     super.dispose();
   }
 
@@ -73,8 +91,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   void update([bool initial = false]) {
-    final time = DateTime.now();
-    timer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+    final time = DateTime.now(), nextSecond = Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1);
+
+    updateTimer = Timer(nextSecond, update);
+
+    if (ballTimer?.isActive != true) ballTimer = Timer(nextSecond - arrivalDuration, ball);
 
     if (initial) return;
 
@@ -92,18 +113,26 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     }();
   }
 
+  void ball() {
+    ballDepartureController.reset();
+    ballArrivalController.forward(from: 0);
+  }
+
   @override
   Widget build(BuildContext context) => CompositedClock(
+        ballArrivalAnimation: ballArrivalController,
+        ballDepartureAnimation: ballDepartureController,
         children: <Widget>[
           AnimatedAnalogTime(animation: analogBounceController, model: model),
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
           Background(
-              animation: CurvedAnimation(
-            parent: backgroundWaveController,
-            curve: waveCurve,
-            reverseCurve: waveCurve.flipped,
-          )),
+            animation: CurvedAnimation(
+              parent: backgroundWaveController,
+              curve: waveCurve,
+              reverseCurve: waveCurve.flipped,
+            ),
+          ),
           const Ball(),
           Location(
             text: model.location,

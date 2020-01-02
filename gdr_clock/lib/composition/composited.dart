@@ -7,17 +7,26 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
+  final Animation<double> ballArrivalAnimation, ballDepartureAnimation;
+
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [ClockChildrenParentData].
   /// Every component can only exist exactly once.
   /// Notice that the order of the [children] does not affect the layout or paint order.
   CompositedClock({
     Key key,
     List<Widget> children,
-  }) : super(key: key, children: children);
+    @required this.ballArrivalAnimation,
+    @required this.ballDepartureAnimation,
+  })  : assert(ballArrivalAnimation != null),
+        assert(ballDepartureAnimation != null),
+        super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderCompositedClock();
+    return RenderCompositedClock(
+      ballArrivalAnimation: ballArrivalAnimation,
+      ballDepartureAnimation: ballDepartureAnimation,
+    );
   }
 }
 
@@ -49,13 +58,34 @@ class ClockChildrenParentData extends CompositionChildrenParentData<ClockCompone
 }
 
 class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
-  RenderCompositedClock() : super(ClockComponent.values);
+  final Animation<double> ballArrivalAnimation, ballDepartureAnimation;
+
+  RenderCompositedClock({
+    this.ballArrivalAnimation,
+    this.ballDepartureAnimation,
+  }) : super(ClockComponent.values);
 
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! ClockChildrenParentData) {
       child.parentData = ClockChildrenParentData()..valid = false;
     }
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    ballArrivalAnimation.addListener(markNeedsLayout);
+    ballDepartureAnimation.addListener(markNeedsLayout);
+  }
+
+  @override
+  void detach() {
+    ballArrivalAnimation.removeListener(markNeedsLayout);
+    ballDepartureAnimation.removeListener(markNeedsLayout);
+
+    super.detach();
   }
 
   @override
@@ -77,7 +107,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Ball
     final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
     ball.layout(constraints.loosen(), parentUsesSize: true);
-    ballData.offset = Offset(size.width * 5 / 8, size.height / 9);
+    ballData.offset = Offset(size.width * 5 / 8 - ballArrivalAnimation.value * size.width / 9, size.height / 9 + ballDepartureAnimation.value * size.height / 9);
     provideRect(ball);
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
