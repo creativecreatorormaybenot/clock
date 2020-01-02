@@ -112,6 +112,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     });
   }
 
+  static const ballEverySeconds = 10;
+
   void update([bool initial = false]) {
     final time = DateTime.now();
 
@@ -119,7 +121,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     if (ballTimer?.isActive != true) {
       ballTimer = Timer(
-        Duration(microseconds: 5e6 ~/ 1 - (time.second % 5) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1) - arrivalDuration,
+        Duration(microseconds: ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1) - arrivalDuration,
         ball,
       );
     }
