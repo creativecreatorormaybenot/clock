@@ -139,7 +139,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         // It should fly into view faster than it leaves the view again.
         -ball.size.height * 3,
       ),
-          ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - (ball.size / 2).offset,
+          ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - Offset(ball.size.width / 2, ball.size.height / 1.42),
           ballEndPosition = Offset(
         size.width * 1.2 / 4,
         -ball.size.height * 2,
@@ -160,16 +160,16 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         // that the analog component is not dragged back when the animation
         // has not caught up to the intersection and the ball is already
         // departing again.
-        intersection = Offset(0, ball.size.height);
+        intersection = Offset(0, (ballDestination.dy + ball.size.height) - analogClockBasePosition.dy);
       } else if (analogClockBaseRect.overlaps(ballRect)) {
         intersection = ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
       }
 
-      final animatedBounce = ball.size.onlyHeight.offset * (bounceAwayAnimation.value - bounceBackAnimation.value);
+      final animatedBounce = ball.size.onlyHeight.offset / 2 * (bounceAwayAnimation.value - bounceBackAnimation.value);
 
       Offset offset;
 
-      if (intersection.distance > animatedBounce.distance) {
+      if (intersection.dy > animatedBounce.dy && bounceBackAnimation.status != AnimationStatus.forward) {
         offset = intersection;
       } else {
         offset = animatedBounce;

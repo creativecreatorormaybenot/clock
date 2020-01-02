@@ -27,7 +27,7 @@ Map<ClockColor, Color> resolvePalette(BuildContext context) {
 }
 
 class Clock extends StatefulWidget {
-  static const vibrantLightPalette = {}, vibrantDarkPalette = {}, subtleLightPalette = {}, subtleDarkPalette = {};
+  static const Map<ClockColor, Color> vibrantLightPalette = {}, vibrantDarkPalette = {}, subtleLightPalette = {}, subtleDarkPalette = {};
 
   final ClockModel model;
 
@@ -140,7 +140,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     });
   }
 
-  static const ballEverySeconds = 10;
+  /// The ball will fall down on every [ballEverySeconds]th second, i.e.
+  /// it is timed in a way that the ball will arrive at its destination
+  /// exactly then.
+  static const ballEverySeconds = 15;
 
   void update([bool initial = false]) {
     final time = DateTime.now();

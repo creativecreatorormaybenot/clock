@@ -10,9 +10,9 @@ const arrivalDuration = Duration(milliseconds: 920),
     departureDuration = Duration(milliseconds: 1242),
     arrivalCurve = AccelerateCurve(),
     departureCurve = Curves.decelerate,
-    bounceAwayDuration = Duration(milliseconds: 236),
-    bounceBackDuration = Duration(milliseconds: 270),
-    bounceAwayCurve = Curves.bounceOut,
+    bounceAwayDuration = Duration(milliseconds: 346),
+    bounceBackDuration = Duration(milliseconds: 671),
+    bounceAwayCurve = Curves.elasticOut,
     bounceBackCurve = Curves.elasticOut;
 
 /// Based on [Curves.decelerate].
