@@ -134,7 +134,13 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
 
-      analogTimeData.offset = analogClockBasePosition + ballRect.intersect(analogClockBaseRect).size.offset;
+      var intersection = Offset.zero;
+
+      if (analogClockBaseRect.overlaps(ballRect)) {
+        intersection = ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
+      }
+
+      analogTimeData.offset = analogClockBasePosition + intersection;
     }();
     provideRect(ball);
 
