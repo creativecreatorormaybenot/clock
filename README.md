@@ -87,6 +87,8 @@ I was inspired by the design of an old analog barometer and hygrometer kind of d
 
 [Quick screen capture showing the final result of the submission]()
 
+The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/lib/main.dart).
+
 ## Notes
 
 * You can follow my whole process of building this in this repository. Maybe it helps someone :)
