@@ -6,6 +6,8 @@ import 'package:gdr_clock/clock.dart';
 
 const waveDuration = Duration(minutes: 1), waveCurve = Curves.easeInOut;
 
+double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
+
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
 

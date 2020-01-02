@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
-const arrivalDuration = Duration(milliseconds: 701), departureDuration = Duration(milliseconds: 420);
+const arrivalDuration = Duration(milliseconds: 353), departureDuration = Duration(milliseconds: 401);
 
 class Ball extends LeafRenderObjectWidget {
   const Ball({
@@ -28,7 +28,7 @@ class RenderBall extends RenderCompositionChild {
 
   @override
   void performResize() {
-    _radius = constraints.biggest.height / 18;
+    _radius = constraints.biggest.height / 21;
 
     size = Size.fromRadius(_radius);
   }

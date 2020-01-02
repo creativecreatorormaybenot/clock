@@ -107,8 +107,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Ball
     final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
     ball.layout(constraints.loosen(), parentUsesSize: true);
-    ballData.offset = Offset(size.width * 5 / 8 - ballArrivalAnimation.value * size.width / 9, size.height / 9 + ballDepartureAnimation.value * size.height / 9);
-    provideRect(ball);
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
@@ -116,10 +114,30 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       BoxConstraints.tight(Size.fromRadius(size.height / 2.9)),
       parentUsesSize: true,
     );
-    analogTimeData.offset = Offset(
-      size.width / 2 - analogTime.size.width / 2.36,
-      size.height / 2 - analogTime.size.height / 3,
-    );
+
+    // The ball destination depends on where the analog clock is positioned, which depends on the size of the analog component.
+    () {
+      final analogClockBasePosition = Offset(
+        size.width / 2 - analogTime.size.width / 2.36,
+        size.height / 2 - analogTime.size.height / 3,
+      );
+
+      final ballStartPosition = Offset(size.width * 5 / 8, -ball.size.height),
+          ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - (ball.size / 2).offset,
+          ballEndPosition = Offset(size.width * 3.3 / 8, -ball.size.height);
+
+      if (ballDepartureAnimation.status != AnimationStatus.forward) {
+        ballData.offset = Offset.lerp(ballStartPosition, ballDestination, ballArrivalAnimation.value);
+      } else {
+        ballData.offset = Offset.lerp(ballDestination, ballEndPosition, ballDepartureAnimation.value);
+      }
+
+      final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
+
+      analogTimeData.offset = analogClockBasePosition + ballRect.intersect(analogClockBaseRect).size.offset;
+    }();
+    provideRect(ball);
+
     provideRect(analogTime);
 
     // Weather

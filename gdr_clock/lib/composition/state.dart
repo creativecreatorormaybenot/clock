@@ -41,13 +41,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     backgroundWaveController = AnimationController(
       vsync: this,
       duration: waveDuration,
-    );
+    )..forward(from: waveProgress(DateTime.now()));
 
     ballArrivalController = AnimationController(
       vsync: this,
       duration: arrivalDuration,
     )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) ballDepartureController.forward(from: 0);
+        if (status == AnimationStatus.completed) {
+          ballDepartureController.forward(from: 0);
+          ballArrivalController.reset();
+        }
       });
     ballDepartureController = AnimationController(
       vsync: this,
@@ -103,7 +106,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     () {
       // This requires the duration to be less than one minute long, but it also ensures consistent behavior.
-      final progress = 1 / waveDuration.inSeconds * time.second;
+      final progress = waveProgress(time);
 
       if ((backgroundWaveController.status == AnimationStatus.reverse || (time.second == 0 && backgroundWaveController.value > 1 / 2)) && !(time.second == 0 && backgroundWaveController.value < 1 / 2)) {
         backgroundWaveController.reverse(from: 1 - progress);
