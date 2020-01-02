@@ -7,6 +7,8 @@ import 'package:gdr_clock/clock.dart';
 import 'package:gdr_clock/main.dart';
 
 enum ClockColor {
+  ballPrimary,
+  ballSecondary,
   text,
   weatherBackground,
   petals,
@@ -27,7 +29,13 @@ Map<ClockColor, Color> resolvePalette(BuildContext context) {
 }
 
 class Clock extends StatefulWidget {
-  static const Map<ClockColor, Color> vibrantLightPalette = {}, vibrantDarkPalette = {}, subtleLightPalette = {}, subtleDarkPalette = {};
+  static const Map<ClockColor, Color> vibrantLightPalette = {
+    ClockColor.ballPrimary: Color(0xffd3d3ff),
+    ClockColor.ballSecondary: Color(0xff9a9aff),
+  },
+      vibrantDarkPalette = {},
+      subtleLightPalette = {},
+      subtleDarkPalette = {};
 
   final ClockModel model;
 
@@ -228,10 +236,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
           AnimatedTemperature(model: model),
           AnimatedWeather(model: model),
-          Background(animation: backgroundWaveAnimation),
+          Background(
+            animation: backgroundWaveAnimation,
+            ballColor: Color.lerp(
+              widget.palette[ClockColor.ballPrimary],
+              widget.palette[ClockColor.ballSecondary],
+              1 / 2,
+            ),
+          ),
           Ball(
             arrivalAnimation: ballArrivalAnimation,
             departureAnimation: ballDepartureAnimation,
+            primaryColor: widget.palette[ClockColor.ballPrimary],
+            secondaryColor: widget.palette[ClockColor.ballSecondary],
           ),
           Location(
             text: model.location,

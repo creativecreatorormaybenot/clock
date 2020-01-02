@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -11,17 +11,27 @@ double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
 
+  final Color ballColor;
+
   const Background({
     Key key,
     @required this.animation,
+    @required this.ballColor,
   })  : assert(animation != null),
+        assert(ballColor != null),
         super(key: key);
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
+  RenderBackground createRenderObject(BuildContext context) {
     return RenderBackground(
       animation: animation,
+      ballColor: ballColor,
     );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderBackground renderObject) {
+    renderObject..ballColor = ballColor;
   }
 }
 
@@ -30,7 +40,17 @@ class RenderBackground extends RenderCompositionChild {
 
   RenderBackground({
     this.animation,
-  }) : super(ClockComponent.background);
+    Color ballColor,
+  })  : _ballColor = ballColor,
+        super(ClockComponent.background);
+
+  Color _ballColor;
+
+  set ballColor(Color color) {
+    if (color != _ballColor) markNeedsPaint();
+
+    _ballColor = color;
+  }
 
   @override
   void attach(PipelineOwner owner) {
@@ -67,10 +87,7 @@ class RenderBackground extends RenderCompositionChild {
       clockData.rectOf(ClockComponent.analogTime),
       clockData.rectOf(ClockComponent.weather),
       clockData.rectOf(ClockComponent.temperature),
-    ]
-        .where((rect) => rect.overlaps(gooArea))
-        .map((rect) => gooArea.intersect(rect))
-        .toList();
+    ].where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
 
     final canvas = context.canvas;
 
@@ -128,27 +145,33 @@ class RenderBackground extends RenderCompositionChild {
           rect.bottomRight.dy,
           rect.centerRight.dx,
           rect.centerRight.dy,
-          i == rects.length - 1
-              ? size.width
-              : (rect.right + rects[i + 1].left) / 2,
-          i == rects.length - 1
-              ? gooArea.top
-              : (rect.center.dy + rects[i + 1].center.dy) / 2,
+          i == rects.length - 1 ? size.width : (rect.right + rects[i + 1].left) / 2,
+          i == rects.length - 1 ? gooArea.top : (rect.center.dy + rects[i + 1].center.dy) / 2,
         );
     }
 
     cut.lineTo(size.width, gooArea.top);
 
-    final upperPath = Path()
-      ..extendWithPath(cut, Offset.zero)
-      // Line to top right, then top left, and then back to start to fill whole upper area.
-      ..lineTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..close();
+    final ball = clockData.rectOf(ClockComponent.ball),
+        upperShader = ui.Gradient.radial(
+            ball.center,
+            // This is four times the ball radius on purpose in order
+            // to have some gradient beyond the circle (the ball).
+            ball.shortestSide * 2,
+            [
+          _ballColor,
+          const Color(0xffffe312),
+        ]),
+        upperPath = Path()
+          ..extendWithPath(cut, Offset.zero)
+          // Line to top right, then top left, and then back to start to fill whole upper area.
+          ..lineTo(size.width, 0)
+          ..lineTo(0, 0)
+          ..close();
     canvas.drawPath(
         upperPath,
         Paint()
-          ..color = const Color(0xffffe312)
+          ..shader = upperShader
           ..style = PaintingStyle.fill);
 
     final lowerPath = Path()

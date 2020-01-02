@@ -2,9 +2,9 @@
 
 * Add ball that bounces about scene.
 
-  + Maybe draw radial gradient about the ball's location in the background.
+  + A curve should be drawn as a new render object below ball but above everything else.
 
-  + A curve should be drawn in background - or if the background changes frequently but the curve does not, in another render object.
+    - The ball rolls along this curve and then falls down onto the destination.
 
     - The curve could slowly change over time like the background does for relaxation.
 

@@ -15,26 +15,21 @@ const arrivalDuration = Duration(milliseconds: 920),
     bounceAwayCurve = Curves.elasticOut,
     bounceBackCurve = Curves.elasticOut;
 
-/// Based on [Curves.decelerate].
-/// I could have used [Curve.flipped], but that is not a `const` value.
-class AccelerateCurve extends Curve {
-  const AccelerateCurve();
-
-  @override
-  double transformInternal(double t) {
-    return t * t;
-  }
-}
-
 class Ball extends LeafRenderObjectWidget {
   final Animation<double> arrivalAnimation, departureAnimation;
+
+  final Color primaryColor, secondaryColor;
 
   const Ball({
     Key key,
     @required this.arrivalAnimation,
     @required this.departureAnimation,
+    @required this.primaryColor,
+    @required this.secondaryColor,
   })  : assert(arrivalAnimation != null),
         assert(departureAnimation != null),
+        assert(primaryColor != null),
+        assert(secondaryColor != null),
         super(key: key);
 
   @override
@@ -42,7 +37,16 @@ class Ball extends LeafRenderObjectWidget {
     return RenderBall(
       arrivalAnimation: arrivalAnimation,
       departureAnimation: departureAnimation,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
     );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderBall renderObject) {
+    renderObject
+      ..primaryColor = primaryColor
+      ..secondaryColor = secondaryColor;
   }
 }
 
@@ -52,7 +56,25 @@ class RenderBall extends RenderCompositionChild {
   RenderBall({
     this.arrivalAnimation,
     this.departureAnimation,
-  }) : super(ClockComponent.ball);
+    Color primaryColor,
+    Color secondaryColor,
+  })  : _primaryColor = primaryColor,
+        _secondaryColor = secondaryColor,
+        super(ClockComponent.ball);
+
+  Color _primaryColor, _secondaryColor;
+
+  set primaryColor(Color color) {
+    if (color != _primaryColor) markNeedsPaint();
+
+    _primaryColor = color;
+  }
+
+  set secondaryColor(Color color) {
+    if (color != _secondaryColor) markNeedsPaint();
+
+    _secondaryColor = color;
+  }
 
   @override
   void attach(PipelineOwner owner) {
@@ -82,10 +104,7 @@ class RenderBall extends RenderCompositionChild {
     size = Size.fromRadius(_radius);
   }
 
-  static const shaderColors = [
-    Color(0xffd3d3ff),
-    Color(0xff9a9aff),
-  ];
+  List<Color> get shaderColors => [_primaryColor, _secondaryColor];
 
   @override
   void paint(PaintingContext context, Offset offset) {
