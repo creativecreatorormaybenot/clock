@@ -1,5 +1,7 @@
 ## TODO
 
+* Extract all colors from render objects into the vibrant light palette.
+
 * Add ball that bounces about scene.
 
   + A curve should be drawn as a new render object below ball but above everything else.

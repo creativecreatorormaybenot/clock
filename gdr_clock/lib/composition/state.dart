@@ -9,13 +9,6 @@ import 'package:gdr_clock/main.dart';
 enum ClockColor {
   ballPrimary,
   ballSecondary,
-  text,
-  weatherBackground,
-  petals,
-  analogClockBackground,
-  thermometerBackground,
-  backgroundTop,
-  backgroundBottom,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
