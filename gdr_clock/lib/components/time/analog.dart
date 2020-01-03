@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +53,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
       minuteHandColor: palette[ClockColor.minuteHand],
       secondHandColor: palette[ClockColor.secondHand],
       shadowColor: palette[ClockColor.shadow],
+      borderColor: palette[ClockColor.border],
     );
   }
 }
@@ -61,7 +62,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
   final int hourDivisions;
 
-  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor;
+  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
 
   const AnalogTime({
     Key key,
@@ -76,6 +77,7 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.minuteHandColor,
     @required this.secondHandColor,
     @required this.shadowColor,
+    @required this.borderColor,
   })  : assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
@@ -87,6 +89,7 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(minuteHandColor != null),
         assert(secondHandColor != null),
         assert(shadowColor != null),
+        assert(borderColor != null),
         super(key: key);
 
   @override
@@ -103,6 +106,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       minuteHandColor: minuteHandColor,
       secondHandColor: secondHandColor,
       shadowColor: shadowColor,
+      borderColor: borderColor,
     );
   }
 
@@ -119,7 +123,8 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..hourHandColor = hourHandColor
       ..minuteHandColor = minuteHandColor
       ..secondHandColor = secondHandColor
-      ..shadowColor = shadowColor;
+      ..shadowColor = shadowColor
+      ..borderColor = borderColor;
   }
 }
 
@@ -136,6 +141,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     Color minuteHandColor,
     Color secondHandColor,
     Color shadowColor,
+    Color borderColor,
   })  : _secondHandAngle = secondHandAngle,
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
@@ -147,6 +153,7 @@ class RenderAnalogTime extends RenderCompositionChild {
         _minuteHandColor = minuteHandColor,
         _secondHandColor = secondHandColor,
         _shadowColor = shadowColor,
+        _borderColor = borderColor,
         super(ClockComponent.analogTime);
 
   double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
@@ -177,7 +184,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     _hourDivisions = hourDivisions;
   }
 
-  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor;
+  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
 
   set textColor(Color textColor) {
     if (_textColor != textColor) markNeedsPaint();
@@ -221,6 +228,12 @@ class RenderAnalogTime extends RenderCompositionChild {
     _shadowColor = shadowColor;
   }
 
+  set borderColor(Color borderColor) {
+    if (_borderColor != borderColor) markNeedsPaint();
+
+    _borderColor = borderColor;
+  }
+
   @override
   bool get sizedByParent => true;
 
@@ -241,19 +254,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    final backgroundGradient = RadialGradient(
-      colors: [
-        _backgroundHighlightColor,
-        _backgroundColor,
-      ],
-      stops: const [
-        0,
-        .7,
-      ],
-    ),
-        fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius);
-
-    canvas.drawOval(fullCircleRect, Paint()..shader = backgroundGradient.createShader(fullCircleRect));
+    _drawBackground(canvas);
 
     final largeDivisions = _hourDivisions, smallDivisions = 60;
 
@@ -325,6 +326,32 @@ class RenderAnalogTime extends RenderCompositionChild {
     _drawHourHand(canvas);
 
     canvas.restore();
+  }
+
+  void _drawBackground(Canvas canvas) {
+    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
+        shader = ui.Gradient.radial(
+      fullCircleRect.center,
+      _radius,
+      [_backgroundHighlightColor, _backgroundColor],
+      const [0, .7],
+    );
+
+    canvas.drawOval(
+        fullCircleRect,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..shader = shader);
+
+    // Border
+    canvas.drawOval(
+        fullCircleRect,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = _borderColor
+          // See thermometer border (`temperature.dart`)
+          // for an explanation as to why this is.
+          ..strokeWidth = _radius / 912);
   }
 
   void _drawHourHand(Canvas canvas) {

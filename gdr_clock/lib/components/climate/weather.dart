@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
       arrowColor: widget.palette[ClockColor.weatherArrow],
       backgroundColor: widget.palette[ClockColor.weatherBackground],
       backgroundHighlightColor: widget.palette[ClockColor.weatherBackgroundHighlight],
+      borderColor: widget.palette[ClockColor.border],
       children: WeatherCondition.values.map(weatherIcon).toList(),
     );
   }
@@ -99,7 +101,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
 class Weather extends MultiChildRenderObjectWidget {
   final double angle;
 
-  final Color arrowColor, backgroundColor, backgroundHighlightColor;
+  final Color arrowColor, backgroundColor, backgroundHighlightColor, borderColor;
 
   Weather({
     Key key,
@@ -108,10 +110,12 @@ class Weather extends MultiChildRenderObjectWidget {
     @required this.arrowColor,
     @required this.backgroundColor,
     @required this.backgroundHighlightColor,
+    @required this.borderColor,
   })  : assert(angle != null),
         assert(arrowColor != null),
         assert(backgroundColor != null),
         assert(backgroundHighlightColor != null),
+        assert(borderColor != null),
         super(key: key, children: children);
 
   @override
@@ -121,6 +125,7 @@ class Weather extends MultiChildRenderObjectWidget {
       arrowColor: arrowColor,
       backgroundColor: backgroundColor,
       backgroundHighlightColor: backgroundHighlightColor,
+      borderColor: borderColor,
     );
   }
 
@@ -130,7 +135,8 @@ class Weather extends MultiChildRenderObjectWidget {
       ..angle = angle
       ..arrowColor = arrowColor
       ..backgroundColor = backgroundColor
-      ..backgroundHighlightColor = backgroundHighlightColor;
+      ..backgroundHighlightColor = backgroundHighlightColor
+      ..borderColor = borderColor;
   }
 }
 
@@ -145,10 +151,12 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     Color arrowColor,
     Color backgroundColor,
     Color backgroundHighlightColor,
+    Color borderColor,
   })  : _angle = angle,
         _arrowColor = arrowColor,
         _backgroundColor = backgroundColor,
         _backgroundHighlightColor = backgroundHighlightColor,
+        _borderColor = borderColor,
         super(WeatherCondition.values);
 
   double _angle;
@@ -159,7 +167,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     _angle = angle;
   }
 
-  Color _arrowColor, _backgroundColor, _backgroundHighlightColor;
+  Color _arrowColor, _backgroundColor, _backgroundHighlightColor, _borderColor;
 
   set arrowColor(Color arrowColor) {
     if (_arrowColor != arrowColor) markNeedsPaint();
@@ -177,6 +185,12 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     if (_backgroundHighlightColor != backgroundHighlightColor) markNeedsPaint();
 
     _backgroundHighlightColor = backgroundHighlightColor;
+  }
+
+  set borderColor(Color borderColor) {
+    if (_borderColor != borderColor) markNeedsPaint();
+
+    _borderColor = borderColor;
   }
 
   @override
@@ -235,20 +249,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Rotate the disc by the given angle. This defines how a potential background that can be drawn inside here will look.
     canvas.rotate(_angle);
 
-    //<editor-fold desc="Background">
-    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
-        backgroundShader = RadialGradient(
-      colors: [
-        Color.lerp(_backgroundHighlightColor, _backgroundColor, 3 / 5),
-        _backgroundColor,
-      ],
-      stops: [
-        0,
-        1,
-      ],
-    ).createShader(fullCircleRect);
-    canvas.drawOval(fullCircleRect, Paint()..shader = backgroundShader);
-    //</editor-fold>
+    _drawBackground(canvas);
 
     // Restore initial rotation.
     canvas.restore();
@@ -303,6 +304,32 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     //</editor-fold>
 
     canvas.restore();
+  }
+
+  void _drawBackground(Canvas canvas) {
+    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
+        shader = ui.Gradient.radial(
+      fullCircleRect.center,
+      _radius,
+      [
+        Color.lerp(_backgroundHighlightColor, _backgroundColor, 3 / 5),
+        _backgroundColor,
+      ],
+    );
+
+    canvas.drawOval(
+        fullCircleRect,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..shader = shader);
+
+    // Border
+    canvas.drawOval(
+        fullCircleRect,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = _borderColor
+          ..strokeWidth = _radius / 275);
   }
 }
 

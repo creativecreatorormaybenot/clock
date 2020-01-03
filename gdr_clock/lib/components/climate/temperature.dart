@@ -49,7 +49,7 @@ class _AnimatedTemperatureState extends AnimatedWidgetBaseState<AnimatedTemperat
       mountColor: widget.palette[ClockColor.thermometerMount],
       backgroundPrimaryColor: widget.palette[ClockColor.thermometerBackgroundPrimary],
       backgroundSecondaryColor: widget.palette[ClockColor.thermometerBackgroundSecondary],
-      borderColor: widget.palette[ClockColor.thermometerBorder],
+      borderColor: widget.palette[ClockColor.border],
       bradColor: widget.palette[ClockColor.brad],
       bradHighlightColor: widget.palette[ClockColor.bradHighlight],
       temperatureColor: widget.palette[ClockColor.thermometerTemperature],
@@ -379,7 +379,7 @@ class RenderTemperature extends RenderCompositionChild {
           ..color = _borderColor
           // Not using strokeWidth 0.0 because that does not seem to scale with smaller canvas size,
           // i.e. 0 < strokeWidth < 1 is actually thinner than strokeWidth = 0.0, strangely.
-          ..strokeWidth = size.height / 1e3);
+          ..strokeWidth = size.height / 649);
 
     //<editor-fold desc="Some kind of brad nails at the top and bottom">
     final bradRadius = size.width / 29,

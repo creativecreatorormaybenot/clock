@@ -10,11 +10,13 @@ enum ClockColor {
   /// This is also used for tick marks or lines on the
   /// analog clock and thermometer.
   text,
+
+  /// Used to outline some components.
+  border,
   ballPrimary,
   ballSecondary,
   thermometerBackgroundPrimary,
   thermometerBackgroundSecondary,
-  thermometerBorder,
   brad,
 
   /// Highlight colors here are used to resemble a shining material,
@@ -82,7 +84,7 @@ class Clock extends StatefulWidget {
     ClockColor.thermometerMount: Color(0xffa38d1c),
     ClockColor.thermometerBackgroundPrimary: Color(0xffcc9933),
     ClockColor.thermometerBackgroundSecondary: Color(0xffc9bd6c),
-    ClockColor.thermometerBorder: Color(0xff000000),
+    ClockColor.border: Color(0xff000000),
     ClockColor.brad: Color(0xff898984),
     ClockColor.bradHighlight: Color(0xff43464b),
     ClockColor.thermometerTemperature: Color(0xde6ab7ff),
@@ -110,8 +112,7 @@ class Clock extends StatefulWidget {
     ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
   },
-      baseLightPalette = {
-  },
+      baseLightPalette = {},
       baseDarkPalette = {
     // Test values todo
     ClockColor.text: Color(0xff424242),
