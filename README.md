@@ -2,6 +2,10 @@
 
 * Extract all colors from render objects into the vibrant light palette.
 
+* Draw gradients about weather, clock, and thermometer.
+
+  + Draw borders about weather and clock.
+
 * Add ball that bounces about scene.
 
   + A curve should be drawn as a new render object below ball but above everything else.
@@ -17,6 +21,18 @@
 * Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.
 
   + Use concepts from there to add that sparkle to the submission.
+
+* Add digital clock.
+
+* Check these for inspiration:
+
+  + https://twitter.com/jgrandchavin/status/1213072263236476929
+
+  + https://twitter.com/HanielBaez/status/1212911845457252352
+
+  + https://twitter.com/berger_apps/status/1210119759251066880
+
+  + https://twitter.com/Joey_Dunivan/status/1204710943772557312
 
 * Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
 

@@ -11,14 +11,18 @@ double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
 
-  final Color ballColor;
+  final Color ballColor, groundColor, gooColor;
 
   const Background({
     Key key,
     @required this.animation,
     @required this.ballColor,
+    @required this.groundColor,
+    @required this.gooColor,
   })  : assert(animation != null),
         assert(ballColor != null),
+        assert(groundColor != null),
+        assert(gooColor != null),
         super(key: key);
 
   @override
@@ -26,12 +30,17 @@ class Background extends LeafRenderObjectWidget {
     return RenderBackground(
       animation: animation,
       ballColor: ballColor,
+      groundColor: groundColor,
+      gooColor: gooColor,
     );
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderBackground renderObject) {
-    renderObject..ballColor = ballColor;
+    renderObject
+      ..ballColor = ballColor
+      ..groundColor = groundColor
+      ..gooColor = gooColor;
   }
 }
 
@@ -41,15 +50,31 @@ class RenderBackground extends RenderCompositionChild {
   RenderBackground({
     this.animation,
     Color ballColor,
+    Color groundColor,
+    Color gooColor,
   })  : _ballColor = ballColor,
+        _groundColor = groundColor,
+        _gooColor = gooColor,
         super(ClockComponent.background);
 
-  Color _ballColor;
+  Color _ballColor, _groundColor, _gooColor;
 
   set ballColor(Color color) {
     if (color != _ballColor) markNeedsPaint();
 
     _ballColor = color;
+  }
+
+  set groundColor(Color groundColor) {
+    if (_groundColor != groundColor) markNeedsPaint();
+
+    _groundColor = groundColor;
+  }
+
+  set gooColor(Color gooColor) {
+    if (_gooColor != gooColor) markNeedsPaint();
+
+    _gooColor = gooColor;
   }
 
   @override
@@ -160,7 +185,7 @@ class RenderBackground extends RenderCompositionChild {
             ball.shortestSide * 2,
             [
           _ballColor,
-          const Color(0xffffe312),
+          _groundColor,
         ]),
         upperPath = Path()
           ..extendWithPath(cut, Offset.zero)
@@ -183,7 +208,7 @@ class RenderBackground extends RenderCompositionChild {
     canvas.drawPath(
         lowerPath,
         Paint()
-          ..color = const Color(0xffff4683)
+          ..color = _gooColor
           ..style = PaintingStyle.fill);
 
     canvas.restore();

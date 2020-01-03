@@ -37,6 +37,9 @@ enum ClockColor {
   lightning,
   windPrimary,
   windSecondary,
+
+  background,
+  goo,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -91,6 +94,8 @@ class Clock extends StatefulWidget {
     ClockColor.lightning: Color(0xfffdd023),
     ClockColor.windPrimary: Color(0xff96c4e8),
     ClockColor.windSecondary: Color(0xff008abf),
+    ClockColor.background: Color(0xffffe312),
+    ClockColor.goo: Color(0xffff4683),
   },
       baseLightPalette = {},
       baseDarkPalette = {
@@ -307,6 +312,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
               widget.palette[ClockColor.ballSecondary],
               1 / 2,
             ),
+            groundColor: widget.palette[ClockColor.background],
+            gooColor: widget.palette[ClockColor.goo],
           ),
           Ball(
             arrivalAnimation: ballArrivalAnimation,
