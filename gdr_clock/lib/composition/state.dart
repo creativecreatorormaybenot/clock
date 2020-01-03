@@ -26,6 +26,18 @@ enum ClockColor {
   thermometerTemperatureMin,
   thermometerBracket,
   thermometerBracketHighlight,
+
+  weatherArrow,
+  weatherBackground,
+  weatherBackgroundHighlight,
+  cloud,
+  fog,
+  raindrop,
+  snowflake,
+  sun,
+  lightning,
+  windPrimary,
+  windSecondary,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -55,6 +67,18 @@ class Clock extends StatefulWidget {
     ClockColor.thermometerTemperatureMin: Color(0xae2a42ff),
     ClockColor.thermometerBracket: Color(0xff87898c),
     ClockColor.thermometerBracketHighlight: Color(0xffe0e1e2),
+    ClockColor.weatherArrow: Color(0xffffddbb),
+    ClockColor.weatherBackground: Color(0xff2c6aee),
+    ClockColor.weatherBackgroundHighlight: Color(0xffffffff),
+    ClockColor.cloud: Color(0xcbc1beba),
+    ClockColor.fog: Color(0xc5cdc8be),
+    ClockColor.raindrop: Color(0xdda1c6cc),
+    ClockColor.snowflake: Color(0xbbfffafa),
+    ClockColor.sun: Color(0xfffcd440),
+    ClockColor.lightning: Color(0xfffdd023),
+    ClockColor.windPrimary: Color(0xff96c4e8),
+    ClockColor.windSecondary: Color(0xff008abf),
+
   },
       baseLightPalette = {
     ...basePalette,
@@ -273,7 +297,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         children: <Widget>[
           AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
           AnimatedTemperature(model: model, palette: widget.palette),
-          AnimatedWeather(model: model),
+          AnimatedWeather(model: model, palette: widget.palette),
           Background(
             animation: backgroundWaveAnimation,
             ballColor: Color.lerp(

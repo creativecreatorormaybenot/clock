@@ -10,12 +10,17 @@ import 'package:gdr_clock/clock.dart';
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
   final ClockModel model;
 
+  final Map<ClockColor, Color> palette;
+
   const AnimatedWeather({
     Key key,
     Curve curve = const ElasticInOutCurve(.6),
     Duration duration = const Duration(seconds: 1),
-    this.model,
-  }) : super(key: key, curve: curve, duration: duration);
+    @required this.model,
+    @required this.palette,
+  })  : assert(model != null),
+        assert(palette != null),
+        super(key: key, curve: curve, duration: duration);
 
   @override
   _AnimatedWeatherState createState() {
@@ -47,32 +52,85 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
   Widget build(BuildContext context) {
     return Weather(
       angle: _angleValue,
-      children: WeatherCondition.values.map((condition) => WeatherIcon(condition: condition)).toList(),
+      arrowColor: widget.palette[ClockColor.weatherArrow],
+      backgroundColor: widget.palette[ClockColor.weatherBackground],
+      backgroundHighlightColor: widget.palette[ClockColor.weatherBackgroundHighlight],
+      children: WeatherCondition.values.map(weatherIcon).toList(),
     );
+  }
+
+  Widget weatherIcon(WeatherCondition condition) {
+    switch (condition) {
+      case WeatherCondition.cloudy:
+        return Cloudy(
+          cloudColor: widget.palette[ClockColor.cloud],
+        );
+      case WeatherCondition.foggy:
+        return Foggy(
+          fogColor: widget.palette[ClockColor.fog],
+        );
+      case WeatherCondition.rainy:
+        return Rainy(
+          raindropColor: widget.palette[ClockColor.raindrop],
+        );
+      case WeatherCondition.snowy:
+        return Snowy(
+          snowflakeColor: widget.palette[ClockColor.snowflake],
+        );
+      case WeatherCondition.sunny:
+        return Sunny(
+          sunColor: widget.palette[ClockColor.sun],
+        );
+      case WeatherCondition.thunderstorm:
+        return Thunderstorm(
+          lightningColor: widget.palette[ClockColor.lightning],
+          raindropColor: widget.palette[ClockColor.raindrop],
+        );
+      case WeatherCondition.windy:
+        return Windy(
+          primaryColor: widget.palette[ClockColor.windPrimary],
+          secondaryColor: widget.palette[ClockColor.windSecondary],
+        );
+    }
+    throw UnimplementedError('Missing weather icon for $condition.');
   }
 }
 
 class Weather extends MultiChildRenderObjectWidget {
   final double angle;
 
+  final Color arrowColor, backgroundColor, backgroundHighlightColor;
+
   Weather({
     Key key,
     @required List<Widget> children,
     @required this.angle,
+    @required this.arrowColor,
+    @required this.backgroundColor,
+    @required this.backgroundHighlightColor,
   })  : assert(angle != null),
+        assert(arrowColor != null),
+        assert(backgroundColor != null),
+        assert(backgroundHighlightColor != null),
         super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderWeather(
       angle: angle,
+      arrowColor: arrowColor,
+      backgroundColor: backgroundColor,
+      backgroundHighlightColor: backgroundHighlightColor,
     );
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderWeather renderObject) {
     renderObject
-      ..angle = angle;
+      ..angle = angle
+      ..arrowColor = arrowColor
+      ..backgroundColor = backgroundColor
+      ..backgroundHighlightColor = backgroundHighlightColor;
   }
 }
 
@@ -83,8 +141,43 @@ class WeatherChildrenParentData extends CompositionChildrenParentData<WeatherCon
 
 class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenParentData, Weather> {
   RenderWeather({
-    this.angle,
-  }) : super(WeatherCondition.values);
+    double angle,
+    Color arrowColor,
+    Color backgroundColor,
+    Color backgroundHighlightColor,
+  })  : _angle = angle,
+        _arrowColor = arrowColor,
+        _backgroundColor = backgroundColor,
+        _backgroundHighlightColor = backgroundHighlightColor,
+        super(WeatherCondition.values);
+
+  double _angle;
+
+  set angle(double angle) {
+    if (_angle != angle) markNeedsPaint();
+
+    _angle = angle;
+  }
+
+  Color _arrowColor, _backgroundColor, _backgroundHighlightColor;
+
+  set arrowColor(Color arrowColor) {
+    if (_arrowColor != arrowColor) markNeedsPaint();
+
+    _arrowColor = arrowColor;
+  }
+
+  set backgroundColor(Color backgroundColor) {
+    if (_backgroundColor != backgroundColor) markNeedsPaint();
+
+    _backgroundColor = backgroundColor;
+  }
+
+  set backgroundHighlightColor(Color backgroundHighlightColor) {
+    if (_backgroundHighlightColor != backgroundHighlightColor) markNeedsPaint();
+
+    _backgroundHighlightColor = backgroundHighlightColor;
+  }
 
   @override
   void setupParentData(RenderObject child) {
@@ -103,8 +196,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
       ..childType = ClockComponent.weather
       ..valid = true;
   }
-
-  double angle;
 
   double _radius;
 
@@ -127,7 +218,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
   }
 
-  static const arrowColor = Color(0xffffddbb), backgroundColor = Color(0xff2c6aee), indentationFactor = .48;
+  static const indentationFactor = .48;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -142,14 +233,14 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Save the initial rotation in order to always draw the arrow pointing straight up.
     canvas.save();
     // Rotate the disc by the given angle. This defines how a potential background that can be drawn inside here will look.
-    canvas.rotate(angle);
+    canvas.rotate(_angle);
 
     //<editor-fold desc="Background">
     final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
         backgroundShader = RadialGradient(
       colors: [
-        Color.lerp(const Color(0xffffffff), backgroundColor, 3 / 5),
-        backgroundColor,
+        Color.lerp(_backgroundHighlightColor, _backgroundColor, 3 / 5),
+        _backgroundColor,
       ],
       stops: [
         0,
@@ -173,7 +264,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
       childParentData
         ..indentationFactor = indentationFactor
         ..radius = _radius
-        ..angle = angle + conditionAngle;
+        ..angle = _angle + conditionAngle;
 
       paintChild(condition);
 
@@ -199,36 +290,19 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..lineTo(0, h + s)
           ..close(),
         Paint()
-          ..color = arrowColor
+          ..color = _arrowColor
           ..style = PaintingStyle.fill);
     // Draw the rest of the arrow.
     canvas.drawLine(
         Offset.zero,
         Offset(0, h + s),
         Paint()
-          ..color = arrowColor
+          ..color = _arrowColor
           ..strokeWidth = _radius / 42
           ..strokeCap = StrokeCap.round);
     //</editor-fold>
 
     canvas.restore();
-  }
-}
-
-class WeatherIcon extends LeafRenderObjectWidget {
-  final WeatherCondition condition;
-
-  WeatherIcon({
-    Key key,
-    @required this.condition,
-  })  : assert(condition != null),
-        super(key: key);
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return RenderWeatherIcon(
-      condition: condition,
-    );
   }
 }
 
@@ -242,10 +316,8 @@ class WeatherIcon extends LeafRenderObjectWidget {
 /// might also involve animating them.
 /// It is possible that I forget to remove this section or that I leave it intentionally - in order
 /// to make it easier to find.
-class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
-  RenderWeatherIcon({
-    WeatherCondition condition,
-  }) : super(condition);
+abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
+  RenderWeatherIcon(WeatherCondition condition) : super(condition);
 
   WeatherCondition get condition => childType;
 
@@ -292,34 +364,85 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     // Having the center in the middle between the tip of the arrow and the border of the circle should be good.
     canvas.translate(0, radius * -indentationFactor / 2);
 
-    switch (condition) {
-      case WeatherCondition.cloudy:
-        drawCloudy(canvas);
-        break;
-      case WeatherCondition.foggy:
-        drawFoggy(canvas);
-        break;
-      case WeatherCondition.rainy:
-        drawRainy(canvas);
-        break;
-      case WeatherCondition.snowy:
-        drawSnowy(canvas);
-        break;
-      case WeatherCondition.sunny:
-        drawSunny(canvas);
-        break;
-      case WeatherCondition.thunderstorm:
-        drawThunderstorm(canvas);
-        break;
-      case WeatherCondition.windy:
-        drawWindy(canvas);
-        break;
-    }
+    drawCondition(canvas);
 
     canvas.restore();
   }
 
-  static const cloudColor = Color(0xcbc1beba);
+  void drawCondition(Canvas canvas);
+
+  /// Paints icon in neutral orientation in big in order to easily design it.
+  @override
+  void debugPaint(PaintingContext context, Offset offset) {
+    assert(() {
+      // Leaving this as an option for now as I want to be able to come back later to improve the icons.
+      return true;
+
+      final canvas = context.canvas;
+
+      canvas.drawPaint(Paint()..color = const Color(0x22000000));
+
+      canvas.save();
+      canvas.translate(534, 350);
+      canvas.scale(2);
+      drawCondition(canvas);
+
+      canvas.restore();
+      return true;
+    }());
+    super.debugPaint(context, offset);
+  }
+}
+
+class Cloudy extends LeafRenderObjectWidget {
+  final Color cloudColor;
+
+  Cloudy({
+    Key key,
+    @required this.cloudColor,
+  })  : assert(cloudColor != null),
+        super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderCloudy(
+      cloudColor: cloudColor,
+    );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderCloudy renderObject) {
+    renderObject..cloudColor = cloudColor;
+  }
+}
+
+class RenderCloudy extends RenderWeatherIcon {
+  RenderCloudy({
+    Color cloudColor,
+  })  : _cloudColor = cloudColor,
+        super(WeatherCondition.cloudy);
+
+  Color _cloudColor;
+
+  set cloudColor(Color cloudColor) {
+    if (_cloudColor != cloudColor) markNeedsPaint();
+
+    _cloudColor = cloudColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
+    // I could also achieve this by passing different values to _drawCloud,
+    // but I only realized that I wanted a different position later and it is easier to
+    // adjust it like this.
+    canvas.translate(0, radius * indentationFactor / 6);
+    canvas.scale(1.1);
+
+    _drawCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
+    _drawCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
+    _drawCloud(canvas, 0, 0, 1.3);
+    _drawCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
+  }
 
   void _drawCloud(Canvas canvas, double tx, double ty, double s) {
     canvas.save();
@@ -359,28 +482,51 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
           )
           ..close(),
         Paint()
-          ..color = cloudColor
+          ..color = _cloudColor
           ..style = PaintingStyle.fill);
 
     canvas.restore();
   }
+}
 
-  void drawCloudy(Canvas canvas) {
-    // I could also achieve this by passing different values to _drawCloud,
-    // but I only realized that I wanted a different position later and it is easier to
-    // adjust it like this.
-    canvas.translate(0, radius * indentationFactor / 6);
-    canvas.scale(1.1);
+class Foggy extends LeafRenderObjectWidget {
+  final Color fogColor;
 
-    _drawCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
-    _drawCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
-    _drawCloud(canvas, 0, 0, 1.3);
-    _drawCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
+  Foggy({
+    Key key,
+    @required this.fogColor,
+  })  : assert(fogColor != null),
+        super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderFoggy(
+      fogColor: fogColor,
+    );
   }
 
-  static const fogColor = Color(0xc5cdc8be);
+  @override
+  void updateRenderObject(BuildContext context, RenderFoggy renderObject) {
+    renderObject..fogColor = fogColor;
+  }
+}
 
-  void drawFoggy(Canvas canvas) {
+class RenderFoggy extends RenderWeatherIcon {
+  RenderFoggy({
+    Color fogColor,
+  })  : _fogColor = fogColor,
+        super(WeatherCondition.foggy);
+
+  Color _fogColor;
+
+  set fogColor(Color fogColor) {
+    if (_fogColor != fogColor) markNeedsPaint();
+
+    _fogColor = fogColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
     final g = radius * indentationFactor / 14;
 
     // Once again, it is easier to adjust it like this afterwards.
@@ -388,7 +534,7 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.scale(.96);
 
     final paint = Paint()
-      ..color = fogColor
+      ..color = _fogColor
       ..strokeWidth = g
       ..strokeCap = StrokeCap.round;
 
@@ -398,70 +544,304 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
       ..drawLine(Offset(g * -6, g), Offset(g * 2, g), paint)
       ..drawLine(Offset(g * -5, g * 3), Offset(g * 4, g * 3), paint);
   }
+}
 
-  static const raindropColor = Color(0xdda1c6cc), raindrops = 42;
+class Rainy extends LeafRenderObjectWidget {
+  final int raindrops;
 
-  void _drawRain(Canvas canvas, int r, int n, double s) {
-    canvas.save();
-    canvas.scale(s);
+  final Color raindropColor;
 
-    final random = Random(r),
-        raindropPaint = Paint()
-          ..color = raindropColor
-          ..strokeWidth = radius / 142;
+  Rainy({
+    Key key,
+    this.raindrops = 42,
+    @required this.raindropColor,
+  })  : assert(raindropColor != null),
+        super(key: key);
 
-    for (var i = 0; i < n; i++) {
-      final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, verticalShift * radius / 7);
-
-      canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
-    }
-
-    canvas.restore();
+  @override
+  RenderRainy createRenderObject(BuildContext context) {
+    return RenderRainy(
+      raindrops: raindrops,
+      raindropColor: raindropColor,
+    );
   }
 
-  void drawRainy(Canvas canvas) {
-    _drawRain(canvas, 0, raindrops, 1.42);
+  @override
+  void updateRenderObject(BuildContext context, RenderRainy renderObject) {
+    renderObject
+      ..raindrops = raindrops
+      ..raindropColor = raindropColor;
+  }
+}
+
+class RenderRainy extends RenderWeatherIcon {
+  RenderRainy({
+    int raindrops,
+    Color raindropColor,
+  })  : _raindrops = raindrops,
+        _raindropColor = raindropColor,
+        super(WeatherCondition.rainy);
+
+  int _raindrops;
+
+  set raindrops(int raindrops) {
+    if (_raindrops != raindrops) markNeedsPaint();
+
+    _raindrops = raindrops;
   }
 
-  static const snowColor = Color(0xbbfffafa), snowflakes = 61, snow = 23;
+  Color _raindropColor;
 
-  void drawSnowy(Canvas canvas) {
+  set raindropColor(Color raindropColor) {
+    if (_raindropColor != raindropColor) markNeedsPaint();
+
+    _raindropColor = raindropColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
+    _drawRain(canvas, _raindropColor, radius, 0, _raindrops, 1.42);
+  }
+}
+
+void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed, int raindrops, double scale) {
+  canvas.save();
+  canvas.scale(scale);
+
+  final random = Random(randomSeed),
+      raindropPaint = Paint()
+        ..color = raindropColor
+        ..strokeWidth = radius / 142;
+
+  for (var i = 0; i < raindrops; i++) {
+    final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, verticalShift * radius / 7);
+
+    canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
+  }
+
+  canvas.restore();
+}
+
+class Snowy extends LeafRenderObjectWidget {
+  final int snowflakes,
+
+      /// How many snowflakes are lying on the ground.
+      snow;
+
+  final Color snowflakeColor;
+
+  Snowy({
+    Key key,
+    this.snowflakes = 61,
+    this.snow = 23,
+    @required this.snowflakeColor,
+  })  : assert(snowflakeColor != null),
+        super(key: key);
+
+  @override
+  RenderSnowy createRenderObject(BuildContext context) {
+    return RenderSnowy(
+      snowflakes: snowflakes,
+      snow: snow,
+      snowflakeColor: snowflakeColor,
+    );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderSnowy renderObject) {
+    renderObject
+      ..snowflakes = snowflakes
+      ..snow = snow
+      ..snowflakeColor = snowflakeColor;
+  }
+}
+
+class RenderSnowy extends RenderWeatherIcon {
+  RenderSnowy({
+    int snowflakes,
+    int snow,
+    Color snowflakeColor,
+  })  : _snowflakes = snowflakes,
+        _snow = snow,
+        _snowflakeColor = snowflakeColor,
+        super(WeatherCondition.snowy);
+
+  int _snowflakes, _snow;
+
+  set snowflakes(int snowflakes) {
+    if (_snowflakes != snowflakes) markNeedsPaint();
+
+    _snowflakes = snowflakes;
+  }
+
+  set snow(int snow) {
+    if (_snow != snow) markNeedsPaint();
+
+    _snow = snow;
+  }
+
+  Color _snowflakeColor;
+
+  set snowflakeColor(Color snowflakeColor) {
+    if (_snowflakeColor != snowflakeColor) markNeedsPaint();
+
+    _snowflakeColor = snowflakeColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
     final random = Random(815174);
 
     // Draw snowflakes
-    final paint = Paint()..color = snowColor;
-    for (var i = 0; i < snowflakes; i++) {
+    final paint = Paint()..color = _snowflakeColor;
+    for (var i = 0; i < _snowflakes; i++) {
       final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
 
       canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, radius / 5 * verticalShift), radius: diameter / 2), paint);
     }
 
     // Draw some laying on the ground
-    for (var i = 0; i < snow; i++) {
+    for (var i = 0; i < _snow; i++) {
       final verticalShift = random.nextDouble(), horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 33 * (1 + diameterShift / 2);
 
       canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 9 + radius / 42 * verticalShift), radius: diameter / 2), paint);
     }
   }
+}
 
-  static const sunColor = Color(0xfffcd440), sunRays = 12;
+class Sunny extends LeafRenderObjectWidget {
+  final int sunRays;
 
-  void drawSunny(Canvas canvas) {
+  final Color sunColor;
+
+  Sunny({
+    Key key,
+    this.sunRays = 12,
+    @required this.sunColor,
+  })  : assert(sunColor != null),
+        super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderSunny(
+      sunRays: sunRays,
+      sunColor: sunColor,
+    );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderSunny renderObject) {
+    renderObject
+      ..sunRays = sunRays
+      ..sunColor = sunColor;
+  }
+}
+
+class RenderSunny extends RenderWeatherIcon {
+  RenderSunny({
+    int sunRays,
+    Color sunColor,
+  })  : _sunRays = sunRays,
+        _sunColor = sunColor,
+        super(WeatherCondition.sunny);
+
+  int _sunRays;
+
+  set sunRays(int sunRays) {
+    if (_sunRays != sunRays) markNeedsPaint();
+
+    _sunRays = sunRays;
+  }
+
+  Color _sunColor;
+
+  set sunColor(Color sunColor) {
+    if (_sunColor != sunColor) markNeedsPaint();
+
+    _sunColor = sunColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
     final paint = Paint()
-      ..color = sunColor
+      ..color = _sunColor
       ..strokeWidth = radius / 124;
 
     canvas.drawOval(Rect.fromCircle(center: Offset.zero, radius: radius / 9), paint);
 
-    for (var i = 0; i < sunRays; i++) {
-      final direction = pi * 2 / sunRays * i;
+    for (var i = 0; i < _sunRays; i++) {
+      final direction = pi * 2 / _sunRays * i;
       canvas.drawLine(Offset.fromDirection(direction, radius / 8), Offset.fromDirection(direction, radius / 6), paint);
     }
   }
+}
 
-  static const lightningColor = Color(0xfffdd023), thunderstormRaindrops = 11;
+class Thunderstorm extends LeafRenderObjectWidget {
+  final int raindrops;
 
-  void drawThunderstorm(Canvas canvas) {
+  final Color lightningColor, raindropColor;
+
+  Thunderstorm({
+    Key key,
+    this.raindrops = 11,
+    @required this.lightningColor,
+    @required this.raindropColor,
+  })  : assert(lightningColor != null),
+        assert(raindropColor != null),
+        super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderThunderstorm(
+      raindrops: raindrops,
+      lightningColor: lightningColor,
+      raindropColor: raindropColor,
+    );
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderThunderstorm renderObject) {
+    renderObject
+      ..raindrops = raindrops
+      ..lightningColor = lightningColor
+      ..raindropColor = raindropColor;
+  }
+}
+
+class RenderThunderstorm extends RenderWeatherIcon {
+  RenderThunderstorm({
+    int raindrops,
+    Color lightningColor,
+    Color raindropColor,
+  })  : _raindrops = raindrops,
+        _lightningColor = lightningColor,
+        _raindropColor = raindropColor,
+        super(WeatherCondition.thunderstorm);
+
+  int _raindrops;
+
+  set raindrops(int raindrops) {
+    if (_raindrops != raindrops) markNeedsPaint();
+
+    _raindrops = raindrops;
+  }
+
+  Color _lightningColor, _raindropColor;
+
+  set lightningColor(Color lightningColor) {
+    if (_lightningColor != lightningColor) markNeedsPaint();
+
+    _lightningColor = lightningColor;
+  }
+
+  set raindropColor(Color raindropColor) {
+    if (_raindropColor != raindropColor) markNeedsPaint();
+
+    _raindropColor = raindropColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
     // Draw lightning
     final lightningPath = Path()
       ..moveTo(radius * -indentationFactor / 4, radius * -indentationFactor / 4)
@@ -475,14 +855,74 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     canvas.drawPath(
         lightningPath,
         Paint()
-          ..color = lightningColor
+          ..color = _lightningColor
           ..style = PaintingStyle.fill);
 
     // Draw raindrops
-    _drawRain(canvas, 435, thunderstormRaindrops, 1);
+    _drawRain(canvas, _raindropColor, radius, 435, _raindrops, 1);
+  }
+}
+
+class Windy extends LeafRenderObjectWidget {
+  final Color primaryColor, secondaryColor;
+
+  Windy({
+    Key key,
+    @required this.primaryColor,
+    @required this.secondaryColor,
+  })  : assert(primaryColor != null),
+        assert(secondaryColor != null),
+        super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderWindy(
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+    );
   }
 
-  static const primaryWindColor = Color(0xff96c4e8), secondaryWindColor = Color(0xff008abf);
+  @override
+  void updateRenderObject(BuildContext context, RenderWindy renderObject) {
+    renderObject
+      ..primaryColor = primaryColor
+      ..secondaryColor = secondaryColor;
+  }
+}
+
+class RenderWindy extends RenderWeatherIcon {
+  RenderWindy({
+    Color primaryColor,
+    Color secondaryColor,
+  })  : _primaryColor = primaryColor,
+        _secondaryColor = secondaryColor,
+        super(WeatherCondition.windy);
+
+  Color _primaryColor, _secondaryColor;
+
+  set primaryColor(Color primaryColor) {
+    if (_primaryColor != primaryColor) markNeedsPaint();
+
+    _primaryColor = primaryColor;
+  }
+
+  set secondaryColor(Color secondaryColor) {
+    if (_secondaryColor != secondaryColor) markNeedsPaint();
+
+    _secondaryColor = secondaryColor;
+  }
+
+  @override
+  void drawCondition(Canvas canvas) {
+    // Primary wind symbol
+    _drawWind(canvas, _primaryColor, 0, radius * indentationFactor / 17, .96, 2, 1.8, 1);
+
+    // Upper wind symbol
+    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -3, radius * indentationFactor / -5, .8, 2, 1.8, 1);
+
+    // Lower wind symbol
+    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -6, radius * indentationFactor / 3, .7, 1, 1, 1);
+  }
 
   void _drawWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3) {
     canvas.save();
@@ -573,38 +1013,5 @@ class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, Weather
     }
 
     canvas.restore();
-  }
-
-  void drawWindy(Canvas canvas) {
-    // Primary wind symbol
-    _drawWind(canvas, primaryWindColor, 0, radius * indentationFactor / 17, .96, 2, 1.8, 1);
-
-    // Upper wind symbol
-    _drawWind(canvas, secondaryWindColor, radius * indentationFactor / -3, radius * indentationFactor / -5, .8, 2, 1.8, 1);
-
-    // Lower wind symbol
-    _drawWind(canvas, secondaryWindColor, radius * indentationFactor / -6, radius * indentationFactor / 3, .7, 1, 1, 1);
-  }
-
-  /// Paints icon in neutral orientation in big in order to easily design it.
-  @override
-  void debugPaint(PaintingContext context, Offset offset) {
-    assert(() {
-      // Leaving this as an option for now as I want to be able to come back later to improve the icons.
-      return true;
-
-      final canvas = context.canvas;
-
-      canvas.drawPaint(Paint()..color = const Color(0x22000000));
-
-      canvas.save();
-      canvas.translate(534, 350);
-      canvas.scale(2);
-      drawFoggy(canvas);
-
-      canvas.restore();
-      return true;
-    }());
-    super.debugPaint(context, offset);
   }
 }
