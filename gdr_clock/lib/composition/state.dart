@@ -345,6 +345,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
               fontWeight: FontWeight.bold,
             ),
           ),
+          Slide(
+            curveColor: Color.lerp(
+              widget.palette[ClockColor.ballPrimary],
+              widget.palette[ClockColor.ballSecondary],
+              1 / 2,
+            ),
+          ),
           UpdatedDate(palette: widget.palette),
         ],
       );

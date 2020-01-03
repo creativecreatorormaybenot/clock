@@ -43,6 +43,9 @@ enum ClockComponent {
   date,
 //  digitalTime,
   location,
+
+  /// Slide where the [ball] rolls down.
+  slide,
   temperature,
   weather,
 }
@@ -120,6 +123,9 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
     ball.layout(constraints.loosen(), parentUsesSize: true);
 
+    // Slide
+    final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide];
+
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
     analogTime.layout(
@@ -144,6 +150,11 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         size.width * 1.2 / 4,
         -ball.size.height * 2,
       );
+
+      final slideRect = Rect.fromPoints(ballDestination.plus(ball.size), ballStartPosition.plus(ball.size));
+
+      slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
+      slideData.offset = slideRect.topLeft;
 
       if (ballDepartureAnimation.status != AnimationStatus.forward) {
         ballData.offset = Offset.lerp(ballStartPosition, ballDestination, ballArrivalAnimation.value);
@@ -244,6 +255,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       paintChild(ClockComponent.temperature);
       paintChild(ClockComponent.weather);
       paintChild(ClockComponent.analogTime);
+      paintChild(ClockComponent.slide);
       paintChild(ClockComponent.ball);
     });
   }
