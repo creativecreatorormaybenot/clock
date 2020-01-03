@@ -1,16 +1,14 @@
 ## TODO
 
+* Draw a curve for the ball's path as a new render object below ball but above everything else.
+
+  + The ball rolls along this curve and then falls down onto the destination.
+
+  + The curve could slowly change over time like the background does for relaxation.
+
 * Draw gradients about weather, clock, and thermometer.
 
   + Draw borders about weather and clock.
-
-* Add ball that bounces about scene.
-
-  + A curve should be drawn as a new render object below ball but above everything else.
-
-    - The ball rolls along this curve and then falls down onto the destination.
-
-    - The curve could slowly change over time like the background does for relaxation.
 
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
