@@ -40,13 +40,27 @@ enum ClockColor {
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
+  final palette = Map.of(Clock.basePalette);
+
   if (Theme.of(context).brightness == Brightness.light) {
-    if (useVibrantPalette) return Clock.vibrantLightPalette;
-    return Clock.subtleLightPalette;
+    palette.addAll(Clock.baseLightPalette);
+
+    if (useVibrantPalette) {
+      palette.addAll(Clock.vibrantLightPalette);
+    } else {
+      palette.addAll(Clock.subtleLightPalette);
+    }
   } else {
-    if (useVibrantPalette) return Clock.vibrantDarkPalette;
-    return Clock.subtleDarkPalette;
+    palette.addAll(Clock.baseDarkPalette);
+
+    if (useVibrantPalette) {
+      palette.addAll(Clock.vibrantDarkPalette);
+    } else {
+      palette.addAll(Clock.subtleDarkPalette);
+    }
   }
+
+  return palette;
 }
 
 class Clock extends StatefulWidget {
@@ -78,24 +92,14 @@ class Clock extends StatefulWidget {
     ClockColor.windPrimary: Color(0xff96c4e8),
     ClockColor.windSecondary: Color(0xff008abf),
   },
-      baseLightPalette = {
-    ...basePalette,
-  },
+      baseLightPalette = {},
       baseDarkPalette = {
-    ...basePalette,
+    ClockColor.text: Color(0xff424242),
   },
-      vibrantLightPalette = {
-    ...baseLightPalette,
-  },
-      vibrantDarkPalette = {
-    ...baseDarkPalette,
-  },
-      subtleLightPalette = {
-    ...baseLightPalette,
-  },
-      subtleDarkPalette = {
-    ...baseDarkPalette,
-  };
+      vibrantLightPalette = {},
+      vibrantDarkPalette = {},
+      subtleLightPalette = {},
+      subtleDarkPalette = {};
 
   final ClockModel model;
 
