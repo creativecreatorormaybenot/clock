@@ -1,5 +1,7 @@
 ## TODO
 
+* Mark the places when the ball drops on the analog clock with little icons, i.e.<div> more towarda the center than the numbers and tick marks.
+
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
   + https://youtu.be/i60HG1TtKJo
