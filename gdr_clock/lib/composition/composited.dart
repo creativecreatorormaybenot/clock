@@ -131,7 +131,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     () {
       final analogClockBasePosition = Offset(
         size.width / 2 - analogTime.size.width / 2.36,
-        size.height / 2 - analogTime.size.height / 3,
+        size.height / 2 - analogTime.size.height / 2.7,
       );
 
       final ballStartPosition = Offset(
