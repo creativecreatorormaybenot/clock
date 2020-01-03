@@ -151,7 +151,14 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         -ball.size.height * 2,
       );
 
-      final slideRect = Rect.fromPoints(ballDestination.plus(ball.size), ballStartPosition.plus(ball.size));
+      final slideRect = Rect.fromPoints(
+        Offset.lerp(
+          ballStartPosition,
+          ballDestination,
+          3 / 4,
+        ).plus(ball.size),
+        ballStartPosition.plus(ball.size),
+      );
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
       slideData.offset = slideRect.topLeft;
