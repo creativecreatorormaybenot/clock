@@ -1,7 +1,5 @@
 ## TODO
 
-* Extract all colors from render objects into the vibrant light palette.
-
 * Draw gradients about weather, clock, and thermometer.
 
   + Draw borders about weather and clock.

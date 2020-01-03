@@ -510,7 +510,7 @@ class RenderTemperature extends RenderCompositionChild {
   }
 
   void _drawLines(Canvas canvas, Line constraints) {
-    final paint = Paint()
+    final linePaint = Paint()
       ..color = _textColor
       ..strokeWidth = size.height / 1e3;
 
@@ -533,7 +533,7 @@ class RenderTemperature extends RenderCompositionChild {
       if (i % majorValue == 0) {
         final line = Line.fromCenter(center: size.width / 2, extent: size.width / 1.46);
 
-        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), paint);
+        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
 
         final text = i == 0 ? '00' : '${i.abs()}', left = text.substring(0, 1), right = text.substring(1);
 
@@ -565,11 +565,11 @@ class RenderTemperature extends RenderCompositionChild {
       } else if (i % intermediateValue == 0) {
         final line = Line.fromCenter(center: size.width / 2, extent: size.width / 2.1);
 
-        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), paint);
+        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
       } else if (i % minorValue == 0) {
         final line = Line.fromCenter(center: size.width / 2, extent: size.width / 3.3);
 
-        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), paint);
+        canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
       }
 
       h -= difference;

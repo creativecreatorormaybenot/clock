@@ -12,23 +12,25 @@ const handBounceDuration = Duration(milliseconds: 274);
 
 class AnimatedAnalogTime extends AnimatedWidget {
   final Animation<double> animation;
+
   final ClockModel model;
+  final Map<ClockColor, Color> palette;
 
   AnimatedAnalogTime({
     Key key,
     @required this.animation,
     @required this.model,
+    @required this.palette,
   })  : assert(animation != null),
         assert(model != null),
+        assert(palette != null),
         super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value),
-        time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogTime(
-      textStyle: Theme.of(context).textTheme.display1,
       secondHandAngle: // Regular distance
           pi * 2 / 60 * time.second +
               // Bounce
@@ -38,73 +40,186 @@ class AnimatedAnalogTime extends AnimatedWidget {
           (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
       hourHandAngle:
           // Distance for the hour.
-          pi *
-                  2 /
-                  (model.is24HourFormat ? 24 : 12) *
-                  (model.is24HourFormat ? time.hour : time.hour % 12) +
+          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
               // Distance for the minute.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
               // Distance for the second.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
       hourDivisions: model.is24HourFormat ? 24 : 12,
+      textColor: palette[ClockColor.text],
+      backgroundColor: palette[ClockColor.analogTimeBackground],
+      backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
+      hourHandColor: palette[ClockColor.hourHand],
+      minuteHandColor: palette[ClockColor.minuteHand],
+      secondHandColor: palette[ClockColor.secondHand],
+      shadowColor: palette[ClockColor.shadow],
     );
   }
 }
 
 class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
-  final TextStyle textStyle;
   final int hourDivisions;
+
+  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor;
 
   const AnalogTime({
     Key key,
-    @required this.textStyle,
     @required this.secondHandAngle,
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
-  })  : assert(textStyle != null),
-        assert(secondHandAngle != null),
+    @required this.textColor,
+    @required this.backgroundColor,
+    @required this.backgroundHighlightColor,
+    @required this.hourHandColor,
+    @required this.minuteHandColor,
+    @required this.secondHandColor,
+    @required this.shadowColor,
+  })  : assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
         assert(hourDivisions != null),
+        assert(textColor != null),
+        assert(backgroundColor != null),
+        assert(backgroundHighlightColor != null),
+        assert(hourHandColor != null),
+        assert(minuteHandColor != null),
+        assert(secondHandColor != null),
+        assert(shadowColor != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderAnalogTime(
-      textStyle: textStyle,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
+      textColor: textColor,
+      backgroundColor: backgroundColor,
+      backgroundHighlightColor: backgroundHighlightColor,
+      hourHandColor: hourHandColor,
+      minuteHandColor: minuteHandColor,
+      secondHandColor: secondHandColor,
+      shadowColor: shadowColor,
     );
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderAnalogTime renderObject) {
     renderObject
-      ..textStyle = textStyle
       ..secondHandAngle = secondHandAngle
       ..minuteHandAngle = minuteHandAngle
       ..hourHandAngle = hourHandAngle
       ..hourDivisions = hourDivisions
-      ..markNeedsPaint();
+      ..textColor = textColor
+      ..backgroundColor = backgroundColor
+      ..backgroundHighlightColor = backgroundHighlightColor
+      ..hourHandColor = hourHandColor
+      ..minuteHandColor = minuteHandColor
+      ..secondHandColor = secondHandColor
+      ..shadowColor = shadowColor;
   }
 }
 
 class RenderAnalogTime extends RenderCompositionChild {
   RenderAnalogTime({
-    this.textStyle,
-    this.secondHandAngle,
-    this.minuteHandAngle,
-    this.hourHandAngle,
-    this.hourDivisions,
-  }) : super(ClockComponent.analogTime);
+    double secondHandAngle,
+    double minuteHandAngle,
+    double hourHandAngle,
+    int hourDivisions,
+    Color textColor,
+    Color backgroundColor,
+    Color backgroundHighlightColor,
+    Color hourHandColor,
+    Color minuteHandColor,
+    Color secondHandColor,
+    Color shadowColor,
+  })  : _secondHandAngle = secondHandAngle,
+        _minuteHandAngle = minuteHandAngle,
+        _hourHandAngle = hourHandAngle,
+        _hourDivisions = hourDivisions,
+        _textColor = textColor,
+        _backgroundColor = backgroundColor,
+        _backgroundHighlightColor = backgroundHighlightColor,
+        _hourHandColor = hourHandColor,
+        _minuteHandColor = minuteHandColor,
+        _secondHandColor = secondHandColor,
+        _shadowColor = shadowColor,
+        super(ClockComponent.analogTime);
 
-  double secondHandAngle, minuteHandAngle, hourHandAngle;
-  TextStyle textStyle;
-  int hourDivisions;
+  double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
+
+  set secondHandAngle(double secondHandAngle) {
+    if (_secondHandAngle != secondHandAngle) markNeedsPaint();
+
+    _secondHandAngle = secondHandAngle;
+  }
+
+  set minuteHandAngle(double minuteHandAngle) {
+    if (_minuteHandAngle != minuteHandAngle) markNeedsPaint();
+
+    _minuteHandAngle = minuteHandAngle;
+  }
+
+  set hourHandAngle(double hourHandAngle) {
+    if (_hourHandAngle != hourHandAngle) markNeedsPaint();
+
+    _hourHandAngle = hourHandAngle;
+  }
+
+  int _hourDivisions;
+
+  set hourDivisions(int hourDivisions) {
+    if (_hourDivisions != hourDivisions) markNeedsPaint();
+
+    _hourDivisions = hourDivisions;
+  }
+
+  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor;
+
+  set textColor(Color textColor) {
+    if (_textColor != textColor) markNeedsPaint();
+
+    _textColor = textColor;
+  }
+
+  set backgroundColor(Color backgroundColor) {
+    if (_backgroundColor != backgroundColor) markNeedsPaint();
+
+    _backgroundColor = backgroundColor;
+  }
+
+  set backgroundHighlightColor(backgroundHighlightColor) {
+    if (_backgroundHighlightColor != backgroundHighlightColor) markNeedsPaint();
+
+    _backgroundHighlightColor = backgroundHighlightColor;
+  }
+
+  set hourHandColor(Color hourHandColor) {
+    if (_hourHandColor != hourHandColor) markNeedsPaint();
+
+    _hourHandColor = hourHandColor;
+  }
+
+  set minuteHandColor(Color minuteHandColor) {
+    if (_minuteHandColor != minuteHandColor) markNeedsPaint();
+
+    _minuteHandColor = minuteHandColor;
+  }
+
+  set secondHandColor(Color secondHandColor) {
+    if (_secondHandColor != secondHandColor) markNeedsPaint();
+
+    _secondHandColor = secondHandColor;
+  }
+
+  set shadowColor(Color shadowColor) {
+    if (_shadowColor != shadowColor) markNeedsPaint();
+
+    _shadowColor = shadowColor;
+  }
 
   @override
   bool get sizedByParent => true;
@@ -126,20 +241,21 @@ class RenderAnalogTime extends RenderCompositionChild {
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    const backgroundGradient = RadialGradient(colors: [
-      Color(0xffffffff),
-      Color(0xffeaffd8),
-    ], stops: [
-      0,
-      .7,
-    ]);
-    final fullCircleRect =
-        Rect.fromCircle(center: Offset.zero, radius: _radius);
+    final backgroundGradient = RadialGradient(
+      colors: [
+        _backgroundHighlightColor,
+        _backgroundColor,
+      ],
+      stops: const [
+        0,
+        .7,
+      ],
+    ),
+        fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius);
 
-    canvas.drawOval(fullCircleRect,
-        Paint()..shader = backgroundGradient.createShader(fullCircleRect));
+    canvas.drawOval(fullCircleRect, Paint()..shader = backgroundGradient.createShader(fullCircleRect));
 
-    final largeDivisions = hourDivisions, smallDivisions = 60;
+    final largeDivisions = _hourDivisions, smallDivisions = 60;
 
     // Ticks indicating minutes and seconds (both 60).
     for (var n = smallDivisions; n > 0; n--) {
@@ -153,7 +269,7 @@ class RenderAnalogTime extends RenderCompositionChild {
               height: height,
             ),
             Paint()
-              ..color = const Color(0xff000000)
+              ..color = _textColor
               ..blendMode = BlendMode.darken);
       }
 
@@ -172,13 +288,16 @@ class RenderAnalogTime extends RenderCompositionChild {
             height: height,
           ),
           Paint()
-            ..color = const Color(0xff000000)
+            ..color = _textColor
             ..blendMode = BlendMode.darken);
 
       final painter = TextPainter(
         text: TextSpan(
           text: '$n',
-          style: textStyle.copyWith(fontSize: _radius / 8.2),
+          style: TextStyle(
+            color: _textColor,
+            fontSize: _radius / 8.2,
+          ),
         ),
         textDirection: TextDirection.ltr,
       );
@@ -211,10 +330,10 @@ class RenderAnalogTime extends RenderCompositionChild {
   void _drawHourHand(Canvas canvas) {
     canvas.save();
 
-    canvas.rotate(hourHandAngle);
+    canvas.rotate(_hourHandAngle);
 
     final paint = Paint()
-          ..color = const Color(0xff3a1009)
+          ..color = _hourHandColor
           ..style = PaintingStyle.fill,
         w = _radius / 42,
         h = -_radius / 2.29,
@@ -247,7 +366,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     // I also just noticed that I opened that issue exactly on
     // New Year's first minute - was not on purpose, but this
     // should show something about my relationship to this project :)
-    canvas.drawShadow(path, const Color(0xff000000), _radius / 57, false);
+    canvas.drawShadow(path, _shadowColor, _radius / 57, false);
 
     canvas.restore();
   }
@@ -255,10 +374,10 @@ class RenderAnalogTime extends RenderCompositionChild {
   void _drawMinuteHand(Canvas canvas) {
     canvas.save();
 
-    canvas.rotate(minuteHandAngle);
+    canvas.rotate(_minuteHandAngle);
 
     final paint = Paint()
-          ..color = const Color(0xff000000)
+          ..color = _minuteHandColor
           ..style = PaintingStyle.fill
           ..isAntiAlias = true,
         h = -_radius / 1.15,
@@ -280,7 +399,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-    canvas.drawShadow(path, const Color(0xff000000), _radius / 89, false);
+    canvas.drawShadow(path, _shadowColor, _radius / 89, false);
 
     canvas.restore();
   }
@@ -288,10 +407,10 @@ class RenderAnalogTime extends RenderCompositionChild {
   void _drawSecondHand(Canvas canvas) {
     canvas.save();
     // Second hand design parts: rotate in order to easily draw the parts facing straight up.
-    canvas.transform(Matrix4.rotationZ(secondHandAngle).storage);
+    canvas.transform(Matrix4.rotationZ(_secondHandAngle).storage);
 
     final paint = Paint()
-          ..color = const Color(0xff09103a)
+          ..color = _secondHandColor
           ..style = PaintingStyle.fill,
         sh = -size.width / 4.7,
         eh = -size.width / 2.8,
@@ -325,7 +444,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close();
 
     canvas.drawPath(path, paint);
-    canvas.drawShadow(path, const Color(0xff000000), _radius / 64, false);
+    canvas.drawShadow(path, _shadowColor, _radius / 64, false);
 
     canvas.restore();
   }

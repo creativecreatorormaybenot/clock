@@ -7,6 +7,8 @@ import 'package:gdr_clock/clock.dart';
 import 'package:gdr_clock/main.dart';
 
 enum ClockColor {
+  /// This is also used for tick marks or lines on the
+  /// analog clock and thermometer.
   text,
   ballPrimary,
   ballSecondary,
@@ -37,9 +39,14 @@ enum ClockColor {
   lightning,
   windPrimary,
   windSecondary,
-
   background,
   goo,
+  analogTimeBackground,
+  analogTimeBackgroundHighlight,
+  hourHand,
+  minuteHand,
+  secondHand,
+  shadow,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -68,7 +75,7 @@ Map<ClockColor, Color> resolvePalette(BuildContext context) {
 
 class Clock extends StatefulWidget {
   static const Map<ClockColor, Color> basePalette = {
-    ClockColor.text: Color(0xff000000),
+    ClockColor.text: Color(0xcd000000),
     ClockColor.ballPrimary: Color(0xffd3d3ff),
     ClockColor.ballSecondary: Color(0xff9a9aff),
     ClockColor.thermometerTube: Color(0xffffe3d1),
@@ -96,6 +103,12 @@ class Clock extends StatefulWidget {
     ClockColor.windSecondary: Color(0xff008abf),
     ClockColor.background: Color(0xffffe312),
     ClockColor.goo: Color(0xffff4683),
+    ClockColor.analogTimeBackground: Color(0xffeaffd8),
+    ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
+    ClockColor.hourHand: Color(0xff3a1009),
+    ClockColor.minuteHand: Color(0xff000000),
+    ClockColor.secondHand: Color(0xff09103a),
+    ClockColor.shadow: Color(0xff000000),
   },
       baseLightPalette = {},
       baseDarkPalette = {
@@ -302,7 +315,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         bounceAwayAnimation: bounceAwayAnimation,
         bounceBackAnimation: bounceBackAnimation,
         children: <Widget>[
-          AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
+          AnimatedAnalogTime(
+            animation: analogBounceAnimation,
+            model: model,
+            palette: widget.palette,
+          ),
           AnimatedTemperature(model: model, palette: widget.palette),
           AnimatedWeather(model: model, palette: widget.palette),
           Background(
