@@ -317,7 +317,9 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 /// It is possible that I forget to remove this section or that I leave it intentionally - in order
 /// to make it easier to find.
 abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
-  RenderWeatherIcon(WeatherCondition condition) : super(condition);
+  final bool debugPaintConditionEnabled;
+
+  RenderWeatherIcon(WeatherCondition condition, [this.debugPaintConditionEnabled = false]) : super(condition);
 
   WeatherCondition get condition => childType;
 
@@ -376,7 +378,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
       // Leaving this as an option for now as I want to be able to come back later to improve the icons.
-      return true;
+      if (!debugPaintConditionEnabled) true;
 
       final canvas = context.canvas;
 
