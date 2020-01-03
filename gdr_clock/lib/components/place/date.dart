@@ -5,7 +5,13 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class UpdatedDate extends StatefulWidget {
-  const UpdatedDate({Key key}) : super(key: key);
+  final Map<ClockColor, Color> palette;
+
+  const UpdatedDate({
+    Key key,
+    @required this.palette,
+  })  : assert(palette != null),
+        super(key: key);
 
   @override
   State createState() => _UpdatedDateState();
@@ -36,17 +42,15 @@ class _UpdatedDateState extends State<UpdatedDate> {
       // DateTime handles passing e.g. 32 as the day just fine, i.e. even when the day should actually roll over,
       // passing the previous day + 1 is fine because DateTime will convert it into the correct date anyway,
       // which means that the time difference here will always be correct.
-      timer = Timer(
-          DateTime(time.year, time.month, time.day + 1).difference(time),
-          update);
+      timer = Timer(DateTime(time.year, time.month, time.day + 1).difference(time), update);
     });
   }
 
   @override
   Widget build(BuildContext context) => Date(
         text: '${time.month}/${time.day}/${time.year}',
-        textStyle: const TextStyle(
-          color: Color(0xff000000),
+        textStyle: TextStyle(
+          color: widget.palette[ClockColor.text],
           fontWeight: FontWeight.bold,
         ),
       );

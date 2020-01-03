@@ -26,7 +26,6 @@ enum ClockColor {
   thermometerTemperatureMin,
   thermometerBracket,
   thermometerBracketHighlight,
-
   weatherArrow,
   weatherBackground,
   weatherBackgroundHighlight,
@@ -78,7 +77,6 @@ class Clock extends StatefulWidget {
     ClockColor.lightning: Color(0xfffdd023),
     ClockColor.windPrimary: Color(0xff96c4e8),
     ClockColor.windSecondary: Color(0xff008abf),
-
   },
       baseLightPalette = {
     ...basePalette,
@@ -314,9 +312,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ),
           Location(
             text: model.location,
-            textStyle: const TextStyle(color: Color(0xff000000), fontWeight: FontWeight.bold),
+            textStyle: TextStyle(
+              color: widget.palette[ClockColor.text],
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const UpdatedDate(),
+          UpdatedDate(palette: widget.palette),
         ],
       );
 }

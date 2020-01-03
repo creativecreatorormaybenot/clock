@@ -378,7 +378,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
       // Leaving this as an option for now as I want to be able to come back later to improve the icons.
-      if (!debugPaintConditionEnabled) true;
+      if (!debugPaintConditionEnabled) return true;
 
       final canvas = context.canvas;
 
