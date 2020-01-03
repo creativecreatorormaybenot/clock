@@ -1,8 +1,6 @@
 ## TODO
 
-* Draw gradients about weather, clock, and thermometer.
-
-  + Draw borders about weather and clock.
+* Draw borders about weather and clock.
 
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
