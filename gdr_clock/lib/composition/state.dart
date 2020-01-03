@@ -94,7 +94,7 @@ class Clock extends StatefulWidget {
   },
       baseLightPalette = {},
       baseDarkPalette = {
-    ClockColor.text: Color(0xff424242),
+    ClockColor.text: Color(0xff424242), // todo only a test
   },
       vibrantLightPalette = {},
       vibrantDarkPalette = {},

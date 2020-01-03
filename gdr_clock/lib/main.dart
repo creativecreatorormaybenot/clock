@@ -30,7 +30,7 @@ void main() {
     ClockCustomizer(
       (model) => Builder(
         builder: (context) {
-          return Clock(
+          return AnimatedClock(
             model: model,
             palette: resolvePalette(context),
           );
