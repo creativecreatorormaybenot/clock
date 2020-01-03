@@ -8,8 +8,6 @@
 
   + Use concepts from there to add that sparkle to the submission.
 
-* Add digital clock.
-
 * Check these for inspiration:
 
   + https://twitter.com/jgrandchavin/status/1213072263236476929
@@ -20,29 +18,39 @@
 
   + https://twitter.com/Joey_Dunivan/status/1204710943772557312
 
-* Push some subtle animated transforms (in CompositedClock?) that introduce some nice perspective changes.
+* Add digital clock.
 
-  + Potentially rotate whole components because it better shows what is an individual part :)
+* Implement accessibility.
+
+  + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
+
+* Effects/filter ideas:
+
+  + Push some subtle animated transforms (in `CompositedClock` ?) that introduce some nice perspective changes.
+
+    - Potentially rotate whole components because it better shows what the individual parts are :)
+
+  + Add some texture over components, e.g.<div>metal-like, wood-like, or just w/e looks interesting.
 
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
 
-  + Have a looping animation, i.e.every condition has a loop.
+  + Have a looping animation, i.e.<div>every condition has a loop.
+
+  + Use the opportunity to finish/clean off the icons (for now).
+
+    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
 
 * Create spin-up animation for when the widget is created or updated? 
 
-* Checkout https://twitter.com/Joey_Dunivan/status/1204710943772557312?s=20 and consider doing something like that.
+  + This could show that the goo actually reacts to the components (even more than the ball push already does).
 
-* Handle dark and light modes properly.
+* Finish all eight themes and ensure that dark mode, light mode, subtle, and vibrant look proper.
 
-* Finish clock first.
-
-* Implement accessibility.
-
-  + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
+  + Choose the best.
 
 * Potentially consider https://api.flutter.dev/flutter/painting/ShaderWarmUp/warmUpOnCanvas.html and https://api.flutter.dev/flutter/painting/ShaderWarmUp-class.html.
 
