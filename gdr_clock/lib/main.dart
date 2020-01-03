@@ -25,6 +25,11 @@ import 'package:gdr_clock/clock.dart';
 /// I used to make it all work.
 const useVibrantPalette = true;
 
+/// The ball will fall down on every [ballEverySeconds]th second, i.e.
+/// it is timed in a way that the ball will arrive at its destination
+/// exactly then.
+const ballEverySeconds = 30;
+
 void main() {
   runApp(
     ClockCustomizer(

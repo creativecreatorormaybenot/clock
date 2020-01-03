@@ -234,11 +234,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     });
   }
 
-  /// The ball will fall down on every [ballEverySeconds]th second, i.e.
-  /// it is timed in a way that the ball will arrive at its destination
-  /// exactly then.
-  static const ballEverySeconds = 15;
-
   void update([bool initial = false]) {
     final time = DateTime.now();
 
