@@ -1,6 +1,6 @@
 ## TODO
 
-* Mark the places when the ball drops on the analog clock with little icons, i.e.<div> more towarda the center than the numbers and tick marks.
+* Mark the places when the ball drops on the analog clock with little icons, i.e.</a> more towards the center than the numbers and tick marks.
 
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
@@ -34,13 +34,13 @@
 
     - Potentially rotate whole components because it better shows what the individual parts are :)
 
-  + Add some texture over components, e.g.<div>metal-like, wood-like, or just w/e looks interesting.
+  + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
 
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
 
-  + Have a looping animation, i.e.<div>every condition has a loop.
+  + Have a looping animation, i.e.</a> every condition has a loop.
 
   + Use the opportunity to finish/clean off the icons (for now).
 
@@ -115,7 +115,7 @@ The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://
 
 * No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
 
-* No premade widgets from the standard library were used in my own code, i.e.every `RenderObject` in the tree of the clock was custom created by me.
+* No premade widgets from the standard library were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.
 
 * No assets were used. The bullet point would be a bit short without this second sentence.
 
