@@ -7,8 +7,25 @@ import 'package:gdr_clock/clock.dart';
 import 'package:gdr_clock/main.dart';
 
 enum ClockColor {
+  text,
   ballPrimary,
   ballSecondary,
+  thermometerBackgroundPrimary,
+  thermometerBackgroundSecondary,
+  thermometerBorder,
+  brad,
+
+  /// Highlight colors here are used to resemble a shining material,
+  /// i.e. some parts of the object should appear closer to the light source
+  /// and e.g. metal will be lighter in those areas.
+  bradHighlight,
+  thermometerTube,
+  thermometerMount,
+  thermometerTemperature,
+  thermometerTemperatureMax,
+  thermometerTemperatureMin,
+  thermometerBracket,
+  thermometerBracketHighlight,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -22,13 +39,41 @@ Map<ClockColor, Color> resolvePalette(BuildContext context) {
 }
 
 class Clock extends StatefulWidget {
-  static const Map<ClockColor, Color> vibrantLightPalette = {
+  static const Map<ClockColor, Color> basePalette = {
+    ClockColor.text: Color(0xff000000),
     ClockColor.ballPrimary: Color(0xffd3d3ff),
     ClockColor.ballSecondary: Color(0xff9a9aff),
+    ClockColor.thermometerTube: Color(0xffffe3d1),
+    ClockColor.thermometerMount: Color(0xffa38d1c),
+    ClockColor.thermometerBackgroundPrimary: Color(0xffcc9933),
+    ClockColor.thermometerBackgroundSecondary: Color(0xffc9bd6c),
+    ClockColor.thermometerBorder: Color(0xff000000),
+    ClockColor.brad: Color(0xff898984),
+    ClockColor.bradHighlight: Color(0xff43464b),
+    ClockColor.thermometerTemperature: Color(0xde6ab7ff),
+    ClockColor.thermometerTemperatureMax: Color(0x9cff3a4b),
+    ClockColor.thermometerTemperatureMin: Color(0xae2a42ff),
+    ClockColor.thermometerBracket: Color(0xff87898c),
+    ClockColor.thermometerBracketHighlight: Color(0xffe0e1e2),
   },
-      vibrantDarkPalette = {},
-      subtleLightPalette = {},
-      subtleDarkPalette = {};
+      baseLightPalette = {
+    ...basePalette,
+  },
+      baseDarkPalette = {
+    ...basePalette,
+  },
+      vibrantLightPalette = {
+    ...baseLightPalette,
+  },
+      vibrantDarkPalette = {
+    ...baseDarkPalette,
+  },
+      subtleLightPalette = {
+    ...baseLightPalette,
+  },
+      subtleDarkPalette = {
+    ...baseDarkPalette,
+  };
 
   final ClockModel model;
 
@@ -227,7 +272,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         bounceBackAnimation: bounceBackAnimation,
         children: <Widget>[
           AnimatedAnalogTime(animation: analogBounceAnimation, model: model),
-          AnimatedTemperature(model: model),
+          AnimatedTemperature(model: model, palette: widget.palette),
           AnimatedWeather(model: model),
           Background(
             animation: backgroundWaveAnimation,
