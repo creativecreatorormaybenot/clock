@@ -412,11 +412,20 @@ class RenderAnalogTime extends RenderCompositionChild {
     final paint = Paint()
           ..color = _secondHandColor
           ..style = PaintingStyle.fill,
-        sh = -size.width / 4.7,
-        eh = -size.width / 2.8,
-        h = -size.width / 2.1,
-        w = size.width / 205,
-        lw = size.width / 71,
+        // These are height and width.
+        h = -_radius / 1.08,
+        w = _radius / 84.51,
+        // These are total width of the design part &
+        // the height where it starts and ends.
+        dw = _radius / 35.52,
+        sh = -_radius / 2.85,
+        eh = -_radius / 1.42,
+        // These are Opposite End start, height,
+        // indent, and width.
+        oes = _radius / 9,
+        oeh = _radius / 8,
+        oei = _radius / 8.37,
+        oew = _radius / 16,
         path = Path()
           ..moveTo(0, 0)
           ..lineTo(-w / 2, 0)
@@ -426,14 +435,14 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..close()
           // Left side of the design part in the middle
           ..moveTo(-w / 2, sh)
-          ..lineTo(-lw / 2, sh)
-          ..lineTo(-lw / 2, eh)
+          ..lineTo(-dw / 2, sh)
+          ..lineTo(-dw / 2, eh)
           ..lineTo(-w / 2, eh)
           ..close()
           // Other side of the part
           ..moveTo(w / 2, sh)
-          ..lineTo(lw / 2, sh)
-          ..lineTo(lw / 2, eh)
+          ..lineTo(dw / 2, sh)
+          ..lineTo(dw / 2, eh)
           ..lineTo(w / 2, eh)
           ..close()
           // End of hand
@@ -441,6 +450,15 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..lineTo(-w / 2, h)
           ..lineTo(w / 2, h)
           ..lineTo(w / 2, eh)
+          ..close()
+          // Opposite end
+          ..moveTo(-w / 2, 0)
+          ..lineTo(-w / 2, oes)
+          ..lineTo(-oew / 2, oes + oeh)
+          ..lineTo(0, oes + oei)
+          ..lineTo(oew / 2, oes + oeh)
+          ..lineTo(w / 2, oes)
+          ..lineTo(w / 2, 0)
           ..close();
 
     canvas.drawPath(path, paint);
