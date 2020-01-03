@@ -11,7 +11,7 @@ double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
 
-  final Color ballColor, groundColor, gooColor, analogTimeComponentColor, weatherComponentColor, temperatureComponentColor, transparentColor;
+  final Color ballColor, groundColor, gooColor, analogTimeComponentColor, weatherComponentColor, temperatureComponentColor;
 
   const Background({
     Key key,
@@ -22,7 +22,6 @@ class Background extends LeafRenderObjectWidget {
     @required this.analogTimeComponentColor,
     @required this.weatherComponentColor,
     @required this.temperatureComponentColor,
-    @required this.transparentColor,
   })  : assert(animation != null),
         assert(ballColor != null),
         assert(groundColor != null),
@@ -30,7 +29,6 @@ class Background extends LeafRenderObjectWidget {
         assert(analogTimeComponentColor != null),
         assert(weatherComponentColor != null),
         assert(temperatureComponentColor != null),
-        assert(transparentColor != null),
         super(key: key);
 
   @override
@@ -43,7 +41,6 @@ class Background extends LeafRenderObjectWidget {
       analogTimeComponentColor: analogTimeComponentColor,
       weatherComponentColor: weatherComponentColor,
       temperatureComponentColor: temperatureComponentColor,
-      transparentColor: transparentColor,
     );
   }
 
@@ -55,8 +52,7 @@ class Background extends LeafRenderObjectWidget {
       ..gooColor = gooColor
       ..analogTimeComponentColor = analogTimeComponentColor
       ..weatherComponentColor = weatherComponentColor
-      ..temperatureComponentColor = temperatureComponentColor
-      ..transparentColor = transparentColor;
+      ..temperatureComponentColor = temperatureComponentColor;
   }
 }
 
@@ -71,17 +67,15 @@ class RenderBackground extends RenderCompositionChild {
     Color analogTimeComponentColor,
     Color weatherComponentColor,
     Color temperatureComponentColor,
-    Color transparentColor,
   })  : _ballColor = ballColor,
         _groundColor = groundColor,
         _gooColor = gooColor,
         _analogTimeComponentColor = analogTimeComponentColor,
         _weatherComponentColor = weatherComponentColor,
         _temperatureComponentColor = temperatureComponentColor,
-        _transparentColor = transparentColor,
         super(ClockComponent.background);
 
-  Color _ballColor, _groundColor, _gooColor, _analogTimeComponentColor, _weatherComponentColor, _temperatureComponentColor, _transparentColor;
+  Color _ballColor, _groundColor, _gooColor, _analogTimeComponentColor, _weatherComponentColor, _temperatureComponentColor;
 
   set ballColor(Color color) {
     if (color != _ballColor) markNeedsPaint();
@@ -117,12 +111,6 @@ class RenderBackground extends RenderCompositionChild {
     if (_temperatureComponentColor != temperatureComponentColor) markNeedsPaint();
 
     _temperatureComponentColor = temperatureComponentColor;
-  }
-
-  set transparentColor(Color transparentColor) {
-    if (_transparentColor != transparentColor) markNeedsPaint();
-
-    _transparentColor = transparentColor;
   }
 
   @override
@@ -255,7 +243,12 @@ class RenderBackground extends RenderCompositionChild {
             ..shader = ui.Gradient.radial(
               component.center,
               component.shortestSide * 7 / 8,
-              [color, _transparentColor],
+              [
+                color,
+                // It is important that the target color has no opacity
+                // because the different gradient otherwise interfere.
+                _groundColor.withOpacity(0),
+              ],
             );
 
       canvas.drawOval(rect, paint);
