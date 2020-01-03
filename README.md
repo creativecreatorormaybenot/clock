@@ -22,6 +22,8 @@
 
   + Potentially rotate whole components because it better shows what is an individual part :)
 
+* Use these colors for a color palette: https://www.dwitter.net/d/5455
+
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
