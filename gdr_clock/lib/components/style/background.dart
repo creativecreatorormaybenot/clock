@@ -11,7 +11,7 @@ double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation;
 
-  final Color ballColor, groundColor, gooColor;
+  final Color ballColor, groundColor, gooColor, analogTimeComponentColor, weatherComponentColor, temperatureComponentColor, transparentColor;
 
   const Background({
     Key key,
@@ -19,10 +19,18 @@ class Background extends LeafRenderObjectWidget {
     @required this.ballColor,
     @required this.groundColor,
     @required this.gooColor,
+    @required this.analogTimeComponentColor,
+    @required this.weatherComponentColor,
+    @required this.temperatureComponentColor,
+    @required this.transparentColor,
   })  : assert(animation != null),
         assert(ballColor != null),
         assert(groundColor != null),
         assert(gooColor != null),
+        assert(analogTimeComponentColor != null),
+        assert(weatherComponentColor != null),
+        assert(temperatureComponentColor != null),
+        assert(transparentColor != null),
         super(key: key);
 
   @override
@@ -32,6 +40,10 @@ class Background extends LeafRenderObjectWidget {
       ballColor: ballColor,
       groundColor: groundColor,
       gooColor: gooColor,
+      analogTimeComponentColor: analogTimeComponentColor,
+      weatherComponentColor: weatherComponentColor,
+      temperatureComponentColor: temperatureComponentColor,
+      transparentColor: transparentColor,
     );
   }
 
@@ -40,7 +52,11 @@ class Background extends LeafRenderObjectWidget {
     renderObject
       ..ballColor = ballColor
       ..groundColor = groundColor
-      ..gooColor = gooColor;
+      ..gooColor = gooColor
+      ..analogTimeComponentColor = analogTimeComponentColor
+      ..weatherComponentColor = weatherComponentColor
+      ..temperatureComponentColor = temperatureComponentColor
+      ..transparentColor = transparentColor;
   }
 }
 
@@ -52,12 +68,20 @@ class RenderBackground extends RenderCompositionChild {
     Color ballColor,
     Color groundColor,
     Color gooColor,
+    Color analogTimeComponentColor,
+    Color weatherComponentColor,
+    Color temperatureComponentColor,
+    Color transparentColor,
   })  : _ballColor = ballColor,
         _groundColor = groundColor,
         _gooColor = gooColor,
+        _analogTimeComponentColor = analogTimeComponentColor,
+        _weatherComponentColor = weatherComponentColor,
+        _temperatureComponentColor = temperatureComponentColor,
+        _transparentColor = transparentColor,
         super(ClockComponent.background);
 
-  Color _ballColor, _groundColor, _gooColor;
+  Color _ballColor, _groundColor, _gooColor, _analogTimeComponentColor, _weatherComponentColor, _temperatureComponentColor, _transparentColor;
 
   set ballColor(Color color) {
     if (color != _ballColor) markNeedsPaint();
@@ -75,6 +99,30 @@ class RenderBackground extends RenderCompositionChild {
     if (_gooColor != gooColor) markNeedsPaint();
 
     _gooColor = gooColor;
+  }
+
+  set analogTimeComponentColor(Color analogTimeComponentColor) {
+    if (_analogTimeComponentColor != analogTimeComponentColor) markNeedsPaint();
+
+    _analogTimeComponentColor = analogTimeComponentColor;
+  }
+
+  set weatherComponentColor(Color weatherComponentColor) {
+    if (_weatherComponentColor != weatherComponentColor) markNeedsPaint();
+
+    _weatherComponentColor = weatherComponentColor;
+  }
+
+  set temperatureComponentColor(Color temperatureComponentColor) {
+    if (_temperatureComponentColor != temperatureComponentColor) markNeedsPaint();
+
+    _temperatureComponentColor = temperatureComponentColor;
+  }
+
+  set transparentColor(Color transparentColor) {
+    if (_transparentColor != transparentColor) markNeedsPaint();
+
+    _transparentColor = transparentColor;
   }
 
   @override
@@ -107,12 +155,21 @@ class RenderBackground extends RenderCompositionChild {
       size.height / 2 + (animation.value - 1 / 2) * size.height / 5,
       double.infinity,
       double.maxFinite,
-    );
-    final componentsInGoo = [
-      clockData.rectOf(ClockComponent.analogTime),
+    ),
+        componentRects = [
       clockData.rectOf(ClockComponent.weather),
       clockData.rectOf(ClockComponent.temperature),
-    ].where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
+      // The glow of the clock should be rendered after the other two components.
+      clockData.rectOf(ClockComponent.analogTime),
+    ],
+        glowComponents = [...componentRects, clockData.rectOf(ClockComponent.ball)],
+        componentColors = [
+      _weatherComponentColor,
+      _temperatureComponentColor,
+      _analogTimeComponentColor,
+      _ballColor,
+    ],
+        componentsInGoo = componentRects.where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
 
     final canvas = context.canvas;
 
@@ -177,27 +234,32 @@ class RenderBackground extends RenderCompositionChild {
 
     cut.lineTo(size.width, gooArea.top);
 
-    final ball = clockData.rectOf(ClockComponent.ball),
-        upperShader = ui.Gradient.radial(
-            ball.center,
-            // This is four times the ball radius on purpose in order
-            // to have some gradient beyond the circle (the ball).
-            ball.shortestSide * 2,
-            [
-          _ballColor,
-          _groundColor,
-        ]),
-        upperPath = Path()
-          ..extendWithPath(cut, Offset.zero)
-          // Line to top right, then top left, and then back to start to fill whole upper area.
-          ..lineTo(size.width, 0)
-          ..lineTo(0, 0)
-          ..close();
+    final upperPath = Path()
+      ..extendWithPath(cut, Offset.zero)
+      // Line to top right, then top left, and then back to start to fill whole upper area.
+      ..lineTo(size.width, 0)
+      ..lineTo(0, 0)
+      ..close();
     canvas.drawPath(
         upperPath,
         Paint()
-          ..shader = upperShader
+          ..color = _groundColor
           ..style = PaintingStyle.fill);
+
+    // Draw a kind of glow about the given components
+    for (var i = 0; i < glowComponents.length; i++) {
+      final component = glowComponents[i], rect = Rect.fromCenter(center: component.center, width: component.width * 7 / 4, height: component.height * 7 / 4);
+
+      final color = componentColors[i],
+          paint = Paint()
+            ..shader = ui.Gradient.radial(
+              component.center,
+              component.shortestSide * 7 / 8,
+              [color, _transparentColor],
+            );
+
+      canvas.drawOval(rect, paint);
+    }
 
     final lowerPath = Path()
       ..extendWithPath(cut, Offset.zero)

@@ -47,6 +47,13 @@ enum ClockColor {
   minuteHand,
   secondHand,
   shadow,
+
+  /// This is important for how gradients (shaders) are rendered
+  /// when approaching a transparent color. If the transparent color
+  /// is actually light, the gradients will fade out into that and
+  /// vise versa.
+  /// This color should generally start with 0x00, i.e. with no opacity.
+  transparent,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -110,9 +117,14 @@ class Clock extends StatefulWidget {
     ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
   },
-      baseLightPalette = {},
+      baseLightPalette = {
+    ClockColor.transparent: Color(0x00ffe312),
+  },
       baseDarkPalette = {
-    ClockColor.text: Color(0xff424242), // todo only a test
+    ClockColor.transparent: Color(0x00ffffff),
+    // Test values todo
+    ClockColor.text: Color(0xff424242),
+    ClockColor.background: Color(0xffffffff),
   },
       vibrantLightPalette = {},
       vibrantDarkPalette = {},
@@ -331,6 +343,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             ),
             groundColor: widget.palette[ClockColor.background],
             gooColor: widget.palette[ClockColor.goo],
+            analogTimeComponentColor: widget.palette[ClockColor.analogTimeBackground],
+            temperatureComponentColor: Color.lerp(
+              widget.palette[ClockColor.thermometerBackgroundPrimary],
+              widget.palette[ClockColor.thermometerBackgroundSecondary],
+              1 / 2,
+            ),
+            weatherComponentColor: widget.palette[ClockColor.weatherBackground],
+            transparentColor: widget.palette[ClockColor.transparent],
           ),
           Ball(
             arrivalAnimation: ballArrivalAnimation,
