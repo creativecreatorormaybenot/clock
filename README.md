@@ -109,7 +109,7 @@ The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://
 
 ## Notes
 
-* You can follow my whole process of building this in this repository. Maybe it helps someone :)
+* You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)
 
 ### Hand bouncing
 
