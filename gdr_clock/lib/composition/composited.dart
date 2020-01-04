@@ -41,7 +41,7 @@ enum ClockComponent {
   background,
   ball,
   date,
-//  digitalTime,
+  digitalTime,
   location,
 
   /// Slide where the [ball] rolls down.

@@ -59,7 +59,7 @@ class RenderLocation extends RenderCompositionChild {
     );
     textPainter.layout(maxWidth: width);
 
-    size = Size(width, textPainter.height);
+    size = textPainter.size;
   }
 
   @override
