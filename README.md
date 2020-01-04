@@ -20,6 +20,10 @@
 
 * Add digital clock.
 
+  + Probably like the place stuff and without a background because that makes it seems like as if it was on the background.
+
+  + Adaptive between 24 hour style and "AM" - "PM" suffix.
+
 * Do not make the ball go off screen.
 
   + Have a section where the ball slowly rolls onto the slide.
