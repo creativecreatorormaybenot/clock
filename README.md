@@ -8,23 +8,9 @@
 
   + Use the suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
-* Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
+    - Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
 
-  + https://youtu.be/i60HG1TtKJo
-
-* Checkout two of the vignettes from this [Flutter Interact talk](https://youtu.be/1AxXF038-lY): the one with thousands of particles being animated and the one with the 3D shapes w/ blending magic.
-
-  + Use concepts from there to add that sparkle to the submission.
-
-* Check these for inspiration:
-
-  + https://twitter.com/jgrandchavin/status/1213072263236476929
-
-  + https://twitter.com/HanielBaez/status/1212911845457252352
-
-  + https://twitter.com/berger_apps/status/1210119759251066880
-
-  + https://twitter.com/Joey_Dunivan/status/1204710943772557312
+* Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for the ball movement animation.
 
 * Do not make the ball go off screen.
 
@@ -33,6 +19,8 @@
     - In there, there is a little part that is opened right before the ball bounces up and is closed afterwards, so the ball can roll over it.
 
     - The animation for it should be started every second, similar to how the background animation works - time it takes is the time the `Timer` manages at the moment, which means that the timer will be replaced by this animation controller.
+
+* Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
 
 * Implement accessibility.
 
