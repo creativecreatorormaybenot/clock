@@ -1,5 +1,13 @@
 ## TODO
 
+* Add digital clock.
+
+  + Probably like the place stuff and without a background because that makes it seems like as if it was on the background or on the goo.
+
+  + Adaptive between 24 hour style and "AM" - "PM" suffix.
+
+  + Use the suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
+
 * Watch "Design and Build Clock Displays with Flutter" from Flutter Interact again.
 
   + https://youtu.be/i60HG1TtKJo
@@ -17,12 +25,6 @@
   + https://twitter.com/berger_apps/status/1210119759251066880
 
   + https://twitter.com/Joey_Dunivan/status/1204710943772557312
-
-* Add digital clock.
-
-  + Probably like the place stuff and without a background because that makes it seems like as if it was on the background.
-
-  + Adaptive between 24 hour style and "AM" - "PM" suffix.
 
 * Do not make the ball go off screen.
 
