@@ -94,6 +94,10 @@
 
   + Consider embedding some visualizations made by https://debugger.skia.org/.
 
+    - Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
+
+    - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
+
   + Add link to it to README.
 
   + Share on FlutterDev: Twitter, Reddit, and Discord.
