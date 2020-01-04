@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
+import 'package:gdr_clock/main.dart';
 
 const handBounceDuration = Duration(milliseconds: 274);
 
@@ -46,6 +47,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
               // Distance for the second.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
       hourDivisions: model.is24HourFormat ? 24 : 12,
+      ballEverySeconds: ballEverySeconds,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
       backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
@@ -60,7 +62,18 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
 class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
+
   final int hourDivisions;
+
+  /// This dictates where the ball icon will be drawn.
+  ///
+  /// `60` has to be evenly divisible by [ballEverySeconds]
+  /// because otherwise it is not clear where ball
+  /// icons should be drawn.
+  ///
+  /// For example, if this is `30`, there will be a ball
+  /// icon drawn at `θ = 0` and one at `θ = π`.
+  final int ballEverySeconds;
 
   final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
 
@@ -70,6 +83,7 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.hourDivisions,
+    @required this.ballEverySeconds,
     @required this.textColor,
     @required this.backgroundColor,
     @required this.backgroundHighlightColor,
@@ -82,6 +96,7 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
         assert(hourDivisions != null),
+        assert(ballEverySeconds != null),
         assert(textColor != null),
         assert(backgroundColor != null),
         assert(backgroundHighlightColor != null),
@@ -90,6 +105,7 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(secondHandColor != null),
         assert(shadowColor != null),
         assert(borderColor != null),
+        assert(60 % ballEverySeconds == 0),
         super(key: key);
 
   @override
@@ -99,6 +115,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
       hourDivisions: hourDivisions,
+      ballEverySeconds: ballEverySeconds,
       textColor: textColor,
       backgroundColor: backgroundColor,
       backgroundHighlightColor: backgroundHighlightColor,
@@ -117,6 +134,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..minuteHandAngle = minuteHandAngle
       ..hourHandAngle = hourHandAngle
       ..hourDivisions = hourDivisions
+      ..ballEverySeconds = ballEverySeconds
       ..textColor = textColor
       ..backgroundColor = backgroundColor
       ..backgroundHighlightColor = backgroundHighlightColor
@@ -134,6 +152,7 @@ class RenderAnalogTime extends RenderCompositionChild {
     double minuteHandAngle,
     double hourHandAngle,
     int hourDivisions,
+    int ballEverySeconds,
     Color textColor,
     Color backgroundColor,
     Color backgroundHighlightColor,
@@ -146,6 +165,7 @@ class RenderAnalogTime extends RenderCompositionChild {
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
         _hourDivisions = hourDivisions,
+        _ballEverySeconds = ballEverySeconds,
         _textColor = textColor,
         _backgroundColor = backgroundColor,
         _backgroundHighlightColor = backgroundHighlightColor,
@@ -176,12 +196,18 @@ class RenderAnalogTime extends RenderCompositionChild {
     _hourHandAngle = hourHandAngle;
   }
 
-  int _hourDivisions;
+  int _hourDivisions, _ballEverySeconds;
 
   set hourDivisions(int hourDivisions) {
     if (_hourDivisions != hourDivisions) markNeedsPaint();
 
     _hourDivisions = hourDivisions;
+  }
+
+  set ballEverySeconds(int ballEverySeconds) {
+    if (_ballEverySeconds != ballEverySeconds) markNeedsPaint();
+
+    _ballEverySeconds = ballEverySeconds;
   }
 
   Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
@@ -255,6 +281,31 @@ class RenderAnalogTime extends RenderCompositionChild {
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     _drawBackground(canvas);
+
+    final balls = 60 ~/ _ballEverySeconds;
+    for (var i = 0; i < balls; i++) {
+      final angle = pi * 2 / 60 * _ballEverySeconds * i,
+          center = Offset.fromDirection(
+        // Need to subtract a quarter of the circle because
+        // Offset.fromDirection starts at positive x.
+        angle - pi / 2,
+        _radius / 2.1,
+      ),
+          circle = Rect.fromCircle(center: center, radius: _radius / 14),
+          paint = Paint()
+            // Using the text color because the purpose of this icon is the same
+            // as what text or tick marks do in here: indicate something.
+            ..color = Color.lerp(
+              _textColor,
+              _backgroundColor,
+              // If the ball is currently hitting the clock, i.e. the second hand
+              // matches up with the ball icon, then the ball icon should light up.
+              // Need to round because of the hand bounce.
+              i * _ballEverySeconds % 60 == (_secondHandAngle / pi / 2 * 60).round() ? 1 / 2 : 1 / 19,
+            );
+
+      canvas.drawOval(circle, paint);
+    }
 
     final largeDivisions = _hourDivisions, smallDivisions = 60;
 
