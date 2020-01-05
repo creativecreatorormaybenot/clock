@@ -1,5 +1,9 @@
 ## TODO
 
+* Implement accessibility.
+
+  + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
+
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
@@ -14,11 +18,9 @@
 
     - The animation for it should be started every second, similar to how the background animation works - time it takes is the time the `Timer` manages at the moment, which means that the timer will be replaced by this animation controller.
 
+* Take inspiration from https://github.com/JustinFincher/FlutterClock.
+
 * Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
-
-* Implement accessibility.
-
-  + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
