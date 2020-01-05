@@ -16,6 +16,8 @@
 
   + Add [ `Semantics` ](https://api.flutter.dev/flutter/widgets/Semantics-class.html) to every component.
 
+  + Test with [Accessibility Scanner](https://play.google.com/store/apps/details?id=com.google.android.apps.accessibility.auditor&hl=en)
+
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
@@ -35,6 +37,8 @@
 * Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
+
+  + Ensure that 
 
 * Effects/filter ideas:
 
@@ -99,6 +103,8 @@
     - Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
 
     - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
+
+  + Mention that usually accessibility and with that semantics are taken care of by prebuilt widgets, but for this clock face it was necessary to do it manually, i.e.</a> use `Semantics` .
 
   + Add link to it to README.
 
