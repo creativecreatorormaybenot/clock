@@ -88,6 +88,8 @@
 
   + Add link to it to README.
 
+  + Potentially post it on https://dev.to/.
+
   + Share on FlutterDev: Twitter, Reddit, and Discord.
 
 * Share with P.
