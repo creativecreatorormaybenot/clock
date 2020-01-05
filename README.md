@@ -1,14 +1,8 @@
 ## TODO
 
-* Add digital clock.
+* Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
-  + Probably like the place stuff and without a background because that makes it seems like as if it was on the background or on the goo.
-
-  + Adaptive between 24 hour style and "AM" - "PM" suffix.
-
-  + Use the suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
-
-    - Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
+  + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
 
 * Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for the ball movement animation.
 
