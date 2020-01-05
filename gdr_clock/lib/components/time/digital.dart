@@ -1,5 +1,36 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
+
+class AnimatedDigitalTime extends AnimatedWidget {
+  final Animation<double> animation;
+
+  final ClockModel model;
+  final Map<ClockColor, Color> palette;
+
+  const AnimatedDigitalTime({
+    Key key,
+    @required this.animation,
+    @required this.model,
+    @required this.palette,
+  })  : assert(animation != null),
+        assert(model != null),
+        assert(palette != null),
+        super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final time = DateTime.now();
+
+    return DigitalTime(
+      hour: time.hour,
+      minute: time.minute,
+      minuteProgress: time.second / 60,
+      use24HourFormat: model.is24HourFormat,
+      textColor: palette[ClockColor.text],
+    );
+  }
+}
 
 class DigitalTime extends LeafRenderObjectWidget {
   final int hour, minute;

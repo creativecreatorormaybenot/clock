@@ -319,6 +319,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             model: model,
             palette: widget.palette,
           ),
+          AnimatedDigitalTime(
+            animation: analogBounceAnimation, // todo
+            model: model,
+            palette: widget.palette,
+          ),
           AnimatedTemperature(model: model, palette: widget.palette),
           AnimatedWeather(model: model, palette: widget.palette),
           Background(
@@ -343,13 +348,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             departureAnimation: ballDepartureAnimation,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
-          ),
-          DigitalTime(
-            hour: 12,
-            minute: 39,
-            minuteProgress: 1 / 2,
-            use24HourFormat: model.is24HourFormat,
-            textColor: widget.palette[ClockColor.text],
           ),
           Location(
             text: model.location,
