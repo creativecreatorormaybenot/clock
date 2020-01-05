@@ -4,7 +4,7 @@
 
 * Implement accessibility.
 
-  + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
+  + Watch https://youtu.be/bWbBgbmAdQs again for this.
 
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
