@@ -6,6 +6,8 @@
 
   + Watch https://youtu.be/bWbBgbmAdQs again for this.
 
+  + Check https://flutter.dev/docs/development/accessibility-and-localization/accessibility.
+
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
