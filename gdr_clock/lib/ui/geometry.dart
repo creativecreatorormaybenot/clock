@@ -4,7 +4,9 @@ extension ExtendedOffset on Offset {
   Offset operator +(Size size) => Offset(dx + size.width, dy + size.height);
 
   /// This exists because of a web compiler error: https://github.com/dart-lang/sdk/issues/39938#issue-542985784
-  Offset plus(Size size) => ExtendedOffset(this) + size;
+  ///
+  /// See [ExtendedOffset.+].
+  Offset plus(Size size) => Offset(dx + size.width, dy + size.height);
 }
 
 extension ExtendedSize on Size {

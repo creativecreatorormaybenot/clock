@@ -54,11 +54,10 @@ class RenderDigitalTime extends RenderCompositionChild {
     int minute,
     bool use24HourFormat,
     Color textColor,
-  })  :
-        _minuteProgress = minuteProgress,
-  _hour = hour,
-  _minute = minute,
-  _use24HourFormat = use24HourFormat,
+  })  : _minuteProgress = minuteProgress,
+        _hour = hour,
+        _minute = minute,
+        _use24HourFormat = use24HourFormat,
         _textColor = textColor,
         super(ClockComponent.digitalTime);
 
@@ -87,7 +86,7 @@ class RenderDigitalTime extends RenderCompositionChild {
 
   bool _use24HourFormat;
 
-  set use24HourFormat( use24HourFormat) {
+  set use24HourFormat(use24HourFormat) {
     if (_use24HourFormat != use24HourFormat) markNeedsLayout();
 
     _use24HourFormat = use24HourFormat;
@@ -101,9 +100,41 @@ class RenderDigitalTime extends RenderCompositionChild {
     _textColor = textColor;
   }
 
+  TextPainter _timePainter, _amPmPainter;
+
   @override
   void performLayout() {
-    size = Size.zero; // todo depends on hour format, hour, minute, and minuteProgress
+    final given = constraints.biggest;
+
+    _timePainter = TextPainter(
+      text: TextSpan(
+        text: '$_hour:$_minute',
+        style: TextStyle(
+          color: _textColor,
+          fontSize: given.width / 27,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+
+    _amPmPainter = TextPainter(
+      text: TextSpan(
+        text: _hour > 12 ? 'PM' : 'AM',
+        style: TextStyle(
+          color: _textColor,
+          fontSize: given.width / 34,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+
+    size = Size(
+      _timePainter.width +
+          // This is always correct because the line that is used instead of AM-PM
+          // should have the same width as the text.
+          _amPmPainter.width,
+      _timePainter.height,
+    );
   }
 
   @override
