@@ -244,6 +244,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
     dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
+
+    // Digital clock
+    final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime];
+
+    digitalTime.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
+    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 3 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
     //</editor-fold>
   }
 
@@ -257,11 +263,17 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       // The order in which the children are passed to the widget does not matter
       // and is alphabetical, i.e. the following is the draw order.
       paintChild(ClockComponent.background);
+
       paintChild(ClockComponent.location);
       paintChild(ClockComponent.date);
+
       paintChild(ClockComponent.temperature);
+
       paintChild(ClockComponent.weather);
+
       paintChild(ClockComponent.analogTime);
+      paintChild(ClockComponent.digitalTime);
+
       paintChild(ClockComponent.slide);
       paintChild(ClockComponent.ball);
     });

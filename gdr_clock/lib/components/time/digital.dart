@@ -104,6 +104,9 @@ class RenderDigitalTime extends RenderCompositionChild {
 
   @override
   void performLayout() {
+    // This should ideally not be the whole screen,
+    // but rather a constrained size, like the width
+    // of the weather component.
     final given = constraints.biggest;
 
     _timePainter = TextPainter(
@@ -111,7 +114,7 @@ class RenderDigitalTime extends RenderCompositionChild {
         text: '$_hour:$_minute',
         style: TextStyle(
           color: _textColor,
-          fontSize: given.width / 27,
+          fontSize: given.width / 9,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -122,11 +125,14 @@ class RenderDigitalTime extends RenderCompositionChild {
         text: _hour > 12 ? 'PM' : 'AM',
         style: TextStyle(
           color: _textColor,
-          fontSize: given.width / 34,
+          fontSize: given.width / 14,
         ),
       ),
       textDirection: TextDirection.ltr,
     );
+
+    _amPmPainter.layout(maxWidth: given.width / 2);
+    _timePainter.layout(maxWidth: given.width - _amPmPainter.width);
 
     size = Size(
       _timePainter.width +
@@ -137,6 +143,8 @@ class RenderDigitalTime extends RenderCompositionChild {
     );
   }
 
+  static const linePaddingFactor = .07;
+
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
@@ -144,7 +152,25 @@ class RenderDigitalTime extends RenderCompositionChild {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    // todo
+    // Need to clip because the moving element can be out of view.
+    canvas.clipRect(Offset.zero & size);
+
+    _timePainter.paint(canvas, Offset.zero);
+
+    final extraYSpace = _use24HourFormat ? _amPmPainter.height : 1, movingRoomY = size.height + extraYSpace, movingTopLeft = Offset(_timePainter.width, movingRoomY * (1 - _minuteProgress) - extraYSpace);
+
+    if (_use24HourFormat) {
+      _amPmPainter.paint(canvas, movingTopLeft);
+    } else {
+      final width = _amPmPainter.size.onlyWidth.offset;
+
+      canvas.drawLine(
+          movingTopLeft + width * linePaddingFactor,
+          movingTopLeft + width * (1 - linePaddingFactor),
+          Paint()
+            ..color = _textColor
+            ..strokeWidth = size.height / 26);
+    }
 
     canvas.restore();
   }

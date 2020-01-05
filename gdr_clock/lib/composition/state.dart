@@ -344,6 +344,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
           ),
+          DigitalTime(
+            hour: 12,
+            minute: 39,
+            minuteProgress: 1 / 2,
+            use24HourFormat: model.is24HourFormat,
+            textColor: widget.palette[ClockColor.text],
+          ),
           Location(
             text: model.location,
             textStyle: TextStyle(
