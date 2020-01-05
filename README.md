@@ -8,6 +8,14 @@
 
   + Check https://flutter.dev/docs/development/accessibility-and-localization/accessibility.
 
+  + Consider the system font size setting.
+
+    - Test if it affects the UI at the moment (it should not because the font size is not from Theme).
+
+    - If the setting is currently ignored, then factor it into the current calculations and find larger values that are acceptable.
+
+  + Add [ `Semantics` ](https://api.flutter.dev/flutter/widgets/Semantics-class.html) to every component.
+
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
