@@ -1,5 +1,7 @@
 ## TODO
 
+* Add shadows to stuff on weather and the thermometer and try to position the light source to the top center in temperature using `Canvas.translate` .
+
 * Implement accessibility.
 
   + Watch "Building in Accessibility with Flutter" from Flutter Interact for this.
