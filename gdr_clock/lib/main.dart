@@ -32,16 +32,14 @@ const ballEverySeconds = 30;
 
 void main() {
   runApp(
-    SemanticsDebugger(
-      child: ClockCustomizer(
-        (model) => Builder(
-          builder: (context) {
-            return AnimatedClock(
-              model: model,
-              palette: resolvePalette(context),
-            );
-          },
-        ),
+    ClockCustomizer(
+      (model) => Builder(
+        builder: (context) {
+          return AnimatedClock(
+            model: model,
+            palette: resolvePalette(context),
+          );
+        },
       ),
     ),
   );
