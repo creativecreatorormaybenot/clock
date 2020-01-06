@@ -1,5 +1,7 @@
 ## TODO
 
+* Test if the mobile changes work correctly.
+
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
@@ -104,7 +106,9 @@
 
 * Share with P.
 
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | ![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | 
+
+![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
