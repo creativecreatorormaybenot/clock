@@ -82,6 +82,8 @@
 
 * Submit submission :)
 
+  + https://flutter.dev/clock - Check rules and FAQ before that.
+
 * Add GIF to README.
 
 * Make repository public.
