@@ -139,6 +139,8 @@ The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://
 
 * No premade widgets from the standard library were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.
 
+  + Accessibility was implemented customly and it had to because I did not use any prebuilt widgets that come with `Semantics` implementations.
+
 * No assets were used. The bullet point would be a bit short without this second sentence.
 
 * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did) nor the rendering layer.<br>This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them (they make the app reactive) :)
