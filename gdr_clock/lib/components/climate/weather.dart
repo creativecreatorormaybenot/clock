@@ -170,6 +170,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     _angle = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   Color _arrowColor, _backgroundColor, _backgroundHighlightColor, _borderColor;
@@ -239,6 +240,18 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
   double _radius;
 
   List<WeatherCondition> get conditions => children;
+
+  WeatherCondition get condition => conditions[(_angle / pi / 2 * conditions.length).round()];
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr
+      ..label = 'Weather condition is ${describeEnum(condition)}';
+  }
 
   @override
   void performLayout() {

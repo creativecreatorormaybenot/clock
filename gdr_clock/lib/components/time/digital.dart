@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
@@ -33,9 +34,12 @@ class AnimatedDigitalTime extends AnimatedWidget {
 }
 
 class DigitalTime extends LeafRenderObjectWidget {
+  /// [hour] is in 24 hour format.
   final int hour, minute;
 
   /// Range from `0` to `1` indicating how far the current minute has progressed.
+  ///
+  /// This should not be used as an accurate representation of the current second.
   final double minuteProgress;
 
   final bool use24HourFormat;
@@ -117,6 +121,7 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _hour = value;
     markNeedsLayout();
+    markNeedsSemanticsUpdate();
   }
 
   set minute(int value) {
@@ -128,6 +133,7 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _minute = value;
     markNeedsLayout();
+    markNeedsSemanticsUpdate();
   }
 
   bool _use24HourFormat;
@@ -141,6 +147,7 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _use24HourFormat = value;
     markNeedsLayout();
+    markNeedsSemanticsUpdate();
   }
 
   Color _textColor;
@@ -158,6 +165,12 @@ class RenderDigitalTime extends RenderCompositionChild {
 
   TextPainter _timePainter, _amPmPainter;
 
+  int get hour => _use24HourFormat ? _hour : _hour % 12;
+
+  String get time => '${hour.twoDigitTime}:${_minute.twoDigitTime}';
+
+  String get amPm => _hour > 12 ? 'PM' : 'AM';
+
   @override
   void performLayout() {
     // This should ideally not be the whole screen,
@@ -167,10 +180,10 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _timePainter = TextPainter(
       text: TextSpan(
-        text: '$_hour:$_minute',
+        text: time,
         style: TextStyle(
           color: _textColor,
-          fontSize: given.width / 9,
+          fontSize: given.width / 7.4,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -178,10 +191,10 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _amPmPainter = TextPainter(
       text: TextSpan(
-        text: _hour > 12 ? 'PM' : 'AM',
+        text: amPm,
         style: TextStyle(
           color: _textColor,
-          fontSize: given.width / 14,
+          fontSize: given.width / 13,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -197,6 +210,16 @@ class RenderDigitalTime extends RenderCompositionChild {
           _amPmPainter.width,
       _timePainter.height,
     );
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..label = 'Digital clock showing $time${_use24HourFormat ? ' $amPm' : ''}'
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr;
   }
 
   static const linePaddingFactor = .07;

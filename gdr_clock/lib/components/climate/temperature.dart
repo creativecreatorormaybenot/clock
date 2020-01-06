@@ -238,6 +238,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _unitString = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   double _temperature, _low, _high;
@@ -251,6 +252,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _temperature = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   set low(double value) {
@@ -262,6 +264,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _low = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   set high(double value) {
@@ -273,6 +276,7 @@ class RenderTemperature extends RenderCompositionChild {
 
     _high = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   Color _textColor,
@@ -430,6 +434,16 @@ class RenderTemperature extends RenderCompositionChild {
 
     _bracketHighlightColor = value;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr
+      ..label = 'Thermometer showing a temperature of $_temperature$_unitString, a temperature high of $_high$_unitString, and a temperature low of $_low$_unitString';
   }
 
   @override

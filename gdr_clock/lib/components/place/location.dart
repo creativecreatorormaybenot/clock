@@ -26,40 +26,75 @@ class Location extends LeafRenderObjectWidget {
   void updateRenderObject(BuildContext context, RenderLocation renderObject) {
     renderObject
       ..text = text
-      ..textStyle = textStyle
-      // The layout depends on the text, i.e. the text to be displayed is
-      // only updated when laying out, which is why this is not markNeedsPaint.
-      ..markNeedsLayout();
+      ..textStyle = textStyle;
   }
 }
 
 class RenderLocation extends RenderCompositionChild {
   RenderLocation({
-    this.text,
-    this.textStyle,
-  }) : super(ClockComponent.location);
+    String text,
+    TextStyle textStyle,
+  })  : _text = text,
+        _textStyle = textStyle,
+        super(ClockComponent.location);
 
-  String text;
-  TextStyle textStyle;
+  String _text;
 
-  TextPainter textPainter;
+  set text(String value) {
+    assert(value != null);
+
+    if (_text == value) {
+      return;
+    }
+
+    _text = value;
+    // The layout depends on the text, i.e. the text to be displayed is
+    // only updated when laying out, which is why this is not markNeedsPaint.
+    markNeedsLayout();
+    markNeedsSemanticsUpdate();
+  }
+
+  TextStyle _textStyle;
+
+  set textStyle(TextStyle value) {
+    assert(value != null);
+
+    if (_textStyle == value) {
+      return;
+    }
+
+    _textStyle = value;
+    markNeedsLayout();
+  }
+
+  TextPainter _textPainter;
 
   @override
   void performLayout() {
     final width = constraints.biggest.width;
 
-    textPainter = TextPainter(
+    _textPainter = TextPainter(
       text: TextSpan(
-        text: text,
-        style: textStyle.copyWith(
+        text: _text,
+        style: _textStyle.copyWith(
           fontSize: width / 14,
         ),
       ),
       textDirection: TextDirection.ltr,
     );
-    textPainter.layout(maxWidth: width);
+    _textPainter.layout(maxWidth: width);
 
-    size = textPainter.size;
+    size = _textPainter.size;
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr
+      ..label = 'Location is $_text';
   }
 
   @override
@@ -69,7 +104,7 @@ class RenderLocation extends RenderCompositionChild {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    textPainter.paint(canvas, Offset.zero);
+    _textPainter.paint(canvas, Offset.zero);
 
     canvas.restore();
   }

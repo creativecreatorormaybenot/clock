@@ -249,7 +249,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime];
 
     digitalTime.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
-    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 3 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
+    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 2.45 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
     //</editor-fold>
   }
 
