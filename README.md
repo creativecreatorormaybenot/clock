@@ -1,6 +1,8 @@
 ## TODO
 
-* Add shadows to stuff on weather and the thermometer and try to position the light source to the top center in temperature using `Canvas.translate` .
+* In the thermometer, there should be shadows for the brackets, mount, and brads.
+
+  + Experiments have shown me that I can control where the shadows are pointing by using `Canvas.translate` , so the light source for the thermometer should be positioned in the middle of it.
 
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 

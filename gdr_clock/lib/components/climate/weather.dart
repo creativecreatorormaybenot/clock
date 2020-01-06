@@ -335,7 +335,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     canvas.drawPetals(_radius);
 
-    // Draw tip of the arrow pointing up.
     _drawArrow(canvas);
 
     canvas.restore();
