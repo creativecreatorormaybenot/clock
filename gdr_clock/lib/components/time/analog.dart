@@ -528,8 +528,6 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..lineTo(w / 2, 0)
           ..close();
 
-    canvas.drawPath(path, paint);
-
     // I have open questions about Canvas.drawShadow (see
     // https://github.com/flutter/flutter/issues/48027 and
     // https://stackoverflow.com/q/59549244/6509751).
@@ -537,6 +535,9 @@ class RenderAnalogTime extends RenderCompositionChild {
     // New Year's first minute - was not on purpose, but this
     // should show something about my relationship to this project :)
     canvas.drawShadow(path, _shadowColor, _radius / 57, false);
+    // The shadow needs to be drawn first because it appears
+    // below the actual hand.
+    canvas.drawPath(path, paint);
 
     canvas.restore();
   }
@@ -568,8 +569,8 @@ class RenderAnalogTime extends RenderCompositionChild {
           )
           ..close();
 
-    canvas.drawPath(path, paint);
     canvas.drawShadow(path, _shadowColor, _radius / 89, false);
+    canvas.drawPath(path, paint);
 
     canvas.restore();
   }
@@ -631,8 +632,8 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..lineTo(w / 2, 0)
           ..close();
 
-    canvas.drawPath(path, paint);
     canvas.drawShadow(path, _shadowColor, _radius / 64, false);
+    canvas.drawPath(path, paint);
 
     canvas.restore();
   }

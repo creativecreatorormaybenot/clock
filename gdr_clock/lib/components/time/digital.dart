@@ -26,7 +26,7 @@ class AnimatedDigitalTime extends AnimatedWidget {
     return DigitalTime(
       hour: time.hour,
       minute: time.minute,
-      minuteProgress: time.second / 60,
+      minuteProgress: (time.second - 1 + animation.value) / 60,
       use24HourFormat: model.is24HourFormat,
       textColor: palette[ClockColor.text],
     );

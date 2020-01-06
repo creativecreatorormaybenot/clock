@@ -57,6 +57,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
       backgroundColor: widget.palette[ClockColor.weatherBackground],
       backgroundHighlightColor: widget.palette[ClockColor.weatherBackgroundHighlight],
       borderColor: widget.palette[ClockColor.border],
+      shadowColor: widget.palette[ClockColor.shadow],
       children: WeatherCondition.values.map(weatherIcon).toList(),
     );
   }
@@ -101,7 +102,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
 class Weather extends MultiChildRenderObjectWidget {
   final double angle;
 
-  final Color arrowColor, backgroundColor, backgroundHighlightColor, borderColor;
+  final Color arrowColor, backgroundColor, backgroundHighlightColor, borderColor, shadowColor;
 
   Weather({
     Key key,
@@ -111,11 +112,13 @@ class Weather extends MultiChildRenderObjectWidget {
     @required this.backgroundColor,
     @required this.backgroundHighlightColor,
     @required this.borderColor,
+    @required this.shadowColor,
   })  : assert(angle != null),
         assert(arrowColor != null),
         assert(backgroundColor != null),
         assert(backgroundHighlightColor != null),
         assert(borderColor != null),
+        assert(shadowColor != null),
         super(key: key, children: children);
 
   @override
@@ -126,6 +129,7 @@ class Weather extends MultiChildRenderObjectWidget {
       backgroundColor: backgroundColor,
       backgroundHighlightColor: backgroundHighlightColor,
       borderColor: borderColor,
+      shadowColor: shadowColor,
     );
   }
 
@@ -136,7 +140,8 @@ class Weather extends MultiChildRenderObjectWidget {
       ..arrowColor = arrowColor
       ..backgroundColor = backgroundColor
       ..backgroundHighlightColor = backgroundHighlightColor
-      ..borderColor = borderColor;
+      ..borderColor = borderColor
+      ..shadowColor = shadowColor;
   }
 }
 
@@ -152,11 +157,13 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     Color backgroundColor,
     Color backgroundHighlightColor,
     Color borderColor,
+    Color shadowColor,
   })  : _angle = angle,
         _arrowColor = arrowColor,
         _backgroundColor = backgroundColor,
         _backgroundHighlightColor = backgroundHighlightColor,
         _borderColor = borderColor,
+        _shadowColor = shadowColor,
         super(WeatherCondition.values);
 
   double _angle;
@@ -173,7 +180,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     markNeedsSemanticsUpdate();
   }
 
-  Color _arrowColor, _backgroundColor, _backgroundHighlightColor, _borderColor;
+  Color _arrowColor, _backgroundColor, _backgroundHighlightColor, _borderColor, _shadowColor;
 
   set arrowColor(Color value) {
     assert(value != null);
@@ -216,6 +223,17 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
 
     _borderColor = value;
+    markNeedsPaint();
+  }
+
+  set shadowColor(Color value) {
+    assert(value != null);
+
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
     markNeedsPaint();
   }
 
@@ -317,32 +335,42 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     canvas.drawPetals(_radius);
 
-    //<editor-fold desc="Arrow">
     // Draw tip of the arrow pointing up.
-    final h = _radius * (indentationFactor - 1), s = _radius / 16;
-    canvas.drawPath(
-        Path()
+    _drawArrow(canvas);
+
+    canvas.restore();
+  }
+
+  void _drawArrow(Canvas canvas) {
+    final h = _radius * (indentationFactor - 1),
+        s = _radius / 16,
+        w = _radius / 42,
+        path = Path()
           // Remember that this is the center of the circle.
           ..moveTo(0, h + s)
           ..lineTo(-s, h + s)
           ..lineTo(0, h)
           ..lineTo(s, h + s)
           ..lineTo(0, h + s)
+          ..close()
+          ..moveTo(-w / 2, 0)
+          ..lineTo(-w / 2, h + s)
+          ..lineTo(w / 2, h + s)
+          ..lineTo(w / 2, 0)
+          // Round cap
+          ..quadraticBezierTo(
+            0,
+            w,
+            -w / 2,
+            0,
+          )
           ..close(),
-        Paint()
+        paint = Paint()
           ..color = _arrowColor
-          ..style = PaintingStyle.fill);
-    // Draw the rest of the arrow.
-    canvas.drawLine(
-        Offset.zero,
-        Offset(0, h + s),
-        Paint()
-          ..color = _arrowColor
-          ..strokeWidth = _radius / 42
-          ..strokeCap = StrokeCap.round);
-    //</editor-fold>
+          ..style = PaintingStyle.fill;
 
-    canvas.restore();
+    canvas.drawShadow(path, _shadowColor, _radius / 54, false);
+    canvas.drawPath(path, paint);
   }
 
   void _drawBackground(Canvas canvas) {
