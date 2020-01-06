@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:vector_math/vector_math_64.dart' show Vector3;
+
 extension ExtendedOffset on Offset {
   Offset operator +(Size size) => Offset(dx + size.width, dy + size.height);
 
@@ -7,6 +9,10 @@ extension ExtendedOffset on Offset {
   ///
   /// See [ExtendedOffset.+].
   Offset plus(Size size) => Offset(dx + size.width, dy + size.height);
+
+  /// Returns a [Vector3] respecting only two dimensions,
+  /// i.e. z is always 0.
+  Vector3 get vector3 => Vector3(dx, dy, 0);
 }
 
 extension ExtendedSize on Size {

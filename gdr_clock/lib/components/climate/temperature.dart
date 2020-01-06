@@ -79,7 +79,8 @@ class Temperature extends LeafRenderObjectWidget {
       maxTemperatureColor,
       minTemperatureColor,
       bracketColor,
-      bracketHighlightColor;
+      bracketHighlightColor,
+      shadowColor;
 
   Temperature({
     Key key,
@@ -101,6 +102,7 @@ class Temperature extends LeafRenderObjectWidget {
     @required this.minTemperatureColor,
     @required this.bracketColor,
     @required this.bracketHighlightColor,
+    @required this.shadowColor,
   })  : assert(unit != null),
         assert(unitString != null),
         assert(temperature != null),
@@ -119,6 +121,7 @@ class Temperature extends LeafRenderObjectWidget {
         assert(minTemperatureColor != null),
         assert(bracketColor != null),
         assert(bradHighlightColor != null),
+        assert(shadowColor != null),
         super(key: key);
 
   @override
@@ -142,6 +145,7 @@ class Temperature extends LeafRenderObjectWidget {
       minTemperatureColor: minTemperatureColor,
       bracketColor: bracketColor,
       bracketHighlightColor: bracketHighlightColor,
+      shadowColor: shadowColor,
     );
   }
 
@@ -165,7 +169,8 @@ class Temperature extends LeafRenderObjectWidget {
       ..maxTemperatureColor = maxTemperatureColor
       ..minTemperatureColor = minTemperatureColor
       ..bracketColor = bracketColor
-      ..bracketHighlightColor = bracketHighlightColor;
+      ..bracketHighlightColor = bracketHighlightColor
+      ..shadowColor = shadowColor;
   }
 }
 
@@ -194,6 +199,7 @@ class RenderTemperature extends RenderCompositionChild {
     Color minTemperatureColor,
     Color bracketColor,
     Color bracketHighlightColor,
+    Color shadowColor,
   })  : _unit = unit,
         _unitString = unitString,
         _temperature = temperature,
@@ -212,6 +218,7 @@ class RenderTemperature extends RenderCompositionChild {
         _minTemperatureColor = minTemperatureColor,
         _bracketColor = bracketColor,
         _bracketHighlightColor = bracketHighlightColor,
+        _shadowColor = shadowColor,
         super(ClockComponent.temperature);
 
   TemperatureUnit _unit;
@@ -291,7 +298,8 @@ class RenderTemperature extends RenderCompositionChild {
       _maxTemperatureColor,
       _minTemperatureColor,
       _bracketColor,
-      _bracketHighlightColor;
+      _bracketHighlightColor,
+      _shadowColor;
 
   set textColor(Color value) {
     assert(value != null);
@@ -433,6 +441,17 @@ class RenderTemperature extends RenderCompositionChild {
     }
 
     _bracketHighlightColor = value;
+    markNeedsPaint();
+  }
+
+  set shadowColor(Color value) {
+    assert(value != null);
+
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
     markNeedsPaint();
   }
 
@@ -616,6 +635,27 @@ class RenderTemperature extends RenderCompositionChild {
       canvas.drawRect(endRect, Paint()..shader = bracketGradient.createShader(endRect));
     }();
     //</editor-fold>
+
+    canvas.restore();
+  }
+
+  /// The position of the light source casting shadows of some elements.
+  /// At the moment, it is the center of the thermometer as the position
+  /// and shadows are drawn for the brackets, brads, and the mount.
+  Offset get lightSourcePosition => Offset(size.width / 2, size.height / 2);
+
+  /// Transforms the given [path] and translates the [canvas] in a way
+  /// that positions the light source of the shadow at a particular point
+  /// of the thermometer ([lightSourcePosition]), even though the path
+  /// was originally drawn with the top left of the thermometer
+  /// being (0, 0).
+  void _drawTransformedShadow(Canvas canvas, Path path, double elevation) {
+    canvas.save();
+
+    final light = lightSourcePosition, transformedPath = path.transform(Matrix4.translation((-lightSourcePosition).vector3).storage);
+
+    canvas.translate(lightSourcePosition.dx, lightSourcePosition.dy);
+    canvas.drawShadow(transformedPath, _shadowColor, elevation, false);
 
     canvas.restore();
   }
