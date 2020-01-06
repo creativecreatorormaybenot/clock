@@ -183,7 +183,7 @@ class RenderDigitalTime extends RenderCompositionChild {
     super.describeSemanticsConfiguration(config);
 
     config
-      ..label = 'Digital clock showing $time${_use24HourFormat ? ' $amPm' : ''}'
+      ..label = 'Digital clock showing $time${_use24HourFormat ? '' : ' $amPm'}'
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr;
   }
@@ -246,8 +246,6 @@ class RenderDigitalTime extends RenderCompositionChild {
     final extraYSpace = _use24HourFormat ? _amPmPainter.height : 1, movingRoomY = size.height + extraYSpace, movingTopLeft = Offset(_timePainter.width, movingRoomY * (1 - _minuteProgress) - extraYSpace);
 
     if (_use24HourFormat) {
-      _amPmPainter.paint(canvas, movingTopLeft);
-    } else {
       final width = _amPmPainter.size.onlyWidth.offset;
 
       canvas.drawLine(
@@ -256,6 +254,8 @@ class RenderDigitalTime extends RenderCompositionChild {
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
+    } else {
+      _amPmPainter.paint(canvas, movingTopLeft);
     }
 
     canvas.restore();
