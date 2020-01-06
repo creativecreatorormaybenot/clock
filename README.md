@@ -1,10 +1,6 @@
 ## TODO
 
-* Add shadows to stuff on weather and the thermometer and try to position the light source to the top center in temperature using `Canvas.translate` .
-
 * Implement accessibility.
-
-  + Update the [ `SemanticsConfiguration` ](https://api.flutter.dev/flutter/semantics/SemanticsConfiguration-class.html) for every render object.
 
   + Consider the system font size setting.
 
@@ -12,7 +8,9 @@
 
     - If the setting is currently ignored, then factor it into the current calculations and find larger values that are acceptable.
 
-  + Test with [Accessibility Scanner](https://play.google.com/store/apps/details?id=com.google.android.apps.accessibility.auditor&hl=en)
+  + Test with [Accessibility Scanner](https://play.google.com/store/apps/details?id=com.google.android.apps.accessibility.auditor&hl=en).
+
+* Add shadows to stuff on weather and the thermometer and try to position the light source to the top center in temperature using `Canvas.translate` .
 
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
