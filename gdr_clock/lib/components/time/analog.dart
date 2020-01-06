@@ -187,6 +187,7 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     _secondHandAngle = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   set minuteHandAngle(double value) {
@@ -198,6 +199,7 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     _minuteHandAngle = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   set hourHandAngle(double value) {
@@ -209,6 +211,7 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     _hourHandAngle = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   int _hourDivisions, _ballEverySeconds;
@@ -222,6 +225,7 @@ class RenderAnalogTime extends RenderCompositionChild {
 
     _hourDivisions = value;
     markNeedsPaint();
+    markNeedsSemanticsUpdate();
   }
 
   set ballEverySeconds(int value) {
@@ -337,6 +341,22 @@ class RenderAnalogTime extends RenderCompositionChild {
     _radius = size.height / 2;
   }
 
+  int get second => (_secondHandAngle / pi / 2 * 60).round();
+
+  int get minute => (_minuteHandAngle / pi / 2 * 60).round();
+
+  int get hour => (_hourHandAngle / pi / 2 * _hourDivisions).round();
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..label = 'Analog clock showing hour $hour, minute $minute, and second $second'
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr;
+  }
+
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
@@ -366,7 +386,7 @@ class RenderAnalogTime extends RenderCompositionChild {
               // If the ball is currently hitting the clock, i.e. the second hand
               // matches up with the ball icon, then the ball icon should light up.
               // Need to round because of the hand bounce.
-              i * _ballEverySeconds % 60 == (_secondHandAngle / pi / 2 * 60).round() ? 1 / 2 : 1 / 19,
+              i * _ballEverySeconds % 60 == second ? 1 / 2 : 1 / 19,
             );
 
       canvas.drawOval(circle, paint);
