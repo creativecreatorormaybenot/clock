@@ -38,7 +38,7 @@
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
-  + Ensure that 
+  + Ensure that sufficient contrast is present for accessibility reasons.
 
 * Effects/filter ideas:
 
