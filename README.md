@@ -1,9 +1,5 @@
 ## TODO
 
-* In the thermometer, there should be shadows for the brackets, mount, and brads.
-
-  + Experiments have shown me that I can control where the shadows are pointing by using `Canvas.translate` , so the light source for the thermometer should be positioned in the middle of it.
-
 * Use the digital time suffix and otherwise a line that slowly travels from bottom to top to indicate the minute progress.
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)

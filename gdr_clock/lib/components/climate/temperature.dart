@@ -57,6 +57,7 @@ class _AnimatedTemperatureState extends AnimatedWidgetBaseState<AnimatedTemperat
       minTemperatureColor: widget.palette[ClockColor.thermometerTemperatureMin],
       bracketColor: widget.palette[ClockColor.thermometerBracket],
       bracketHighlightColor: widget.palette[ClockColor.bradHighlight],
+      shadowColor: widget.palette[ClockColor.shadow],
     );
   }
 }
@@ -520,11 +521,17 @@ class RenderTemperature extends RenderCompositionChild {
     ]),
         bradIndent = size.width / 11;
     () {
-      final topRect = Rect.fromCircle(center: Offset(size.width / 2, bradIndent), radius: bradRadius);
-      canvas.drawOval(topRect, Paint()..shader = bradGradient.createShader(topRect));
+      final elevation = size.width / 186;
 
-      final bottomRect = Rect.fromCircle(center: Offset(size.width / 2, size.height - bradIndent), radius: bradRadius);
-      canvas.drawOval(bottomRect, Paint()..shader = bradGradient.createShader(bottomRect));
+      final topRect = Rect.fromCircle(center: Offset(size.width / 2, bradIndent), radius: bradRadius), topPath = Path()..addOval(topRect), topPaint = Paint()..shader = bradGradient.createShader(topRect);
+      _drawTransformedShadow(canvas, topPath, elevation);
+      canvas.drawPath(topPath, topPaint);
+
+      final bottomRect = Rect.fromCircle(center: Offset(size.width / 2, size.height - bradIndent), radius: bradRadius),
+          bottomPath = Path()..addOval(bottomRect),
+          bottomPaint = Paint()..shader = bradGradient.createShader(bottomRect);
+      _drawTransformedShadow(canvas, bottomPath, elevation);
+      canvas.drawPath(bottomPath, bottomPaint);
     }();
     //</editor-fold>
 
@@ -554,14 +561,72 @@ class RenderTemperature extends RenderCompositionChild {
 
     _drawLines(canvas, lines);
 
-    final tubeWidth = bradRadius * 1.2;
+    final tubeWidth = bradRadius * 1.2, tubeElevation = size.width / 114;
 
     //<editor-fold desc="Glass tube">
-    final tubePaint = Paint()
-      ..color = _tubeColor
-      ..strokeWidth = tubeWidth
-      ..strokeCap = StrokeCap.round;
-    canvas.drawLine(tube.startOffset(dx: size.width / 2), tube.endOffset(dx: size.width / 2), tubePaint);
+    // I do not want to pass the variables from above,
+    // so this is more convenient.
+    final tubePaint = Paint()..color = _tubeColor,
+        tubeStart = tube.startOffset(dx: size.width / 2),
+        tubeEnd = tube.endOffset(dx: size.width / 2),
+        tubePath = Path()
+          ..moveTo(tubeEnd.dx - tubeWidth / 2, tubeEnd.dy)
+          ..lineTo(tubeStart.dx - tubeWidth / 2, tubeStart.dy)
+          ..conicTo(tubeStart.dx, tubeStart.dy - tubeWidth, tubeStart.dx + tubeWidth / 2, tubeStart.dy, 1 / 2)
+          ..lineTo(tubeEnd.dx + tubeWidth / 2, tubeEnd.dy)
+          ..conicTo(tubeEnd.dx, tubeEnd.dy + tubeWidth, tubeEnd.dx - tubeWidth / 2, tubeEnd.dy, 1 / 2)
+          ..close();
+    //</editor-fold>
+
+    //<editor-fold desc="Mount">
+    final mountPaint = Paint()..color = _mountColor;
+    Path mountPath;
+
+    // I do not want to pass the variables from above to a method,
+    // so this is more convenient :)
+    () {
+      final w = bradRadius * 1.33, start = mount.startOffset(dx: size.width / 2), end = mount.endOffset(dx: size.width / 2);
+      mountPath = Path()
+        ..moveTo(end.dx - w / 2, end.dy)
+        // Square cap at the top
+        ..lineTo(
+          start.dx - w / 2,
+          // Adding the width to the y value here
+          // because there should be a square cap,
+          // which extends beyond the end point.
+          start.dy - w / 2,
+        )
+        ..lineTo(
+          start.dx + w / 2,
+          start.dy - w / 2,
+        )
+        ..lineTo(end.dx + w / 2, end.dy)
+        // Round cap at the bottom
+        ..conicTo(
+          end.dx,
+          end.dy + w,
+          // This is obviously the starting point again.
+          end.dx - w / 2,
+          end.dy,
+          1 / 2,
+        )
+        ..close();
+
+      // The idea here is to draw a shadow for the whole tube
+      // at once, which includes the mount. Otherwise, the shadows
+      // of the tube and the mount would overlap, which looks
+      // unnatural.
+      _drawTransformedShadow(
+          canvas,
+          Path.from(tubePath)
+            ..extendWithPath(
+              mountPath,
+              Offset.zero,
+            ),
+          tubeElevation);
+
+      canvas.drawPath(tubePath, tubePaint);
+    }();
     //</editor-fold>
 
     _drawTemperature(
@@ -592,28 +657,8 @@ class RenderTemperature extends RenderCompositionChild {
       text: 'min',
     );
 
-    //<editor-fold desc="Mount">
-    () {
-      final paint = Paint()
-            ..color = _mountColor
-            ..strokeWidth = bradRadius * 1.33
-            ..strokeCap = StrokeCap.round,
-          start = mount.startOffset(dx: size.width / 2);
-
-      canvas.drawLine(
-        start,
-        mount.endOffset(dx: size.width / 2),
-        paint,
-      );
-
-      // Add square cap at the top
-      canvas.drawLine(
-        start,
-        start,
-        paint..strokeCap = StrokeCap.square,
-      );
-    }();
-    //</editor-fold>
+    // The mount should be drawn over the liquid at the bottom :)
+    canvas.drawPath(mountPath, mountPaint);
 
     //<editor-fold desc="Brackets">
     final bracketGradient = LinearGradient(
@@ -626,13 +671,15 @@ class RenderTemperature extends RenderCompositionChild {
         bracketWidth = tubeWidth * 1.42,
         bracketSize = Size(bracketWidth, bracketWidth / 2.3);
     () {
-      final dx = size.width / 2 - bracketWidth / 2;
+      final dx = size.width / 2 - bracketWidth / 2, elevation = size.width / 91;
 
-      final startRect = brackets.startOffset(dx: dx) & bracketSize;
-      canvas.drawRect(startRect, Paint()..shader = bracketGradient.createShader(startRect));
+      final startRect = brackets.startOffset(dx: dx) & bracketSize, startPath = Path()..addRect(startRect), startPaint = Paint()..shader = bracketGradient.createShader(startRect);
+      _drawTransformedShadow(canvas, startPath, elevation);
+      canvas.drawPath(startPath, startPaint);
 
-      final endRect = brackets.endOffset(dx: dx) & bracketSize;
-      canvas.drawRect(endRect, Paint()..shader = bracketGradient.createShader(endRect));
+      final endRect = brackets.endOffset(dx: dx) & bracketSize, endPath = Path()..addRect(endRect), endPaint = Paint()..shader = bracketGradient.createShader(endRect);
+      _drawTransformedShadow(canvas, endPath, elevation);
+      canvas.drawPath(endPath, endPaint);
     }();
     //</editor-fold>
 
@@ -642,6 +689,11 @@ class RenderTemperature extends RenderCompositionChild {
   /// The position of the light source casting shadows of some elements.
   /// At the moment, it is the center of the thermometer as the position
   /// and shadows are drawn for the brackets, brads, and the mount.
+  ///
+  /// This will not make the shadows appear exactly as though the light
+  /// source was at [lightSourcePosition] but rather shift them a tiny bit,
+  /// which makes the shadows in here fit more with the rest of the shadows
+  /// in the clock face.
   Offset get lightSourcePosition => Offset(size.width / 2, size.height / 2);
 
   /// Transforms the given [path] and translates the [canvas] in a way
@@ -652,9 +704,9 @@ class RenderTemperature extends RenderCompositionChild {
   void _drawTransformedShadow(Canvas canvas, Path path, double elevation) {
     canvas.save();
 
-    final light = lightSourcePosition, transformedPath = path.transform(Matrix4.translation((-lightSourcePosition).vector3).storage);
+    final light = lightSourcePosition, transformedPath = path.transform(Matrix4.translation((-light).vector3).storage);
 
-    canvas.translate(lightSourcePosition.dx, lightSourcePosition.dy);
+    canvas.translate(light.dx, light.dy);
     canvas.drawShadow(transformedPath, _shadowColor, elevation, false);
 
     canvas.restore();
