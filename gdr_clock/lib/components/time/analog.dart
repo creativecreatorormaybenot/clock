@@ -494,7 +494,7 @@ class RenderAnalogTime extends RenderCompositionChild {
           ..color = _borderColor
           // See thermometer border (`temperature.dart`)
           // for an explanation as to why this is.
-          ..strokeWidth = _radius / 912);
+          ..strokeWidth = _radius / 612);
   }
 
   void _drawHourHand(Canvas canvas) {

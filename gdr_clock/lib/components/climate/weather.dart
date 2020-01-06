@@ -396,7 +396,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
         Paint()
           ..style = PaintingStyle.stroke
           ..color = _borderColor
-          ..strokeWidth = _radius / 275);
+          ..strokeWidth = _radius / 217);
   }
 }
 
