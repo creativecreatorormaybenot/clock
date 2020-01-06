@@ -148,6 +148,7 @@ class RenderBackground extends RenderCompositionChild {
     super.attach(owner);
 
     animation.addListener(markNeedsPaint);
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
   }
 
   @override

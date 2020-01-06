@@ -70,6 +70,23 @@ class RenderLocation extends RenderCompositionChild {
   TextPainter _textPainter;
 
   @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr
+      ..label = 'Location is $_text';
+  }
+
+  @override
   void performLayout() {
     final width = constraints.biggest.width;
 
@@ -85,16 +102,6 @@ class RenderLocation extends RenderCompositionChild {
     _textPainter.layout(maxWidth: width);
 
     size = _textPainter.size;
-  }
-
-  @override
-  void describeSemanticsConfiguration(SemanticsConfiguration config) {
-    super.describeSemanticsConfiguration(config);
-
-    config
-      ..isReadOnly = true
-      ..textDirection = TextDirection.ltr
-      ..label = 'Location is $_text';
   }
 
   @override

@@ -11,7 +11,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
 
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [ClockChildrenParentData].
   /// Every component can only exist exactly once.
-  /// Notice that the order of the [children] does not affect the layout or paint order.
+  /// Notice that the order of [children] does not affect the layout or paint order.
   CompositedClock({
     Key key,
     List<Widget> children,
@@ -50,7 +50,23 @@ enum ClockComponent {
   weather,
 }
 
+/// The order in which the children are passed to the widget does not matter
+/// and is alphabetical, i.e. the following is the paint order.
+const List<ClockComponent> paintOrder = [
+  ClockComponent.background,
+  ClockComponent.location,
+  ClockComponent.date,
+  ClockComponent.temperature,
+  ClockComponent.weather,
+  ClockComponent.analogTime,
+  ClockComponent.digitalTime,
+  ClockComponent.slide,
+  ClockComponent.ball,
+];
+
 class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
+  bool hasSemanticsInformation;
+
   Map<ClockComponent, Rect> _rects;
 
   void _addRect(RenderBox child) {
@@ -253,6 +269,35 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     //</editor-fold>
   }
 
+  /// Ensures that only composition children that have set
+  /// [ClockChildrenParentData.hasSemanticsInformation] to `true`
+  /// will be visited for semantics.
+  ///
+  /// The children are visited in the [paintOrder]. The reason I do
+  /// that is that the [RenderObject.visitChildrenForSemantics]
+  /// documentation states that this should be the way, however,
+  /// my tests with TalkBack on Android have shown that the order
+  /// does not matter.
+  @override
+  void visitChildrenForSemantics(visitor) {
+    final toBeVisited = <ClockComponent, RenderBox>{};
+
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData as ClockChildrenParentData, component = childParentData.childType;
+
+      assert(childParentData.hasSemanticsInformation != null, 'The render object ($child) for $component did not set $ClockChildrenParentData.hasSemanticsInformation properly.');
+
+      if (childParentData.hasSemanticsInformation) toBeVisited[component] = child;
+
+      child = childParentData.nextSibling;
+    }
+
+    for (final component in paintOrder) {
+      if (toBeVisited.containsKey(component)) visitor(toBeVisited[component]);
+    }
+  }
+
   @override
   void paint(PaintingContext context, Offset offset) {
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
@@ -260,22 +305,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       super.paint(context, offset);
 
       // Draw components in the actual draw order.
-      // The order in which the children are passed to the widget does not matter
-      // and is alphabetical, i.e. the following is the draw order.
-      paintChild(ClockComponent.background);
-
-      paintChild(ClockComponent.location);
-      paintChild(ClockComponent.date);
-
-      paintChild(ClockComponent.temperature);
-
-      paintChild(ClockComponent.weather);
-
-      paintChild(ClockComponent.analogTime);
-      paintChild(ClockComponent.digitalTime);
-
-      paintChild(ClockComponent.slide);
-      paintChild(ClockComponent.ball);
+      paintOrder.forEach(paintChild);
     });
   }
 }

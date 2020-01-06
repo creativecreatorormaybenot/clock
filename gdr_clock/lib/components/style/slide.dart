@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
@@ -44,6 +45,13 @@ class RenderSlide extends RenderCompositionChild {
 
   @override
   bool get sizedByParent => true;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
+  }
 
   @override
   void performResize() {

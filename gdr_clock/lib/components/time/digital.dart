@@ -172,6 +172,23 @@ class RenderDigitalTime extends RenderCompositionChild {
   String get amPm => _hour > 12 ? 'PM' : 'AM';
 
   @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+
+    config
+      ..label = 'Digital clock showing $time${_use24HourFormat ? ' $amPm' : ''}'
+      ..isReadOnly = true
+      ..textDirection = TextDirection.ltr;
+  }
+
+  @override
   void performLayout() {
     // This should ideally not be the whole screen,
     // but rather a constrained size, like the width
@@ -210,16 +227,6 @@ class RenderDigitalTime extends RenderCompositionChild {
           _amPmPainter.width,
       _timePainter.height,
     );
-  }
-
-  @override
-  void describeSemanticsConfiguration(SemanticsConfiguration config) {
-    super.describeSemanticsConfiguration(config);
-
-    config
-      ..label = 'Digital clock showing $time${_use24HourFormat ? ' $amPm' : ''}'
-      ..isReadOnly = true
-      ..textDirection = TextDirection.ltr;
   }
 
   static const linePaddingFactor = .07;

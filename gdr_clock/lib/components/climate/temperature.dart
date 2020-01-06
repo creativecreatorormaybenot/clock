@@ -437,13 +437,20 @@ class RenderTemperature extends RenderCompositionChild {
   }
 
   @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+  }
+
+  @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
 
     config
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr
-      ..label = 'Thermometer showing a temperature of $_temperature$_unitString, a temperature high of $_high$_unitString, and a temperature low of $_low$_unitString';
+      ..label = 'Thermometer showing a temperature of $_temperature$_unitString, a high of $_high$_unitString, and a low of $_low$_unitString';
   }
 
   @override

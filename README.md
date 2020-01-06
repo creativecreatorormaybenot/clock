@@ -62,6 +62,12 @@
 
   + Choose the best.
 
+* Find out where potentially too many "rebuilds" are triggered, e.g.</a> where `markNeedsLayout` is called unnecessarily or where the layout of a child could actually be determined by the parent and the child does not need to mark the parent as dirty.
+
+  + It seems like `performLayout` and semantics updates of `CompositedClock` are called all the time, even though they would only need to be called when the ball moves (which might be all the time at some point : D).
+
+    - For example, the background animation should not cause all other children to rebuild.
+
 * Potentially consider https://api.flutter.dev/flutter/painting/ShaderWarmUp/warmUpOnCanvas.html and https://api.flutter.dev/flutter/painting/ShaderWarmUp-class.html.
 
   + Even if performance does not need to be optimized, https://debugger.skia.org/ could be a nice tool to visualize the painting process for the article.

@@ -234,7 +234,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
     clockCompositionData
       ..childType = ClockComponent.weather
-      ..valid = true;
+      ..valid = true
+      ..hasSemanticsInformation = true;
   }
 
   double _radius;

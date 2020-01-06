@@ -92,6 +92,8 @@ class RenderBall extends RenderCompositionChild {
 
     arrivalAnimation.addListener(markNeedsPaint);
     departureAnimation.addListener(markNeedsPaint);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
   }
 
   @override

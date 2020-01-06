@@ -348,6 +348,13 @@ class RenderAnalogTime extends RenderCompositionChild {
   int get hour => (_hourHandAngle / pi / 2 * _hourDivisions).round();
 
   @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+  }
+
+  @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
 
