@@ -4,17 +4,13 @@
 
 * Implement accessibility.
 
-  + Watch https://youtu.be/bWbBgbmAdQs again for this.
-
-  + Check https://flutter.dev/docs/development/accessibility-and-localization/accessibility.
+  + Add [ `Semantics` ](https://api.flutter.dev/flutter/widgets/Semantics-class.html) to every component.
 
   + Consider the system font size setting.
 
     - Test if it affects the UI at the moment (it should not because the font size is not from Theme).
 
     - If the setting is currently ignored, then factor it into the current calculations and find larger values that are acceptable.
-
-  + Add [ `Semantics` ](https://api.flutter.dev/flutter/widgets/Semantics-class.html) to every component.
 
   + Test with [Accessibility Scanner](https://play.google.com/store/apps/details?id=com.google.android.apps.accessibility.auditor&hl=en)
 
