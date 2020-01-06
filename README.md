@@ -104,7 +104,7 @@
 
 * Share with P.
 
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me%20on%20Twitter&style=social
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | ![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me%20on%20Twitter&style=social)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
