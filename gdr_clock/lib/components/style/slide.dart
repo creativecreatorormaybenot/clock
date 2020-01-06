@@ -31,10 +31,15 @@ class RenderSlide extends RenderCompositionChild {
 
   Color _curveColor;
 
-  set curveColor(Color curveColor) {
-    if (_curveColor != curveColor) markNeedsPaint();
+  set curveColor(Color value) {
+    assert(value != null);
 
-    _curveColor = curveColor;
+    if (_curveColor == value) {
+      return;
+    }
+
+    _curveColor = value;
+    markNeedsPaint();
   }
 
   @override

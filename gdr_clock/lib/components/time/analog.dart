@@ -31,31 +31,33 @@ class AnimatedAnalogTime extends AnimatedWidget {
   Widget build(BuildContext context) {
     final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
-    return AnalogTime(
-      secondHandAngle: // Regular distance
-          pi * 2 / 60 * time.second +
-              // Bounce
-              pi * 2 / 60 * (bounce - 1),
-      minuteHandAngle: pi * 2 / 60 * time.minute +
-          // Bounce only when the minute changes.
-          (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
-      hourHandAngle:
-          // Distance for the hour.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
-              // Distance for the minute.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
-              // Distance for the second.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
-      hourDivisions: model.is24HourFormat ? 24 : 12,
-      ballEverySeconds: ballEverySeconds,
-      textColor: palette[ClockColor.text],
-      backgroundColor: palette[ClockColor.analogTimeBackground],
-      backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
-      hourHandColor: palette[ClockColor.hourHand],
-      minuteHandColor: palette[ClockColor.minuteHand],
-      secondHandColor: palette[ClockColor.secondHand],
-      shadowColor: palette[ClockColor.shadow],
-      borderColor: palette[ClockColor.border],
+    return Semantics(
+      child: AnalogTime(
+        secondHandAngle: // Regular distance
+            pi * 2 / 60 * time.second +
+                // Bounce
+                pi * 2 / 60 * (bounce - 1),
+        minuteHandAngle: pi * 2 / 60 * time.minute +
+            // Bounce only when the minute changes.
+            (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
+        hourHandAngle:
+            // Distance for the hour.
+            pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+                // Distance for the minute.
+                pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
+                // Distance for the second.
+                pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
+        hourDivisions: model.is24HourFormat ? 24 : 12,
+        ballEverySeconds: ballEverySeconds,
+        textColor: palette[ClockColor.text],
+        backgroundColor: palette[ClockColor.analogTimeBackground],
+        backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
+        hourHandColor: palette[ClockColor.hourHand],
+        minuteHandColor: palette[ClockColor.minuteHand],
+        secondHandColor: palette[ClockColor.secondHand],
+        shadowColor: palette[ClockColor.shadow],
+        borderColor: palette[ClockColor.border],
+      ),
     );
   }
 }
@@ -178,86 +180,151 @@ class RenderAnalogTime extends RenderCompositionChild {
 
   double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
 
-  set secondHandAngle(double secondHandAngle) {
-    if (_secondHandAngle != secondHandAngle) markNeedsPaint();
+  set secondHandAngle(double value) {
+    assert(value != null);
 
-    _secondHandAngle = secondHandAngle;
+    if (_secondHandAngle == value) {
+      return;
+    }
+
+    _secondHandAngle = value;
+    markNeedsPaint();
   }
 
-  set minuteHandAngle(double minuteHandAngle) {
-    if (_minuteHandAngle != minuteHandAngle) markNeedsPaint();
+  set minuteHandAngle(double value) {
+    assert(value != null);
 
-    _minuteHandAngle = minuteHandAngle;
+    if (_minuteHandAngle == value) {
+      return;
+    }
+
+    _minuteHandAngle = value;
+    markNeedsPaint();
   }
 
-  set hourHandAngle(double hourHandAngle) {
-    if (_hourHandAngle != hourHandAngle) markNeedsPaint();
+  set hourHandAngle(double value) {
+    assert(value != null);
 
-    _hourHandAngle = hourHandAngle;
+    if (_hourHandAngle == value) {
+      return;
+    }
+
+    _hourHandAngle = value;
+    markNeedsPaint();
   }
 
   int _hourDivisions, _ballEverySeconds;
 
-  set hourDivisions(int hourDivisions) {
-    if (_hourDivisions != hourDivisions) markNeedsPaint();
+  set hourDivisions(int value) {
+    assert(value != null);
 
-    _hourDivisions = hourDivisions;
+    if (_hourDivisions == value) {
+      return;
+    }
+
+    _hourDivisions = value;
+    markNeedsPaint();
   }
 
-  set ballEverySeconds(int ballEverySeconds) {
-    if (_ballEverySeconds != ballEverySeconds) markNeedsPaint();
+  set ballEverySeconds(int value) {
+    assert(value != null);
 
-    _ballEverySeconds = ballEverySeconds;
+    if (_ballEverySeconds == value) {
+      return;
+    }
+
+    _ballEverySeconds = value;
+    markNeedsPaint();
   }
 
   Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
 
-  set textColor(Color textColor) {
-    if (_textColor != textColor) markNeedsPaint();
+  set textColor(Color value) {
+    assert(value != null);
 
-    _textColor = textColor;
+    if (_textColor == value) {
+      return;
+    }
+
+    _textColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundColor(Color backgroundColor) {
-    if (_backgroundColor != backgroundColor) markNeedsPaint();
+  set backgroundColor(Color value) {
+    assert(value != null);
 
-    _backgroundColor = backgroundColor;
+    if (_backgroundColor == value) {
+      return;
+    }
+
+    _backgroundColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundHighlightColor(backgroundHighlightColor) {
-    if (_backgroundHighlightColor != backgroundHighlightColor) markNeedsPaint();
+  set backgroundHighlightColor(Color value) {
+    assert(value != null);
 
-    _backgroundHighlightColor = backgroundHighlightColor;
+    if (_backgroundHighlightColor == value) {
+      return;
+    }
+
+    _backgroundHighlightColor = value;
+    markNeedsPaint();
   }
 
-  set hourHandColor(Color hourHandColor) {
-    if (_hourHandColor != hourHandColor) markNeedsPaint();
+  set hourHandColor(Color value) {
+    assert(value != null);
 
-    _hourHandColor = hourHandColor;
+    if (_hourHandColor == value) {
+      return;
+    }
+
+    _hourHandColor = value;
+    markNeedsPaint();
   }
 
-  set minuteHandColor(Color minuteHandColor) {
-    if (_minuteHandColor != minuteHandColor) markNeedsPaint();
+  set minuteHandColor(Color value) {
+    assert(value != null);
 
-    _minuteHandColor = minuteHandColor;
+    if (_minuteHandColor == value) {
+      return;
+    }
+
+    _minuteHandColor = value;
+    markNeedsPaint();
   }
 
-  set secondHandColor(Color secondHandColor) {
-    if (_secondHandColor != secondHandColor) markNeedsPaint();
+  set secondHandColor(Color value) {
+    assert(value != null);
 
-    _secondHandColor = secondHandColor;
+    if (_secondHandColor == value) {
+      return;
+    }
+
+    _secondHandColor = value;
+    markNeedsPaint();
   }
 
-  set shadowColor(Color shadowColor) {
-    if (_shadowColor != shadowColor) markNeedsPaint();
+  set shadowColor(Color value) {
+    assert(value != null);
 
-    _shadowColor = shadowColor;
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
+    markNeedsPaint();
   }
 
-  set borderColor(Color borderColor) {
-    if (_borderColor != borderColor) markNeedsPaint();
+  set borderColor(Color value) {
+    assert(value != null);
 
-    _borderColor = borderColor;
+    if (_borderColor == value) {
+      return;
+    }
+
+    _borderColor = value;
+    markNeedsPaint();
   }
 
   @override

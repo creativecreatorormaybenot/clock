@@ -77,40 +77,70 @@ class RenderBackground extends RenderCompositionChild {
 
   Color _ballColor, _groundColor, _gooColor, _analogTimeComponentColor, _weatherComponentColor, _temperatureComponentColor;
 
-  set ballColor(Color color) {
-    if (color != _ballColor) markNeedsPaint();
+  set ballColor(Color value) {
+    assert(value != null);
 
-    _ballColor = color;
+    if (_ballColor == value) {
+      return;
+    }
+
+    _ballColor = value;
+    markNeedsPaint();
   }
 
-  set groundColor(Color groundColor) {
-    if (_groundColor != groundColor) markNeedsPaint();
+  set groundColor(Color value) {
+    assert(value != null);
 
-    _groundColor = groundColor;
+    if (_groundColor == value) {
+      return;
+    }
+
+    _groundColor = value;
+    markNeedsPaint();
   }
 
-  set gooColor(Color gooColor) {
-    if (_gooColor != gooColor) markNeedsPaint();
+  set gooColor(Color value) {
+    assert(value != null);
 
-    _gooColor = gooColor;
+    if (_gooColor == value) {
+      return;
+    }
+
+    _gooColor = value;
+    markNeedsPaint();
   }
 
-  set analogTimeComponentColor(Color analogTimeComponentColor) {
-    if (_analogTimeComponentColor != analogTimeComponentColor) markNeedsPaint();
+  set analogTimeComponentColor(Color value) {
+    assert(value != null);
 
-    _analogTimeComponentColor = analogTimeComponentColor;
+    if (_analogTimeComponentColor == value) {
+      return;
+    }
+
+    _analogTimeComponentColor = value;
+    markNeedsPaint();
   }
 
-  set weatherComponentColor(Color weatherComponentColor) {
-    if (_weatherComponentColor != weatherComponentColor) markNeedsPaint();
+  set weatherComponentColor(Color value) {
+    assert(value != null);
 
-    _weatherComponentColor = weatherComponentColor;
+    if (_weatherComponentColor == value) {
+      return;
+    }
+
+    _weatherComponentColor = value;
+    markNeedsPaint();
   }
 
-  set temperatureComponentColor(Color temperatureComponentColor) {
-    if (_temperatureComponentColor != temperatureComponentColor) markNeedsPaint();
+  set temperatureComponentColor(Color value) {
+    assert(value != null);
 
-    _temperatureComponentColor = temperatureComponentColor;
+    if (_temperatureComponentColor == value) {
+      return;
+    }
+
+    _temperatureComponentColor = value;
+    markNeedsPaint();
   }
 
   @override

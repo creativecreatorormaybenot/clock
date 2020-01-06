@@ -161,36 +161,61 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
   double _angle;
 
-  set angle(double angle) {
-    if (_angle != angle) markNeedsPaint();
+  set angle(double value) {
+    assert(value != null);
 
-    _angle = angle;
+    if (_angle == value) {
+      return;
+    }
+
+    _angle = value;
+    markNeedsPaint();
   }
 
   Color _arrowColor, _backgroundColor, _backgroundHighlightColor, _borderColor;
 
-  set arrowColor(Color arrowColor) {
-    if (_arrowColor != arrowColor) markNeedsPaint();
+  set arrowColor(Color value) {
+    assert(value != null);
 
-    _arrowColor = arrowColor;
+    if (_arrowColor == value) {
+      return;
+    }
+
+    _arrowColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundColor(Color backgroundColor) {
-    if (_backgroundColor != backgroundColor) markNeedsPaint();
+  set backgroundColor(Color value) {
+    assert(value != null);
 
-    _backgroundColor = backgroundColor;
+    if (_backgroundColor == value) {
+      return;
+    }
+
+    _backgroundColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundHighlightColor(Color backgroundHighlightColor) {
-    if (_backgroundHighlightColor != backgroundHighlightColor) markNeedsPaint();
+  set backgroundHighlightColor(Color value) {
+    assert(value != null);
 
-    _backgroundHighlightColor = backgroundHighlightColor;
+    if (_backgroundHighlightColor == value) {
+      return;
+    }
+
+    _backgroundHighlightColor = value;
+    markNeedsPaint();
   }
 
-  set borderColor(Color borderColor) {
-    if (_borderColor != borderColor) markNeedsPaint();
+  set borderColor(Color value) {
+    assert(value != null);
 
-    _borderColor = borderColor;
+    if (_borderColor == value) {
+      return;
+    }
+
+    _borderColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -453,10 +478,15 @@ class RenderCloudy extends RenderWeatherIcon {
 
   Color _cloudColor;
 
-  set cloudColor(Color cloudColor) {
-    if (_cloudColor != cloudColor) markNeedsPaint();
+  set cloudColor(Color value) {
+    assert(value != null);
 
-    _cloudColor = cloudColor;
+    if (_cloudColor == value) {
+      return;
+    }
+
+    _cloudColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -548,10 +578,15 @@ class RenderFoggy extends RenderWeatherIcon {
 
   Color _fogColor;
 
-  set fogColor(Color fogColor) {
-    if (_fogColor != fogColor) markNeedsPaint();
+  set fogColor(Color value) {
+    assert(value != null);
 
-    _fogColor = fogColor;
+    if (_fogColor == value) {
+      return;
+    }
+
+    _fogColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -613,18 +648,28 @@ class RenderRainy extends RenderWeatherIcon {
 
   int _raindrops;
 
-  set raindrops(int raindrops) {
-    if (_raindrops != raindrops) markNeedsPaint();
+  set raindrops(int value) {
+    assert(value != null);
 
-    _raindrops = raindrops;
+    if (_raindrops == value) {
+      return;
+    }
+
+    _raindrops = value;
+    markNeedsPaint();
   }
 
   Color _raindropColor;
 
-  set raindropColor(Color raindropColor) {
-    if (_raindropColor != raindropColor) markNeedsPaint();
+  set raindropColor(Color value) {
+    assert(value != null);
 
-    _raindropColor = raindropColor;
+    if (_raindropColor == value) {
+      return;
+    }
+
+    _raindropColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -697,24 +742,39 @@ class RenderSnowy extends RenderWeatherIcon {
 
   int _snowflakes, _snow;
 
-  set snowflakes(int snowflakes) {
-    if (_snowflakes != snowflakes) markNeedsPaint();
+  set snowflakes(int value) {
+    assert(value != null);
 
-    _snowflakes = snowflakes;
+    if (_snowflakes == value) {
+      return;
+    }
+
+    _snowflakes = value;
+    markNeedsPaint();
   }
 
-  set snow(int snow) {
-    if (_snow != snow) markNeedsPaint();
+  set snow(int value) {
+    assert(value != null);
 
-    _snow = snow;
+    if (_snow == value) {
+      return;
+    }
+
+    _snow = value;
+    markNeedsPaint();
   }
 
   Color _snowflakeColor;
 
-  set snowflakeColor(Color snowflakeColor) {
-    if (_snowflakeColor != snowflakeColor) markNeedsPaint();
+  set snowflakeColor(Color value) {
+    assert(value != null);
 
-    _snowflakeColor = snowflakeColor;
+    if (_snowflakeColor == value) {
+      return;
+    }
+
+    _snowflakeColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -776,18 +836,28 @@ class RenderSunny extends RenderWeatherIcon {
 
   int _sunRays;
 
-  set sunRays(int sunRays) {
-    if (_sunRays != sunRays) markNeedsPaint();
+  set sunRays(int value) {
+    assert(value != null);
 
-    _sunRays = sunRays;
+    if (_sunRays == value) {
+      return;
+    }
+
+    _sunRays = value;
+    markNeedsPaint();
   }
 
   Color _sunColor;
 
-  set sunColor(Color sunColor) {
-    if (_sunColor != sunColor) markNeedsPaint();
+  set sunColor(Color value) {
+    assert(value != null);
 
-    _sunColor = sunColor;
+    if (_sunColor == value) {
+      return;
+    }
+
+    _sunColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -849,24 +919,39 @@ class RenderThunderstorm extends RenderWeatherIcon {
 
   int _raindrops;
 
-  set raindrops(int raindrops) {
-    if (_raindrops != raindrops) markNeedsPaint();
+  set raindrops(int value) {
+    assert(value != null);
 
-    _raindrops = raindrops;
+    if (_raindrops == value) {
+      return;
+    }
+
+    _raindrops = value;
+    markNeedsPaint();
   }
 
   Color _lightningColor, _raindropColor;
 
-  set lightningColor(Color lightningColor) {
-    if (_lightningColor != lightningColor) markNeedsPaint();
+  set lightningColor(Color value) {
+    assert(value != null);
 
-    _lightningColor = lightningColor;
+    if (_lightningColor == value) {
+      return;
+    }
+
+    _lightningColor = value;
+    markNeedsPaint();
   }
 
-  set raindropColor(Color raindropColor) {
-    if (_raindropColor != raindropColor) markNeedsPaint();
+  set raindropColor(Color value) {
+    assert(value != null);
 
-    _raindropColor = raindropColor;
+    if (_raindropColor == value) {
+      return;
+    }
+
+    _raindropColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -929,16 +1014,26 @@ class RenderWindy extends RenderWeatherIcon {
 
   Color _primaryColor, _secondaryColor;
 
-  set primaryColor(Color primaryColor) {
-    if (_primaryColor != primaryColor) markNeedsPaint();
+  set primaryColor(Color value) {
+    assert(value != null);
 
-    _primaryColor = primaryColor;
+    if (_primaryColor == value) {
+      return;
+    }
+
+    _primaryColor = value;
+    markNeedsPaint();
   }
 
-  set secondaryColor(Color secondaryColor) {
-    if (_secondaryColor != secondaryColor) markNeedsPaint();
+  set secondaryColor(Color value) {
+    assert(value != null);
 
-    _secondaryColor = secondaryColor;
+    if (_secondaryColor == value) {
+      return;
+    }
+
+    _secondaryColor = value;
+    markNeedsPaint();
   }
 
   @override

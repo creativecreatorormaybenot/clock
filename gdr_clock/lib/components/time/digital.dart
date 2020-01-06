@@ -94,41 +94,66 @@ class RenderDigitalTime extends RenderCompositionChild {
 
   double _minuteProgress;
 
-  set minuteProgress(double minuteProgress) {
-    // The layout depends on the time displayed.
-    if (_minuteProgress != minuteProgress) markNeedsLayout();
+  set minuteProgress(double value) {
+    assert(value != null);
 
-    _minuteProgress = minuteProgress;
+    if (_minuteProgress == value) {
+      return;
+    }
+
+    _minuteProgress = value;
+    // The layout depends on the time displayed.
+    markNeedsLayout();
   }
 
   int _hour, _minute;
 
-  set hour(int hour) {
-    if (_hour != hour) markNeedsLayout();
+  set hour(int value) {
+    assert(value != null);
 
-    _hour = hour;
+    if (_hour == value) {
+      return;
+    }
+
+    _hour = value;
+    markNeedsLayout();
   }
 
-  set minute(int minute) {
-    if (_minute != minute) markNeedsLayout();
+  set minute(int value) {
+    assert(value != null);
 
-    _minute = minute;
+    if (_minute == value) {
+      return;
+    }
+
+    _minute = value;
+    markNeedsLayout();
   }
 
   bool _use24HourFormat;
 
-  set use24HourFormat(use24HourFormat) {
-    if (_use24HourFormat != use24HourFormat) markNeedsLayout();
+  set use24HourFormat(bool value) {
+    assert(value != null);
 
-    _use24HourFormat = use24HourFormat;
+    if (_use24HourFormat == value) {
+      return;
+    }
+
+    _use24HourFormat = value;
+    markNeedsLayout();
   }
 
   Color _textColor;
 
-  set textColor(Color textColor) {
-    if (_textColor != textColor) markNeedsPaint();
+  set textColor(Color value) {
+    assert(value != null);
 
-    _textColor = textColor;
+    if (_textColor == value) {
+      return;
+    }
+
+    _textColor = value;
+    markNeedsPaint();
   }
 
   TextPainter _timePainter, _amPmPainter;

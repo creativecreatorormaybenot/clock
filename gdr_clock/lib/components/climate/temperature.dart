@@ -216,38 +216,63 @@ class RenderTemperature extends RenderCompositionChild {
 
   TemperatureUnit _unit;
 
-  set unit(TemperatureUnit unit) {
-    if (unit != _unit) markNeedsPaint();
+  set unit(TemperatureUnit value) {
+    assert(value != null);
 
-    _unit = unit;
+    if (_unit == value) {
+      return;
+    }
+
+    _unit = value;
+    markNeedsPaint();
   }
 
   String _unitString;
 
-  set unitString(String unitString) {
-    if (_unitString != unitString) markNeedsPaint();
+  set unitString(String value) {
+    assert(value != null);
 
-    _unitString = unitString;
+    if (_unitString == value) {
+      return;
+    }
+
+    _unitString = value;
+    markNeedsPaint();
   }
 
   double _temperature, _low, _high;
 
-  set temperature(double temperature) {
-    if (_temperature != temperature) markNeedsPaint();
+  set temperature(double value) {
+    assert(value != null);
 
-    _temperature = temperature;
+    if (_temperature == value) {
+      return;
+    }
+
+    _temperature = value;
+    markNeedsPaint();
   }
 
-  set low(double low) {
-    if (_low != low) markNeedsPaint();
+  set low(double value) {
+    assert(value != null);
 
-    _low = low;
+    if (_low == value) {
+      return;
+    }
+
+    _low = value;
+    markNeedsPaint();
   }
 
-  set high(double high) {
-    if (_high != high) markNeedsPaint();
+  set high(double value) {
+    assert(value != null);
 
-    _high = high;
+    if (_high == value) {
+      return;
+    }
+
+    _high = value;
+    markNeedsPaint();
   }
 
   Color _textColor,
@@ -264,82 +289,147 @@ class RenderTemperature extends RenderCompositionChild {
       _bracketColor,
       _bracketHighlightColor;
 
-  set textColor(Color textColor) {
-    if (_textColor != textColor) markNeedsPaint();
+  set textColor(Color value) {
+    assert(value != null);
 
-    _textColor = textColor;
+    if (_textColor == value) {
+      return;
+    }
+
+    _textColor = value;
+    markNeedsPaint();
   }
 
-  set tubeColor(Color tubeColor) {
-    if (_tubeColor != tubeColor) markNeedsPaint();
+  set tubeColor(Color value) {
+    assert(value != null);
 
-    _tubeColor = tubeColor;
+    if (_tubeColor == value) {
+      return;
+    }
+
+    _tubeColor = value;
+    markNeedsPaint();
   }
 
-  set mountColor(Color mountColor) {
-    if (_mountColor != mountColor) markNeedsPaint();
+  set mountColor(Color value) {
+    assert(value != null);
 
-    _mountColor = mountColor;
+    if (_mountColor == value) {
+      return;
+    }
+
+    _mountColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundPrimaryColor(Color backgroundPrimaryColor) {
-    if (_backgroundPrimaryColor != backgroundPrimaryColor) markNeedsPaint();
+  set backgroundPrimaryColor(Color value) {
+    assert(value != null);
 
-    _backgroundPrimaryColor = backgroundPrimaryColor;
+    if (_backgroundPrimaryColor == value) {
+      return;
+    }
+
+    _backgroundPrimaryColor = value;
+    markNeedsPaint();
   }
 
-  set backgroundSecondaryColor(Color backgroundSecondaryColor) {
-    if (_backgroundSecondaryColor != backgroundSecondaryColor) markNeedsPaint();
+  set backgroundSecondaryColor(Color value) {
+    assert(value != null);
 
-    _backgroundSecondaryColor = backgroundSecondaryColor;
+    if (_backgroundSecondaryColor == value) {
+      return;
+    }
+
+    _backgroundSecondaryColor = value;
+    markNeedsPaint();
   }
 
-  set borderColor(Color borderColor) {
-    if (_borderColor != borderColor) markNeedsPaint();
+  set borderColor(Color value) {
+    assert(value != null);
 
-    _borderColor = borderColor;
+    if (_borderColor == value) {
+      return;
+    }
+
+    _borderColor = value;
+    markNeedsPaint();
   }
 
-  set bradColor(Color bradColor) {
-    if (_bradColor != bradColor) markNeedsPaint();
+  set bradColor(Color value) {
+    assert(value != null);
 
-    _bradColor = bradColor;
+    if (_bradColor == value) {
+      return;
+    }
+
+    _bradColor = value;
+    markNeedsPaint();
   }
 
-  set bradHighlightColor(Color bradHighlightColor) {
-    if (_bradHighlightColor != bradHighlightColor) markNeedsPaint();
+  set bradHighlightColor(Color value) {
+    assert(value != null);
 
-    _bradHighlightColor = bradHighlightColor;
+    if (_bradHighlightColor == value) {
+      return;
+    }
+
+    _bradHighlightColor = value;
+    markNeedsPaint();
   }
 
-  set temperatureColor(Color temperatureColor) {
-    if (_temperatureColor != temperatureColor) markNeedsPaint();
+  set temperatureColor(Color value) {
+    assert(value != null);
 
-    _temperatureColor = temperatureColor;
+    if (_temperatureColor == value) {
+      return;
+    }
+
+    _temperatureColor = value;
+    markNeedsPaint();
   }
 
-  set maxTemperatureColor(Color maxTemperatureColor) {
-    if (_maxTemperatureColor != maxTemperatureColor) markNeedsPaint();
+  set maxTemperatureColor(Color value) {
+    assert(value != null);
 
-    _maxTemperatureColor = maxTemperatureColor;
+    if (_maxTemperatureColor == value) {
+      return;
+    }
+
+    _maxTemperatureColor = value;
+    markNeedsPaint();
   }
 
-  set minTemperatureColor(Color minTemperatureColor) {
-    if (_minTemperatureColor != minTemperatureColor) markNeedsPaint();
+  set minTemperatureColor(Color value) {
+    assert(value != null);
 
-    _minTemperatureColor = minTemperatureColor;
+    if (_minTemperatureColor == value) {
+      return;
+    }
+
+    _minTemperatureColor = value;
+    markNeedsPaint();
   }
 
-  set bracketColor(Color bracketColor) {
-    if (_bracketColor != bracketColor) markNeedsPaint();
+  set bracketColor(Color value) {
+    assert(value != null);
 
-    _bracketColor = bracketColor;
+    if (_bracketColor == value) {
+      return;
+    }
+
+    _bracketColor = value;
+    markNeedsPaint();
   }
 
-  set bracketHighlightColor(Color bracketHighlightColor) {
-    if (_bracketHighlightColor != bracketHighlightColor) markNeedsPaint();
+  set bracketHighlightColor(Color value) {
+    assert(value != null);
 
-    _bracketHighlightColor = bracketHighlightColor;
+    if (_bracketHighlightColor == value) {
+      return;
+    }
+
+    _bracketHighlightColor = value;
+    markNeedsPaint();
   }
 
   @override
@@ -489,9 +579,9 @@ class RenderTemperature extends RenderCompositionChild {
     final bracketGradient = LinearGradient(
             // Again, highlight in the center to show that the metal is shining.
             colors: [
-          _bradHighlightColor,
+          _bracketHighlightColor,
           _bracketColor,
-          _bradHighlightColor,
+          _bracketHighlightColor,
         ]),
         bracketWidth = tubeWidth * 1.42,
         bracketSize = Size(bracketWidth, bracketWidth / 2.3);

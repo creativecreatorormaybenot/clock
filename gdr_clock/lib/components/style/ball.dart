@@ -64,16 +64,26 @@ class RenderBall extends RenderCompositionChild {
 
   Color _primaryColor, _secondaryColor;
 
-  set primaryColor(Color color) {
-    if (color != _primaryColor) markNeedsPaint();
+  set primaryColor(Color value) {
+    assert(value != null);
 
-    _primaryColor = color;
+    if (_primaryColor == value) {
+      return;
+    }
+
+    _primaryColor = value;
+    markNeedsPaint();
   }
 
-  set secondaryColor(Color color) {
-    if (color != _secondaryColor) markNeedsPaint();
+  set secondaryColor(Color value) {
+    assert(value != null);
 
-    _secondaryColor = color;
+    if (_secondaryColor == value) {
+      return;
+    }
+
+    _secondaryColor = value;
+    markNeedsPaint();
   }
 
   @override
