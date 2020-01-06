@@ -189,7 +189,6 @@ class _ClockCustomizerState extends State<ClockCustomizer> {
     );
 
     return MaterialApp(
-      showSemanticsDebugger: true, // todo remove
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: _themeMode,

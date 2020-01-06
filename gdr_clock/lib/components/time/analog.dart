@@ -31,33 +31,31 @@ class AnimatedAnalogTime extends AnimatedWidget {
   Widget build(BuildContext context) {
     final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
-    return Semantics(
-      child: AnalogTime(
-        secondHandAngle: // Regular distance
-            pi * 2 / 60 * time.second +
-                // Bounce
-                pi * 2 / 60 * (bounce - 1),
-        minuteHandAngle: pi * 2 / 60 * time.minute +
-            // Bounce only when the minute changes.
-            (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
-        hourHandAngle:
-            // Distance for the hour.
-            pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
-                // Distance for the minute.
-                pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
-                // Distance for the second.
-                pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
-        hourDivisions: model.is24HourFormat ? 24 : 12,
-        ballEverySeconds: ballEverySeconds,
-        textColor: palette[ClockColor.text],
-        backgroundColor: palette[ClockColor.analogTimeBackground],
-        backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
-        hourHandColor: palette[ClockColor.hourHand],
-        minuteHandColor: palette[ClockColor.minuteHand],
-        secondHandColor: palette[ClockColor.secondHand],
-        shadowColor: palette[ClockColor.shadow],
-        borderColor: palette[ClockColor.border],
-      ),
+    return AnalogTime(
+      secondHandAngle: // Regular distance
+          pi * 2 / 60 * time.second +
+              // Bounce
+              pi * 2 / 60 * (bounce - 1),
+      minuteHandAngle: pi * 2 / 60 * time.minute +
+          // Bounce only when the minute changes.
+          (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
+      hourHandAngle:
+          // Distance for the hour.
+          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+              // Distance for the minute.
+              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
+              // Distance for the second.
+              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
+      hourDivisions: model.is24HourFormat ? 24 : 12,
+      ballEverySeconds: ballEverySeconds,
+      textColor: palette[ClockColor.text],
+      backgroundColor: palette[ClockColor.analogTimeBackground],
+      backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
+      hourHandColor: palette[ClockColor.hourHand],
+      minuteHandColor: palette[ClockColor.minuteHand],
+      secondHandColor: palette[ClockColor.secondHand],
+      shadowColor: palette[ClockColor.shadow],
+      borderColor: palette[ClockColor.border],
     );
   }
 }
