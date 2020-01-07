@@ -1,7 +1,5 @@
 ## TODO
 
-* Make digital clock animation smooth in the linear section - it should already be.
-
 * Do not make the ball go off screen.
 
   + Have a section where the ball slowly rolls onto the slide.
