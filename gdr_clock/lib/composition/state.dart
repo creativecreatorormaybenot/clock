@@ -145,7 +145,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer updateTimer, ballTimer;
 
-  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, bounceAwayController, bounceBackController, minuteController;
+  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, ballTravelController, bounceAwayController, bounceBackController, minuteController;
 
   double minuteProgress(DateTime time) => (time.second + time.millisecond / 1e3 + time.microsecond / 1e6) / 60;
 
@@ -184,6 +184,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballDepartureController = AnimationController(
       vsync: this,
       duration: departureDuration,
+    );
+    ballTravelController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: ballEverySeconds) - departureDuration - arrivalDuration,
     );
 
     bounceAwayController = AnimationController(
@@ -306,6 +310,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
+  Animation<double> get ballTravelAnimation {
+    return CurvedAnimation(
+      parent: ballTravelController,
+      curve: travelCurve,
+    );
+  }
+
   Animation<double> get bounceAwayAnimation {
     return CurvedAnimation(
       parent: bounceAwayController,
@@ -326,6 +337,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Widget build(BuildContext context) => CompositedClock(
         ballArrivalAnimation: ballArrivalAnimation,
         ballDepartureAnimation: ballDepartureAnimation,
+        ballTravelAnimation: ballTravelAnimation,
         bounceAwayAnimation: bounceAwayAnimation,
         bounceBackAnimation: bounceBackAnimation,
         children: <Widget>[

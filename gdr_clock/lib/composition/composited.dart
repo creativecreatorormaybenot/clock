@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
-  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, bounceAwayAnimation, bounceBackAnimation;
+  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, ballTravelAnimation, bounceAwayAnimation, bounceBackAnimation;
 
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [ClockChildrenParentData].
   /// Every component can only exist exactly once.
@@ -17,10 +17,12 @@ class CompositedClock extends MultiChildRenderObjectWidget {
     List<Widget> children,
     @required this.ballArrivalAnimation,
     @required this.ballDepartureAnimation,
+    @required this.ballTravelAnimation,
     @required this.bounceAwayAnimation,
     @required this.bounceBackAnimation,
   })  : assert(ballArrivalAnimation != null),
         assert(ballDepartureAnimation != null),
+        assert(ballTravelAnimation != null),
         assert(bounceAwayAnimation != null),
         assert(bounceBackAnimation != null),
         super(key: key, children: children);
@@ -30,6 +32,7 @@ class CompositedClock extends MultiChildRenderObjectWidget {
     return RenderCompositedClock(
       ballArrivalAnimation: ballArrivalAnimation,
       ballDepartureAnimation: ballDepartureAnimation,
+      ballTravelAnimation: ballTravelAnimation,
       bounceAwayAnimation: bounceAwayAnimation,
       bounceBackAnimation: bounceBackAnimation,
     );
@@ -83,11 +86,12 @@ class ClockChildrenParentData extends CompositionChildrenParentData<ClockCompone
 }
 
 class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
-  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, bounceAwayAnimation, bounceBackAnimation;
+  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, ballTravelAnimation, bounceAwayAnimation, bounceBackAnimation;
 
   RenderCompositedClock({
     this.ballArrivalAnimation,
     this.ballDepartureAnimation,
+    this.ballTravelAnimation,
     this.bounceAwayAnimation,
     this.bounceBackAnimation,
   }) : super(ClockComponent.values);
@@ -105,6 +109,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     ballArrivalAnimation.addListener(markNeedsLayout);
     ballDepartureAnimation.addListener(markNeedsLayout);
+    ballTravelAnimation.addListener(markNeedsLayout);
     bounceAwayAnimation.addListener(markNeedsLayout);
     bounceBackAnimation.addListener(markNeedsLayout);
   }
@@ -113,6 +118,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void detach() {
     ballArrivalAnimation.removeListener(markNeedsLayout);
     ballDepartureAnimation.removeListener(markNeedsLayout);
+    ballTravelAnimation.removeListener(markNeedsLayout);
     bounceAwayAnimation.removeListener(markNeedsLayout);
     bounceBackAnimation.removeListener(markNeedsLayout);
 
