@@ -2,8 +2,6 @@
 
 * Make digital clock animation smooth in the linear section - it should already be.
 
-* Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for the ball movement animation.
-
 * Do not make the ball go off screen.
 
   + Have a section where the ball slowly rolls onto the slide.
@@ -11,6 +9,8 @@
     - In there, there is a little part that is opened right before the ball bounces up and is closed afterwards, so the ball can roll over it.
 
     - The animation for it should be started every second, similar to how the background animation works - time it takes is the time the `Timer` manages at the moment, which means that the timer will be replaced by this animation controller.
+
+  + Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for this.
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
