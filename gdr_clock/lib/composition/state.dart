@@ -147,6 +147,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, bounceAwayController, bounceBackController, minuteController;
 
+  double minuteProgress(DateTime time) => (time.second + time.millisecond / 1e3 + time.microsecond / 1e6) / 60;
+
   @override
   void initState() {
     super.initState();
@@ -200,7 +202,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     minuteController = AnimationController(
       vsync: this,
       duration: const Duration(minutes: 1),
-    )..forward(from: time.second / 60);
+    )..forward(from: minuteProgress(time));
 
     widget.model.addListener(modelChanged);
 
@@ -257,7 +259,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     if (initial) return;
 
-    minuteController.forward(from: time.second / 60);
+    minuteController.forward(from: minuteProgress(time));
 
     analogBounceController.forward(from: 0);
 
