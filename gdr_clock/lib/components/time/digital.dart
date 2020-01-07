@@ -243,14 +243,21 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     _timePainter.paint(canvas, Offset.zero);
 
-    final extraYSpace = _use24HourFormat ? _amPmPainter.height : 1, movingRoomY = size.height + extraYSpace, movingTopLeft = Offset(_timePainter.width, movingRoomY * (1 - _minuteProgress) - extraYSpace);
+    final
+        // The text should go fully off screen about the new minute.
+        extraYSpace = _amPmPainter.height,
+        movingRoomY = size.height + extraYSpace,
+        movingTopLeft = Offset(_timePainter.width, movingRoomY * (1 - _minuteProgress) - extraYSpace);
 
     if (_use24HourFormat) {
-      final width = _amPmPainter.size.onlyWidth.offset;
+      final width = _amPmPainter.size.onlyWidth.offset,
+          height = _amPmPainter.size.onlyHeight.offset /
+              // Line should be in the center of the AM/PM text.
+              2;
 
       canvas.drawLine(
-          movingTopLeft + width * linePaddingFactor,
-          movingTopLeft + width * (1 - linePaddingFactor),
+          movingTopLeft + width * linePaddingFactor + height,
+          movingTopLeft + width * (1 - linePaddingFactor) + height,
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
