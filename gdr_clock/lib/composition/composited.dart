@@ -167,6 +167,19 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         -ball.size.height * 2,
       );
 
+      final ballArrivalTween = Tween(
+        begin: ballStartPosition,
+        end: ballDestination,
+      ),
+          ballDepartureTween = Tween(
+        begin: ballDestination,
+        end: ballEndPosition,
+      ),
+          ballTravelTween = Tween(
+        begin: ballDepartureTween.end,
+        end: ballArrivalTween.begin,
+      );
+
       final slideRect = Rect.fromPoints(
         Offset.lerp(
           ballStartPosition,
@@ -180,9 +193,11 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       slideData.offset = slideRect.topLeft;
 
       if (ballDepartureAnimation.status != AnimationStatus.forward) {
-        ballData.offset = Offset.lerp(ballStartPosition, ballDestination, ballArrivalAnimation.value);
+        ballData.offset = ballArrivalTween.evaluate(ballArrivalAnimation);
+      } else if (ballArrivalAnimation.status != AnimationStatus.forward) {
+        ballData.offset = ballTravelTween.evaluate(ballTravelAnimation);
       } else {
-        ballData.offset = Offset.lerp(ballDestination, ballEndPosition, ballDepartureAnimation.value);
+        ballData.offset = ballDepartureTween.evaluate(ballDepartureAnimation);
       }
 
       final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
