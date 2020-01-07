@@ -193,7 +193,7 @@ class RenderDigitalTime extends RenderCompositionChild {
   /// should move at the start and end of a minute.
   /// This time is taken both at the start and the end for a total of
   /// [fastMoveSeconds] * 2 per minute.
-  static const fastMoveSeconds = 2.5;
+  static const double fastMoveSeconds = 5;
 
   TweenSequence yMovementSequence;
 
@@ -239,26 +239,27 @@ class RenderDigitalTime extends RenderCompositionChild {
 
     final
         // The text should go fully off screen about the new minute.
-        outPadding = _timePainter.height,
-        inPadding = _timePainter.height + 1.5;
+        h = _amPmPainter.height / 2,
+        inDistance = h * 2.3;
 
+    // Describes the center position of the element.
     yMovementSequence = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: size.height + outPadding, end: size.height - inPadding).chain(
+        tween: Tween(begin: size.height + h, end: size.height + h - inDistance).chain(
           CurveTween(
-            curve: const Cubic(.14, .78, .86, .55),
+            curve: const Cubic(.32, .62, .06, .95),
           ),
         ),
         weight: fastMoveSeconds,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: size.height - inPadding, end: inPadding),
+        tween: Tween(begin: size.height + h - inDistance, end: inDistance - h),
         weight: 60 - fastMoveSeconds * 2,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: inPadding, end: -outPadding).chain(
+        tween: Tween(begin: inDistance - h, end: -h).chain(
           CurveTween(
-            curve: const Cubic(1, .22, 1, .56),
+            curve: const Cubic(.91, .09, .91, .54),
           ),
         ),
         weight: fastMoveSeconds,
@@ -283,20 +284,16 @@ class RenderDigitalTime extends RenderCompositionChild {
     _timePainter.paint(canvas, Offset.zero);
 
     if (_use24HourFormat) {
-      final width = _amPmPainter.size.width,
-          y = movementY +
-              _amPmPainter.size.height /
-                  // Line should be in the center of the AM/PM text.
-                  2;
+      final width = _amPmPainter.size.width;
 
       canvas.drawLine(
-          Offset(_timePainter.width + width * linePaddingFactor, y),
-          Offset(_timePainter.width + width * (1 - linePaddingFactor), y),
+          Offset(_timePainter.width + width * linePaddingFactor, movementY),
+          Offset(_timePainter.width + width * (1 - linePaddingFactor), movementY),
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {
-      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY));
+      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
     }
 
     canvas.restore();
