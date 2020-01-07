@@ -102,14 +102,14 @@
 
 * Share with P.
 
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | 
-
-![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 I was inspired by the design of an old analog barometer and hygrometer kind of device.
 
-[Quick screen capture showing the final result of the submission]()
+![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)
+
+![Quick screen capture showing the final result of the submission]()
 
 The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/lib/main.dart).
 
