@@ -236,27 +236,31 @@ class RenderDigitalTime extends RenderCompositionChild {
       _timePainter.height,
     );
 
-    // The text should go fully off screen about the new minute.
+    final
+        // The text should go fully off screen about the new minute.
+        outPadding = _timePainter.height,
+        inPadding = _timePainter.height + 1.5;
+
     yMovementSequence = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: size.height + _timePainter.height, end: size.height - _timePainter.height * 1.5).chain(
+        tween: Tween(begin: size.height + outPadding, end: size.height - inPadding).chain(
           CurveTween(
             curve: const Cubic(.14, .78, .86, .55),
           ),
         ),
-        weight: fastMoveSeconds / 60,
+        weight: fastMoveSeconds,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: size.height - _timePainter.height * 1.5, end: _timePainter.height * 1.5),
-        weight: 1 - fastMoveSeconds / 60 * 2,
+        tween: Tween(begin: size.height - inPadding, end: inPadding),
+        weight: 60 - fastMoveSeconds * 2,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: _timePainter.height * 1.5, end: -_timePainter.height).chain(
+        tween: Tween(begin: inPadding, end: -outPadding).chain(
           CurveTween(
             curve: const Cubic(1, .22, 1, .56),
           ),
         ),
-        weight: fastMoveSeconds / 60,
+        weight: fastMoveSeconds,
       ),
     ]);
   }
@@ -285,13 +289,13 @@ class RenderDigitalTime extends RenderCompositionChild {
                   2;
 
       canvas.drawLine(
-          Offset(width * linePaddingFactor, y),
-          Offset(width * (1 - linePaddingFactor), y),
+          Offset(_timePainter.width + width * linePaddingFactor, y),
+          Offset(_timePainter.width + width * (1 - linePaddingFactor), y),
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {
-      _amPmPainter.paint(canvas, Offset(0, movementY));
+      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY));
     }
 
     canvas.restore();

@@ -4,6 +4,8 @@
 
   + Use https://cubic-bezier.com to design the curve - `Tween` should offer a way to add a curve to it and `TweenSequence` should allow to have two `Tween` s, one for coming up and one from leaving up :)
 
+  + Animate digital time smoothly (forward a minute in `update` ).
+
 * Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for the ball movement animation.
 
 * Do not make the ball go off screen.
