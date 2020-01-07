@@ -188,6 +188,14 @@ class RenderDigitalTime extends RenderCompositionChild {
       ..textDirection = TextDirection.ltr;
   }
 
+  /// Determines for how many seconds the moving item (AM/PM or the line)
+  /// should move at the start and end of a minute.
+  /// This time is taken both at the start and the end for a total of
+  /// [fastMoveSeconds] * 2 per minute.
+  static const fastMoveSeconds = 2.5;
+
+  TweenSequence movingSequence;
+
   @override
   void performLayout() {
     // This should ideally not be the whole screen,
@@ -227,6 +235,21 @@ class RenderDigitalTime extends RenderCompositionChild {
           _amPmPainter.width,
       _timePainter.height,
     );
+
+    movingSequence = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(),
+        weight: fastMoveSeconds / 60,
+      ),
+      TweenSequenceItem(
+        tween: Tween(),
+        weight: 1 - fastMoveSeconds / 60 * 2,
+      ),
+      TweenSequenceItem(
+        tween: Tween(),
+        weight: fastMoveSeconds / 60,
+      ),
+    ]);
   }
 
   static const linePaddingFactor = .07;
