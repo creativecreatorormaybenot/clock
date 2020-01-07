@@ -26,7 +26,7 @@ class AnimatedDigitalTime extends AnimatedWidget {
     return DigitalTime(
       hour: time.hour,
       minute: time.minute,
-      minuteProgress: (time.second - 1 + animation.value) / 60,
+      minuteProgress: animation.value,
       use24HourFormat: model.is24HourFormat,
       textColor: palette[ClockColor.text],
     );
@@ -37,7 +37,8 @@ class DigitalTime extends LeafRenderObjectWidget {
   /// [hour] is in 24 hour format.
   final int hour, minute;
 
-  /// Range from `0` to `1` indicating how far the current minute has progressed.
+  /// Range from `0` to `1` ([minuteProgress] >= 0 ∧ [minuteProgress] <= 1)
+  /// indicating how far the current minute has progressed.
   ///
   /// This should not be used as an accurate representation of the current second.
   final double minuteProgress;

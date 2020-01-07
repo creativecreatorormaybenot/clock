@@ -145,13 +145,15 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer updateTimer, ballTimer;
 
-  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, bounceAwayController, bounceBackController;
+  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, bounceAwayController, bounceBackController, minuteController;
 
   @override
   void initState() {
     super.initState();
 
     model = widget.model;
+
+    final time = DateTime.now();
 
     analogBounceController = AnimationController(
       vsync: this,
@@ -163,7 +165,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     backgroundWaveController = AnimationController(
       vsync: this,
       duration: waveDuration,
-    )..forward(from: waveProgress(DateTime.now()));
+    )..forward(from: waveProgress(time));
 
     ballArrivalController = AnimationController(
       vsync: this,
@@ -195,6 +197,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       duration: bounceBackDuration,
     );
 
+    minuteController = AnimationController(
+      vsync: this,
+      duration: const Duration(minutes: 1),
+    )..forward(from: time.second / 60);
+
     widget.model.addListener(modelChanged);
 
     update(true);
@@ -214,6 +221,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     bounceAwayController.dispose();
     bounceBackController.dispose();
+
+    minuteController.dispose();
 
     super.dispose();
   }
@@ -247,6 +256,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     }
 
     if (initial) return;
+
+    minuteController.forward(from: time.second / 60);
 
     analogBounceController.forward(from: 0);
 
@@ -307,6 +318,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
+  Animation<double> get minuteAnimation => minuteController;
+
   @override
   Widget build(BuildContext context) => CompositedClock(
         ballArrivalAnimation: ballArrivalAnimation,
@@ -320,7 +333,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             palette: widget.palette,
           ),
           AnimatedDigitalTime(
-            animation: analogBounceAnimation, // todo
+            animation: minuteAnimation,
             model: model,
             palette: widget.palette,
           ),
