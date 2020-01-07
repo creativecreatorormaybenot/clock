@@ -86,6 +86,8 @@
 
     - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
 
+  + Add an "Everything is implicitly animated" screen recording, where the model values are modified programmatically.
+
   + Mention that usually accessibility and with that semantics are taken care of by prebuilt widgets, but for this clock face it was necessary to do it manually, i.e.</a> override [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) .
 
   + Add link to it to README.
