@@ -8,6 +8,8 @@
 
     - The animation for it should be started every second, similar to how the background animation works - time it takes is the time the `Timer` manages at the moment, which means that the timer will be replaced by this animation controller.
 
+    - The ball should be half-way visible in order to save space.
+
   + Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for this.
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
