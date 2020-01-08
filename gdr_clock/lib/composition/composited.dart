@@ -193,8 +193,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
       slideData.offset = slideRect.topLeft;
 
-      print('RenderCompositedClock.performLayout ${ballTravelAnimation.value} ${ballArrivalAnimation.value} ${ballDepartureAnimation.value}');
-
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
         ballData.offset = ballDepartureTween.evaluate(ballDepartureAnimation);
       } else if (ballTravelAnimation.status == AnimationStatus.forward) {
