@@ -124,7 +124,7 @@ class RenderBall extends RenderCompositionChild {
     final canvas = context.canvas;
 
     canvas.save();
-    // Translate to the center of the ball.
+    // Translate to the top left of the ball.
     canvas.translate(offset.dx, offset.dy);
 
     final rect = Offset.zero & Size.fromRadius(_radius),
@@ -146,6 +146,22 @@ class RenderBall extends RenderCompositionChild {
                 colors: shaderColors,
                 tileMode: TileMode.mirror,
               ).createShader(rect),
+    );
+
+    // Draw small dot onto the ball.
+    // The point is to indicate the rotation (rolling)
+    // even when the radial shader has to be used because
+    // of lacking Flutter web support.
+    canvas.drawOval(
+      Rect.fromCircle(
+        center:
+            // Translate to the center of the ball first
+            Offset(size.width / 2, size.height / 2) +
+                // Position of the dot relative to the center of the ball
+                Offset.fromDirection(pi / 2 + angle, _radius * 2 / 3),
+        radius: _radius / 9,
+      ),
+      Paint()..color = _primaryColor,
     );
 
     canvas.restore();
