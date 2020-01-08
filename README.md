@@ -1,6 +1,6 @@
 ## TODO
 
-* Make the rotation of the ball relate to the distance traveled (make it look more realistic).
+* Use a smaller acceleration for the travel curve.
 
 * Finish ball slide (see sketch).
 

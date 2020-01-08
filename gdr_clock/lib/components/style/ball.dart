@@ -10,7 +10,7 @@ const arrivalDuration = Duration(milliseconds: 920),
     departureDuration = Duration(milliseconds: 1242),
     arrivalCurve = AccelerateCurve(),
     departureCurve = Curves.decelerate,
-    travelCurve = Curves.linear,
+    travelCurve = AccelerateCurve(),
     bounceAwayDuration = Duration(milliseconds: 346),
     bounceBackDuration = Duration(milliseconds: 671),
     bounceAwayCurve = Curves.elasticOut,
@@ -50,13 +50,14 @@ enum BallMovementStage {
 }
 
 class BallParentData extends ClockChildrenParentData {
-  BallMovementStage stage;
-
-  double movementProgress;
-
-  /// The distance the ball needs to travel for
-  /// the current [stage].
-  double movementDistance;
+  /// Indicates how far the ball has rolled
+  /// along the track, i.e. along the [BallMovementStage]s.
+  /// This can rise or decline while moving through the
+  /// stages because the ball can roll backwards sometimes.
+  ///
+  /// However, the distance resets to `0` when
+  /// [BallMovementStage.travel] begins.
+  double distanceTraveled;
 }
 
 /// Renders a ball moving about the scene.
@@ -130,19 +131,19 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     final canvas = context.canvas;
 
     canvas.save();
-    // Translate to the top left of the ball.
-    canvas.translate(offset.dx, offset.dy);
+    // Translate to the center of the ball.
+    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
     // This is the circumference of the ball. Basically,
     // it is its length when unwrapping its circle.
-    final ballLength = _radius * 2 * pi,
-        // Controls which direction the ball rotates in.
-        direction = compositionData.stage == BallMovementStage.travel ? 1 : -1;
+    final ballLength = _radius * 2 * pi;
 
-    final rect = Offset.zero & Size.fromRadius(_radius),
+    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius),
         // Rotate the ball as if it rolled when it falls down and
         // flies back up.
-        angle = 2 * pi * (compositionData.movementDistance / ballLength) * compositionData.movementProgress * direction;
+        angle = 2 * pi * (compositionData.distanceTraveled / ballLength);
+
+    canvas.rotate(angle);
 
     canvas.drawOval(
       rect,
@@ -153,28 +154,41 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
             // Flutter web and Flutter web does not currently support sweep gradients.
             ? ui.Gradient.radial(rect.center, rect.shortestSide / 2, shaderColors)
             : SweepGradient(
-                startAngle: angle,
-                endAngle: angle + pi / 2,
+                startAngle: 0,
+                endAngle: pi / 2,
                 colors: shaderColors,
                 tileMode: TileMode.mirror,
               ).createShader(rect),
     );
 
-    // Draw small dot onto the ball.
-    // The point is to indicate the rotation (rolling)
-    // even when the radial shader has to be used because
-    // of lacking Flutter web support.
+    _drawDots(canvas);
+
+    canvas.restore();
+  }
+
+  /// Draws small dots on two sides
+  /// of the ball.
+  ///
+  /// See [_drawDot].
+  void _drawDots(Canvas canvas) {
+    _drawDot(canvas, 0);
+    _drawDot(canvas, pi);
+  }
+
+  /// Draw small dot onto the ball.
+  /// The point is to indicate the rotation (rolling)
+  /// even when the radial shader has to be used because
+  /// of lacking Flutter web support.
+  void _drawDot(Canvas canvas, double angle) {
+    canvas.save();
+
+    canvas.rotate(angle);
     canvas.drawOval(
-      Rect.fromCircle(
-        center:
-            // Translate to the center of the ball first
-            Offset(size.width / 2, size.height / 2) +
-                // Position of the dot relative to the center of the ball
-                Offset.fromDirection(pi / 2 + angle, _radius * 2 / 3),
-        radius: _radius / 9,
-      ),
-      Paint()..color = _primaryColor,
-    );
+        Rect.fromCircle(
+          center: Offset(0, _radius * 5 / 7),
+          radius: _radius / 9,
+        ),
+        Paint()..color = _primaryColor);
 
     canvas.restore();
   }

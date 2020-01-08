@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/animation.dart';
 
@@ -28,4 +29,8 @@ class AngleTween extends Tween<double> {
 
     return lerp(v);
   }
+}
+
+extension OffsetTween on Tween<Offset> {
+  double get distance => (end - begin).distance;
 }

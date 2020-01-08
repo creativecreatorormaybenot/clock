@@ -199,24 +199,23 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         ..start = ballStartPosition
         ..destination = ballDestination;
 
+      final travelDistance = ballTravelTween.distance,
+          // Negative as the ball rolls backwards along this path.
+          arrivalDistance = -ballArrivalTween.distance,
+          departureDistance = -ballDepartureTween.distance;
+
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
         ballData
           ..offset = ballDepartureTween.evaluate(ballDepartureAnimation)
-          ..movementProgress = ballDepartureAnimation.value
-          ..movementDistance = (ballDepartureTween.end - ballDepartureTween.begin).distance
-          ..stage = BallMovementStage.departure;
+          ..distanceTraveled = travelDistance + arrivalDistance + departureDistance * ballDepartureAnimation.value;
       } else if (ballTravelAnimation.status == AnimationStatus.forward) {
         ballData
           ..offset = ballTravelTween.evaluate(ballTravelAnimation)
-          ..movementProgress = ballTravelAnimation.value
-          ..movementDistance = (ballTravelTween.end - ballTravelTween.begin).distance
-          ..stage = BallMovementStage.travel;
+          ..distanceTraveled = travelDistance * ballTravelAnimation.value;
       } else {
         ballData
           ..offset = ballArrivalTween.evaluate(ballArrivalAnimation)
-          ..movementProgress = ballArrivalAnimation.value
-          ..movementDistance = (ballArrivalTween.end - ballArrivalTween.begin).distance
-          ..stage = BallMovementStage.arrival;
+          ..distanceTraveled = travelDistance + arrivalDistance * ballArrivalAnimation.value;
       }
 
       final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
