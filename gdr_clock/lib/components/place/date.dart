@@ -84,7 +84,7 @@ class Date extends LeafRenderObjectWidget {
   }
 }
 
-class RenderDate extends RenderCompositionChild {
+class RenderDate extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderDate({
     String text,
     TextStyle textStyle,
@@ -125,7 +125,7 @@ class RenderDate extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+    compositionData.hasSemanticsInformation = true;
   }
 
   @override

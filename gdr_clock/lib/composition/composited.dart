@@ -69,20 +69,6 @@ const List<ClockComponent> paintOrder = [
 
 class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
   bool hasSemanticsInformation;
-
-  Map<ClockComponent, Rect> _rects;
-
-  void _addRect(RenderBox child) {
-    final childParentData = child.parentData as ClockChildrenParentData;
-    _rects[childParentData.childType] = childParentData.offset & child.size;
-  }
-
-  Rect rectOf(ClockComponent component) {
-    assert(childType == ClockComponent.background, 'Only the background component can access sizes and offsets of the other children.');
-    final rect = _rects[component];
-    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
-    return rect;
-  }
 }
 
 class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
@@ -99,7 +85,15 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! ClockChildrenParentData) {
-      child.parentData = ClockChildrenParentData()..valid = false;
+      if (child is RenderBackground) {
+        child.parentData = BackgroundParentData();
+      } else if (child is RenderSlide) {
+        child.parentData = SlideParentData();
+      } else {
+        child.parentData = ClockChildrenParentData();
+      }
+
+      (child.parentData as ClockChildrenParentData).valid = false;
     }
   }
 
@@ -134,10 +128,10 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     //<editor-fold desc="Laying out children">
     // Background
-    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background];
+    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background] as BackgroundParentData;
 
-    backgroundData._rects = {};
-    final provideRect = backgroundData._addRect;
+    backgroundData.clearRects();
+    final provideRect = backgroundData.addRect;
 
     background.layout(BoxConstraints.tight(size));
 

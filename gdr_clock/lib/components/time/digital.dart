@@ -83,7 +83,7 @@ class DigitalTime extends LeafRenderObjectWidget {
   }
 }
 
-class RenderDigitalTime extends RenderCompositionChild {
+class RenderDigitalTime extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderDigitalTime({
     double minuteProgress,
     int hour,
@@ -176,7 +176,7 @@ class RenderDigitalTime extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+    compositionData.hasSemanticsInformation = true;
   }
 
   @override

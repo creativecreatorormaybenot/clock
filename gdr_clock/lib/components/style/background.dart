@@ -56,7 +56,27 @@ class Background extends LeafRenderObjectWidget {
   }
 }
 
-class RenderBackground extends RenderCompositionChild {
+class BackgroundParentData extends ClockChildrenParentData {
+  Map<ClockComponent, Rect> _rects;
+
+  void addRect(RenderBox child) {
+    final childParentData = child.parentData as ClockChildrenParentData;
+    _rects[childParentData.childType] = childParentData.offset & child.size;
+  }
+
+  Rect rectOf(ClockComponent component) {
+    final rect = _rects[component];
+    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
+    return rect;
+  }
+
+  /// Needs to be called before calling [addRect] or [rectOf].
+  void clearRects() {
+    _rects = {};
+  }
+}
+
+class RenderBackground extends RenderCompositionChild<ClockComponent, BackgroundParentData> {
   final Animation<double> animation;
 
   RenderBackground({
@@ -148,7 +168,7 @@ class RenderBackground extends RenderCompositionChild {
     super.attach(owner);
 
     animation.addListener(markNeedsPaint);
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
+    compositionData.hasSemanticsInformation = false;
   }
 
   @override
@@ -165,8 +185,6 @@ class RenderBackground extends RenderCompositionChild {
   void paint(PaintingContext context, Offset offset) {
     // Do not need to clip here because CompositedClock already clips the canvas.
 
-    final clockData = parentData as ClockChildrenParentData;
-
     final gooArea = Rect.fromLTWH(
       // Infinite width and height ensure that the indentations of the goo caused by components will always consider the complete object, even if some of it is out of view.
       // Using maxFinite because negativeInfinity for the left value throws NaN errors.
@@ -176,12 +194,12 @@ class RenderBackground extends RenderCompositionChild {
       double.maxFinite,
     ),
         componentRects = [
-      clockData.rectOf(ClockComponent.weather),
-      clockData.rectOf(ClockComponent.temperature),
+      compositionData.rectOf(ClockComponent.weather),
+      compositionData.rectOf(ClockComponent.temperature),
       // The glow of the clock should be rendered after the other two components.
-      clockData.rectOf(ClockComponent.analogTime),
+      compositionData.rectOf(ClockComponent.analogTime),
     ],
-        glowComponents = [...componentRects, clockData.rectOf(ClockComponent.ball)],
+        glowComponents = [...componentRects, compositionData.rectOf(ClockComponent.ball)],
         componentColors = [
       _weatherComponentColor,
       _temperatureComponentColor,

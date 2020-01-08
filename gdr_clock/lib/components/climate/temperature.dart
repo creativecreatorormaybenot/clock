@@ -175,7 +175,7 @@ class Temperature extends LeafRenderObjectWidget {
   }
 }
 
-class RenderTemperature extends RenderCompositionChild {
+class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   static const temperatureScale = {
     TemperatureUnit.celsius: [-16, 50],
     TemperatureUnit.fahrenheit: [3, 122],
@@ -460,7 +460,7 @@ class RenderTemperature extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+    compositionData.hasSemanticsInformation = true;
   }
 
   @override

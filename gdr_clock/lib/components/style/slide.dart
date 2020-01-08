@@ -24,7 +24,11 @@ class Slide extends LeafRenderObjectWidget {
   }
 }
 
-class RenderSlide extends RenderCompositionChild {
+class SlideParentData extends ClockChildrenParentData {
+  Offset start, end, destination;
+}
+
+class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
   RenderSlide({
     Color curveColor,
   })  : _curveColor = curveColor,
@@ -50,7 +54,7 @@ class RenderSlide extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
+    compositionData.hasSemanticsInformation = false;
   }
 
   @override

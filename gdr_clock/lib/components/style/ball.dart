@@ -54,7 +54,7 @@ class Ball extends LeafRenderObjectWidget {
   }
 }
 
-class RenderBall extends RenderCompositionChild {
+class RenderBall extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   final Animation<double> arrivalAnimation, departureAnimation, travelAnimation;
 
   RenderBall({
@@ -98,7 +98,7 @@ class RenderBall extends RenderCompositionChild {
     arrivalAnimation.addListener(markNeedsPaint);
     departureAnimation.addListener(markNeedsPaint);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = false;
+    compositionData.hasSemanticsInformation = false;
   }
 
   @override

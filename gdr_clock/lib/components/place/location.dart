@@ -30,7 +30,7 @@ class Location extends LeafRenderObjectWidget {
   }
 }
 
-class RenderLocation extends RenderCompositionChild {
+class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderLocation({
     String text,
     TextStyle textStyle,
@@ -73,7 +73,7 @@ class RenderLocation extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+    compositionData.hasSemanticsInformation = true;
   }
 
   @override

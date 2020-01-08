@@ -146,7 +146,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogTime extends RenderCompositionChild {
+class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderAnalogTime({
     double secondHandAngle,
     double minuteHandAngle,
@@ -351,7 +351,7 @@ class RenderAnalogTime extends RenderCompositionChild {
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    (compositionData as ClockChildrenParentData).hasSemanticsInformation = true;
+    compositionData.hasSemanticsInformation = true;
   }
 
   @override
