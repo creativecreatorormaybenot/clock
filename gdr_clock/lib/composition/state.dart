@@ -143,7 +143,7 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
   ClockModel model;
 
-  Timer updateTimer, ballTimer;
+  Timer updateTimer;
 
   AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, ballTravelController, bounceAwayController, bounceBackController, minuteController;
 
@@ -174,9 +174,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       duration: arrivalDuration,
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          ballDepartureController.forward(from: 0);
           ballArrivalController.reset();
 
+          ballDepartureController.forward(from: 0);
+
+          // Starting the animation for the bouncing
+          // of the element hit.
           bounceBackController.reset();
           bounceAwayController.forward(from: 0);
         }
@@ -184,11 +187,23 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballDepartureController = AnimationController(
       vsync: this,
       duration: departureDuration,
-    );
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          ballDepartureController.reset();
+
+          ballTravelController.forward(from: 0);
+        }
+      });
     ballTravelController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: ballEverySeconds) - departureDuration - arrivalDuration,
-    );
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          ballTravelController.reset();
+
+          ballArrivalController.forward(from: 0);
+        }
+      });
 
     bounceAwayController = AnimationController(
       vsync: this,
@@ -216,7 +231,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   @override
   void dispose() {
     updateTimer?.cancel();
-    ballTimer?.cancel();
 
     analogBounceController.dispose();
 
@@ -254,11 +268,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     updateTimer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
-    if (ballTimer?.isActive != true) {
-      ballTimer = Timer(
-        Duration(microseconds: ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1) - arrivalDuration,
-        ball,
-      );
+    if (!ballArrivalController.isAnimating && !ballDepartureController.isAnimating) {
+      // toGo is the time until the next ball
+      // arrival animation should start in microseconds.
+      final toGo = ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
+
+      // It should be fine to call this even when the travel
+      // controller is already animating because it should be
+      // at that exact value at the moment. The real value
+      // will be close enough to the theoretical one.
+      ballTravelController.forward(from: toGo / ballTravelController.duration.inMicroseconds);
     }
 
     if (initial) return;
