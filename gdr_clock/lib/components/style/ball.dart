@@ -17,7 +17,7 @@ const arrivalDuration = Duration(milliseconds: 920),
     bounceBackCurve = Curves.elasticOut;
 
 class Ball extends LeafRenderObjectWidget {
-  final Animation<double> arrivalAnimation, departureAnimation;
+  final Animation<double> arrivalAnimation, departureAnimation, travelAnimation;
 
   final Color primaryColor, secondaryColor;
 
@@ -25,10 +25,12 @@ class Ball extends LeafRenderObjectWidget {
     Key key,
     @required this.arrivalAnimation,
     @required this.departureAnimation,
+    @required this.travelAnimation,
     @required this.primaryColor,
     @required this.secondaryColor,
   })  : assert(arrivalAnimation != null),
         assert(departureAnimation != null),
+        assert(travelAnimation != null),
         assert(primaryColor != null),
         assert(secondaryColor != null),
         super(key: key);
@@ -38,6 +40,7 @@ class Ball extends LeafRenderObjectWidget {
     return RenderBall(
       arrivalAnimation: arrivalAnimation,
       departureAnimation: departureAnimation,
+      travelAnimation: travelAnimation,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
     );
@@ -52,11 +55,12 @@ class Ball extends LeafRenderObjectWidget {
 }
 
 class RenderBall extends RenderCompositionChild {
-  final Animation<double> arrivalAnimation, departureAnimation;
+  final Animation<double> arrivalAnimation, departureAnimation, travelAnimation;
 
   RenderBall({
     this.arrivalAnimation,
     this.departureAnimation,
+    this.travelAnimation,
     Color primaryColor,
     Color secondaryColor,
   })  : _primaryColor = primaryColor,
@@ -127,10 +131,20 @@ class RenderBall extends RenderCompositionChild {
     // Translate to the top left of the ball.
     canvas.translate(offset.dx, offset.dy);
 
+    double animationValue;
+
+    if (departureAnimation.status == AnimationStatus.forward) {
+      animationValue = 1 - departureAnimation.value;
+    } else if (travelAnimation.status == AnimationStatus.forward) {
+      animationValue = travelAnimation.value;
+    } else {
+      animationValue = 1 - arrivalAnimation.value;
+    }
+
     final rect = Offset.zero & Size.fromRadius(_radius),
         // Rotate the ball as if it rolled when it falls down and
         // flies back up.
-        angle = 2 * pi * (1 - (arrivalAnimation.status == AnimationStatus.forward ? arrivalAnimation.value : departureAnimation.value));
+        angle = 2 * pi * animationValue;
 
     canvas.drawOval(
       rect,

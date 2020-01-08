@@ -277,7 +277,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // controller is already animating because it should be
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
-      ballTravelController.forward(from: toGo / ballTravelController.duration.inMicroseconds);
+      ballTravelController.forward(from: 1 - toGo / ballTravelController.duration.inMicroseconds);
     }
 
     if (initial) return;
@@ -392,6 +392,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           Ball(
             arrivalAnimation: ballArrivalAnimation,
             departureAnimation: ballDepartureAnimation,
+            travelAnimation: ballTravelAnimation,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
           ),

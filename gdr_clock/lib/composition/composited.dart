@@ -164,13 +164,14 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       final ballStartPosition = Offset(
         size.width * 3 / 4,
-        // It should fly into view faster than it leaves the view again.
-        -ball.size.height * 3,
+        // It should slowly come a bit more into view
+        // (h / 2 for the end position).
+        -ball.size.height / 4,
       ),
           ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - Offset(ball.size.width / 2, ball.size.height / 1.42),
           ballEndPosition = Offset(
         size.width * 1.2 / 4,
-        -ball.size.height * 2,
+        -ball.size.height / 2,
       );
 
       final ballArrivalTween = Tween(
@@ -197,6 +198,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
       slideData.offset = slideRect.topLeft;
+
+      print('RenderCompositedClock.performLayout ${ballTravelAnimation.value} ${ballArrivalAnimation.value} ${ballDepartureAnimation.value}');
 
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
         ballData.offset = ballDepartureTween.evaluate(ballDepartureAnimation);

@@ -1,16 +1,8 @@
 ## TODO
 
-* Do not make the ball go off screen.
+* Make the rotation of the ball relate to the distance traveled (make it look more realistic).
 
-  + Have a section where the ball slowly rolls onto the slide.
-
-    - In there, there is a little part that is opened right before the ball bounces up and is closed afterwards, so the ball can roll over it.
-
-    - The animation for it should be started every second, similar to how the background animation works - time it takes is the time the `Timer` manages at the moment, which means that the timer will be replaced by this animation controller.
-
-    - The ball should be half-way visible in order to save space.
-
-  + Explore [ `TweenSequence` ](https://api.flutter.dev/flutter/animation/TweenSequence-class.html) for this.
+* Finish ball slide (see sketch).
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
