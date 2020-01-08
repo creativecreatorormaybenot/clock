@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -277,7 +278,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // controller is already animating because it should be
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
-      ballTravelController.forward(from: 1 - toGo / ballTravelController.duration.inMicroseconds);
+      ballTravelController.forward(from: max(0, 1 - toGo / ballTravelController.duration.inMicroseconds));
     }
 
     if (initial) return;
@@ -390,9 +391,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             weatherComponentColor: widget.palette[ClockColor.weatherBackground],
           ),
           Ball(
-            arrivalAnimation: ballArrivalAnimation,
-            departureAnimation: ballDepartureAnimation,
-            travelAnimation: ballTravelAnimation,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
           ),

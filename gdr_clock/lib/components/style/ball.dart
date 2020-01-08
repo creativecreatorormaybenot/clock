@@ -17,30 +17,19 @@ const arrivalDuration = Duration(milliseconds: 920),
     bounceBackCurve = Curves.elasticOut;
 
 class Ball extends LeafRenderObjectWidget {
-  final Animation<double> arrivalAnimation, departureAnimation, travelAnimation;
-
   final Color primaryColor, secondaryColor;
 
   const Ball({
     Key key,
-    @required this.arrivalAnimation,
-    @required this.departureAnimation,
-    @required this.travelAnimation,
     @required this.primaryColor,
     @required this.secondaryColor,
-  })  : assert(arrivalAnimation != null),
-        assert(departureAnimation != null),
-        assert(travelAnimation != null),
-        assert(primaryColor != null),
+  })  : assert(primaryColor != null),
         assert(secondaryColor != null),
         super(key: key);
 
   @override
   RenderBall createRenderObject(BuildContext context) {
     return RenderBall(
-      arrivalAnimation: arrivalAnimation,
-      departureAnimation: departureAnimation,
-      travelAnimation: travelAnimation,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
     );
@@ -54,13 +43,37 @@ class Ball extends LeafRenderObjectWidget {
   }
 }
 
-class RenderBall extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
-  final Animation<double> arrivalAnimation, departureAnimation, travelAnimation;
+enum BallMovementStage {
+  travel,
+  arrival,
+  departure,
+}
 
+class BallParentData extends ClockChildrenParentData {
+  BallMovementStage stage;
+
+  double movementProgress;
+
+  /// The distance the ball needs to travel for
+  /// the current [stage].
+  double movementDistance;
+}
+
+/// Renders a ball moving about the scene.
+///
+/// The movement of the ball is separated into three stages:
+///
+///  1. Travel, which brings the ball from the end point to the start point.
+///  1. Arrival, which brings the ball from the start point to its destination.
+///  1. Departure, which brings the ball away from the destination to the end point.
+///
+/// See also: [BallMovementStage]
+///
+/// The ball also rotates to resemble rolling and this rotation is calculated
+/// by taking the circumference of the circle, the distance of the current stage, and
+/// the progress of the current movement.
+class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> {
   RenderBall({
-    this.arrivalAnimation,
-    this.departureAnimation,
-    this.travelAnimation,
     Color primaryColor,
     Color secondaryColor,
   })  : _primaryColor = primaryColor,
@@ -95,18 +108,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, ClockChildrenPar
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    arrivalAnimation.addListener(markNeedsPaint);
-    departureAnimation.addListener(markNeedsPaint);
-
     compositionData.hasSemanticsInformation = false;
-  }
-
-  @override
-  void detach() {
-    arrivalAnimation.removeListener(markNeedsPaint);
-    departureAnimation.removeListener(markNeedsPaint);
-
-    super.detach();
   }
 
   @override
@@ -131,20 +133,16 @@ class RenderBall extends RenderCompositionChild<ClockComponent, ClockChildrenPar
     // Translate to the top left of the ball.
     canvas.translate(offset.dx, offset.dy);
 
-    double animationValue;
-
-    if (departureAnimation.status == AnimationStatus.forward) {
-      animationValue = 1 - departureAnimation.value;
-    } else if (travelAnimation.status == AnimationStatus.forward) {
-      animationValue = travelAnimation.value;
-    } else {
-      animationValue = 1 - arrivalAnimation.value;
-    }
+    // This is the circumference of the ball. Basically,
+    // it is its length when unwrapping its circle.
+    final ballLength = _radius * 2 * pi,
+        // Controls which direction the ball rotates in.
+        direction = compositionData.stage == BallMovementStage.travel ? 1 : -1;
 
     final rect = Offset.zero & Size.fromRadius(_radius),
         // Rotate the ball as if it rolled when it falls down and
         // flies back up.
-        angle = 2 * pi * animationValue;
+        angle = 2 * pi * (compositionData.movementDistance / ballLength) * compositionData.movementProgress * direction;
 
     canvas.drawOval(
       rect,

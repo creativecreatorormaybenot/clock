@@ -89,6 +89,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         child.parentData = BackgroundParentData();
       } else if (child is RenderSlide) {
         child.parentData = SlideParentData();
+      } else if (child is RenderBall) {
+        child.parentData = BallParentData();
       } else {
         child.parentData = ClockChildrenParentData();
       }
@@ -136,11 +138,11 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     background.layout(BoxConstraints.tight(size));
 
     // Ball
-    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball];
+    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData;
     ball.layout(constraints.loosen(), parentUsesSize: true);
 
     // Slide
-    final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide];
+    final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
@@ -191,14 +193,30 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       );
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
-      slideData.offset = slideRect.topLeft;
+      slideData
+        ..offset = slideRect.topLeft
+        ..end = ballEndPosition
+        ..start = ballStartPosition
+        ..destination = ballDestination;
 
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
-        ballData.offset = ballDepartureTween.evaluate(ballDepartureAnimation);
+        ballData
+          ..offset = ballDepartureTween.evaluate(ballDepartureAnimation)
+          ..movementProgress = ballDepartureAnimation.value
+          ..movementDistance = (ballDepartureTween.end - ballDepartureTween.begin).distance
+          ..stage = BallMovementStage.departure;
       } else if (ballTravelAnimation.status == AnimationStatus.forward) {
-        ballData.offset = ballTravelTween.evaluate(ballTravelAnimation);
+        ballData
+          ..offset = ballTravelTween.evaluate(ballTravelAnimation)
+          ..movementProgress = ballTravelAnimation.value
+          ..movementDistance = (ballTravelTween.end - ballTravelTween.begin).distance
+          ..stage = BallMovementStage.travel;
       } else {
-        ballData.offset = ballArrivalTween.evaluate(ballArrivalAnimation);
+        ballData
+          ..offset = ballArrivalTween.evaluate(ballArrivalAnimation)
+          ..movementProgress = ballArrivalAnimation.value
+          ..movementDistance = (ballArrivalTween.end - ballArrivalTween.begin).distance
+          ..stage = BallMovementStage.arrival;
       }
 
       final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
