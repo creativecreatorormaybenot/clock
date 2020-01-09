@@ -206,7 +206,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballDepartureController.reset();
           ballTrips.count++;
 
-          ballTravelController.forward(from: 0);
+          ballTravelController.forward(from: ballTravelProgress(DateTime.now()));
         }
       });
 
@@ -268,21 +268,25 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     });
   }
 
+  double ballTravelProgress(DateTime time) {
+    // toGo is the time until the next ball
+    // arrival animation should start in microseconds.
+    final toGo = ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
+
+    return max(0, 1 - toGo / ballTravelController.duration.inMicroseconds);
+  }
+
   void update([bool initial = false]) {
     final time = DateTime.now();
 
     updateTimer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
     if (!ballArrivalController.isAnimating && !ballDepartureController.isAnimating) {
-      // toGo is the time until the next ball
-      // arrival animation should start in microseconds.
-      final toGo = ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
-
       // It should be fine to call this even when the travel
       // controller is already animating because it should be
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
-      ballTravelController.forward(from: max(0, 1 - toGo / ballTravelController.duration.inMicroseconds));
+      ballTravelController.forward(from: ballTravelProgress(time));
     }
 
     if (initial) return;

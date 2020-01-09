@@ -29,7 +29,7 @@ const useVibrantPalette = true;
 /// The ball will fall down on every [ballEverySeconds]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
-const ballEverySeconds = 30;
+const ballEverySeconds = 6;
 
 void main() {
   runApp(
