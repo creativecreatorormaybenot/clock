@@ -111,11 +111,9 @@ The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://
 
 * You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)
 
-### Bouncing
+### Hand bouncing
 
 * For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
-
-* For the ball, I conducted some experiments in real life and looked at a few simulations online. I think that the version I ended up with looks realistic out of all the different ideas I tried. It would look a lot better if the object could deform, but that is completely out of scope and assuming that the bodies are all completely rigid also adds something nice to the design.
 
 ### Implementation
 
