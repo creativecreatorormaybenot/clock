@@ -1,12 +1,12 @@
 ## TODO
 
+* Finish ball slide (see sketch).
+
 * Use a smaller acceleration for the travel curve.
 
 * Draw shadows for the slides in `Slide` .
 
 * Draw shadow for the ball in `Background` (below everything but the ground).
-
-* Finish ball slide (see sketch).
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
