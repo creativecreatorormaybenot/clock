@@ -1,7 +1,5 @@
 ## TODO
 
-* Think of a way to make the ball rotation always wrap around.
-
 * Use a smaller acceleration for the travel curve.
 
 * Draw shadows for the slides in `Slide` .

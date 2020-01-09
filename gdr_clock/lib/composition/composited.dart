@@ -204,6 +204,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
           arrivalDistance = -ballArrivalTween.distance,
           departureDistance = -ballDepartureTween.distance;
 
+      ballData.totalDistance = travelDistance + arrivalDistance + departureDistance;
+
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
         ballData
           ..offset = ballDepartureTween.evaluate(ballDepartureAnimation)

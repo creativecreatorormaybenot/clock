@@ -148,6 +148,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, ballTravelController, bounceAwayController, bounceBackController, minuteController;
 
+  BallTrips ballTrips;
+
   double minuteProgress(DateTime time) => (time.second + time.millisecond / 1e3 + time.microsecond / 1e6) / 60;
 
   @override
@@ -170,6 +172,17 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       duration: waveDuration,
     )..forward(from: waveProgress(time));
 
+    ballTrips = BallTrips();
+    ballTravelController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: ballEverySeconds) - departureDuration - arrivalDuration,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          ballTravelController.reset();
+
+          ballArrivalController.forward(from: 0);
+        }
+      });
     ballArrivalController = AnimationController(
       vsync: this,
       duration: arrivalDuration,
@@ -191,18 +204,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           ballDepartureController.reset();
+          ballTrips.count++;
 
           ballTravelController.forward(from: 0);
-        }
-      });
-    ballTravelController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: ballEverySeconds) - departureDuration - arrivalDuration,
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          ballTravelController.reset();
-
-          ballArrivalController.forward(from: 0);
         }
       });
 
@@ -391,6 +395,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             weatherComponentColor: widget.palette[ClockColor.weatherBackground],
           ),
           Ball(
+            trips: ballTrips,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
           ),

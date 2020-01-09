@@ -17,19 +17,24 @@ const arrivalDuration = Duration(milliseconds: 920),
     bounceBackCurve = Curves.elasticOut;
 
 class Ball extends LeafRenderObjectWidget {
+  final BallTrips trips;
+
   final Color primaryColor, secondaryColor;
 
   const Ball({
     Key key,
+    @required this.trips,
     @required this.primaryColor,
     @required this.secondaryColor,
-  })  : assert(primaryColor != null),
+  })  : assert(trips != null),
+        assert(primaryColor != null),
         assert(secondaryColor != null),
         super(key: key);
 
   @override
   RenderBall createRenderObject(BuildContext context) {
     return RenderBall(
+      trips: trips,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
     );
@@ -43,21 +48,33 @@ class Ball extends LeafRenderObjectWidget {
   }
 }
 
-enum BallMovementStage {
-  travel,
-  arrival,
-  departure,
+/// A way to count the ball's trips while being able to
+/// pass a pointer to the count around.
+///
+/// This is needed to account for the fact that the ball does not
+/// rotate an integer amount of full rotations while rolling
+/// along the track.
+///
+/// A [ValueNotifier] would also do the job, but I do not want
+/// to notify. Hence, this is the simpler option.
+class BallTrips {
+  BallTrips([this.count = 0]);
+
+  double count;
 }
 
 class BallParentData extends ClockChildrenParentData {
   /// Indicates how far the ball has rolled
-  /// along the track, i.e. along the [BallMovementStage]s.
+  /// along the track, i.e. along the ball's movement stages
+  /// (see [RenderBall]).
   /// This can rise or decline while moving through the
   /// stages because the ball can roll backwards sometimes.
   ///
   /// However, the distance resets to `0` when
-  /// [BallMovementStage.travel] begins.
+  /// the travel stage begins.
   double distanceTraveled;
+
+  double totalDistance;
 }
 
 /// Renders a ball moving about the scene.
@@ -68,13 +85,14 @@ class BallParentData extends ClockChildrenParentData {
 ///  1. Arrival, which brings the ball from the start point to its destination.
 ///  1. Departure, which brings the ball away from the destination to the end point.
 ///
-/// See also: [BallMovementStage]
-///
 /// The ball also rotates to resemble rolling and this rotation is calculated
 /// by taking the circumference of the circle, the distance of the current stage, and
 /// the progress of the current movement.
 class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> {
+  final BallTrips trips;
+
   RenderBall({
+    this.trips,
     Color primaryColor,
     Color secondaryColor,
   })  : _primaryColor = primaryColor,
@@ -105,22 +123,11 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     markNeedsPaint();
   }
 
-  /// It makes sense to handle this in this
-  /// render object and to update it in [paimt]
-  /// because the only purpose of it is to
-  /// keep visual consistency. The visuals are
-  /// always drawn in here.
-  double _initialRotation;
-
-  double _previousRotation, _previousDistance;
-
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
     compositionData.hasSemanticsInformation = false;
-
-    _previousRotation = _previousDistance = _initialRotation = 0;
   }
 
   @override
@@ -149,21 +156,26 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // it is its length when unwrapping its circle.
     final ballLength = _radius * 2 * pi;
 
-    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius), distance = compositionData.distanceTraveled;
+    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius);
 
-    // Rotate the ball as if it rolled.
-    var angle = _initialRotation + 2 * pi * (distance / ballLength);
+    // Rotate the ball as if it rolled along the slides.
+    // This value can be greater than 1, but I imagine that
+    // leaving that is cheaper (regarding performance) than
+    // using modulo.
+    // It is fine because the Canvas.rotate also takes any multiples
+    // of the rotation value and accepts it.
+    final progress = (compositionData.distanceTraveled +
+            // After every trip there will probably be some additional
+            // distance that is not evenly divisible by the circumference,
+            // which would cause the rotation to visually reset if
+            // not accounted for.
+            (compositionData.totalDistance % ballLength) * trips.count)
+        // The ball needs to rotate once for every circumference
+        // on the track.
+        /
+        ballLength;
 
-    // If the rotation change does not
-    if (2 * pi * ((distance - _previousDistance) / ballLength) + _initialRotation != angle - _previousRotation) {
-      _initialRotation = _previousRotation % (2 * pi);
-
-      angle = _initialRotation + 2 * pi * (distance / ballLength);
-    }
-
-    canvas.rotate(angle);
-    _previousRotation = angle;
-    _previousDistance = distance;
+    canvas.rotate(2 * pi * progress);
 
     canvas.drawOval(
       rect,
