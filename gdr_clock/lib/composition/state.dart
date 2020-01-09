@@ -50,6 +50,8 @@ enum ClockColor {
   minuteHand,
   secondHand,
   shadow,
+  lid,
+  lidHighlight,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -112,6 +114,8 @@ class Clock extends StatefulWidget {
     ClockColor.minuteHand: Color(0xff000000),
     ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
+    ClockColor.lid: Color(0xff855e42),
+    ClockColor.lidHighlight: Color(0xff966F33),
   },
       baseLightPalette = {},
       baseDarkPalette = {

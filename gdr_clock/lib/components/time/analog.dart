@@ -56,6 +56,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
       secondHandColor: palette[ClockColor.secondHand],
       shadowColor: palette[ClockColor.shadow],
       borderColor: palette[ClockColor.border],
+      lidColor: palette[ClockColor.lid],
+      lidHighlightColor: palette[ClockColor.lidHighlight],
     );
   }
 }
@@ -75,7 +77,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   /// icon drawn at `θ = 0` and one at `θ = π`.
   final int ballEverySeconds;
 
-  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
+  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor, lidColor, lidHighlightColor;
 
   const AnalogTime({
     Key key,
@@ -92,6 +94,8 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.secondHandColor,
     @required this.shadowColor,
     @required this.borderColor,
+    @required this.lidColor,
+    @required this.lidHighlightColor,
   })  : assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
@@ -105,6 +109,8 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(secondHandColor != null),
         assert(shadowColor != null),
         assert(borderColor != null),
+        assert(lidColor != null),
+        assert(lidHighlightColor != null),
         assert(60 % ballEverySeconds == 0),
         super(key: key);
 
@@ -124,6 +130,8 @@ class AnalogTime extends LeafRenderObjectWidget {
       secondHandColor: secondHandColor,
       shadowColor: shadowColor,
       borderColor: borderColor,
+      lidColor: lidColor,
+      lidHighlightColor: lidHighlightColor,
     );
   }
 
@@ -142,7 +150,9 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..minuteHandColor = minuteHandColor
       ..secondHandColor = secondHandColor
       ..shadowColor = shadowColor
-      ..borderColor = borderColor;
+      ..borderColor = borderColor
+      ..lidColor = lidColor
+      ..lidHighlightColor = lidHighlightColor;
   }
 }
 
@@ -161,6 +171,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     Color secondHandColor,
     Color shadowColor,
     Color borderColor,
+    Color lidColor,
+    Color lidHighlightColor,
   })  : _secondHandAngle = secondHandAngle,
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
@@ -174,6 +186,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
         _secondHandColor = secondHandColor,
         _shadowColor = shadowColor,
         _borderColor = borderColor,
+        _lidColor = lidColor,
+        _lidHighlightColor = lidHighlightColor,
         super(ClockComponent.analogTime);
 
   double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
@@ -239,7 +253,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     markNeedsPaint();
   }
 
-  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
+  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor, _lidColor, _lidHighlightColor;
 
   set textColor(Color value) {
     assert(value != null);
@@ -326,6 +340,28 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     }
 
     _borderColor = value;
+    markNeedsPaint();
+  }
+
+  set lidColor(Color value) {
+    assert(value != null);
+
+    if (_lidColor == value) {
+      return;
+    }
+
+    _lidColor = value;
+    markNeedsPaint();
+  }
+
+  set lidHighlightColor(Color value) {
+    assert(value != null);
+
+    if (_lidHighlightColor == value) {
+      return;
+    }
+
+    _lidHighlightColor = value;
     markNeedsPaint();
   }
 
@@ -468,6 +504,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     _drawSecondHand(canvas);
     _drawHourHand(canvas);
 
+    _drawLid(canvas);
+
     canvas.restore();
   }
 
@@ -495,6 +533,28 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
           // See thermometer border (`temperature.dart`)
           // for an explanation as to why this is.
           ..strokeWidth = _radius / 612);
+  }
+
+  void _drawLid(Canvas canvas) {
+    final rect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: _radius / 24,
+    ),
+        shader = ui.Gradient.radial(
+      Offset.zero,
+      rect.shortestSide / 2,
+      [
+        _lidHighlightColor,
+        _lidColor,
+      ],
+    ),
+        paint = Paint()
+          ..shader = shader
+          ..style = PaintingStyle.fill,
+        path = Path()..addOval(rect);
+
+    canvas.drawShadow(path, _shadowColor, _radius / 49, false);
+    canvas.drawPath(path, paint);
   }
 
   void _drawHourHand(Canvas canvas) {

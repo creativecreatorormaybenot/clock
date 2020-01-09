@@ -2,9 +2,13 @@
 
 * Color the dots based on the current ball trip stage.
 
+* Swap between vibrant and subtle color themes on every ball drop.
+
 * Contract the travel slide at the correct times.
 
 * Use a smaller acceleration for the travel curve.
+
+* Put `ballEverySeconds` back to a reasonable (relaxing) value.
 
 * Draw shadows for the slides in `Slide` .
 
