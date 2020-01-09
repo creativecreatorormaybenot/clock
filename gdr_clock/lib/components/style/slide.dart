@@ -25,6 +25,7 @@ class Slide extends LeafRenderObjectWidget {
 }
 
 class SlideParentData extends ClockChildrenParentData {
+  /// Positions relative to the top left of the render box.
   Offset start, end, destination;
 
   double ballRadius;
@@ -69,50 +70,40 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     final canvas = context.canvas;
 
     canvas.save();
+    // Translate to the top left of this box.
     canvas.translate(offset.dx, offset.dy);
 
-    // By translating to the given offset,
-    // the offset needs to be subtracted from the given
-    // points because they are relative to the parent,
-    // i.e. relative to the canvas position of the parent.
-    final start = compositionData.start - offset, end = compositionData.end - offset, destination = compositionData.destination - offset;
+    // The positions are already given relative to the top left.
+    final start = compositionData.start, end = compositionData.end, destination = compositionData.destination;
 
     // Need to know where the start line is located in order to
     // properly add padding to account for the ball's size.
     final startLeft = start.dx < end.dx;
 
-    final startLine = Line2d(start: start, end: destination)
-//            .endPadding(.7)
-            // The start line should touch the ball on its side.
-            // The same also goes for the end line, which is
-            // why startLeft is required.
-//            .shift(Offset(compositionData.ballRadius * (startLeft ? -1 : 1), 0))
-    ,
-        endLine = Line2d(start: end, end: destination)
-//            .endPadding(.7)
-//            .shift(Offset(compositionData.ballRadius * (startLeft ? 1 : -1), 0))
-    ;
+    // The stroke width is drawn out equally in both directions from
+    // the 0 width line and thus, the lines need to be shifted a bit more
+    // if they should only touch the ball instead of overlapping.
+    final strokeWidth = size.shortestSide / 51, shiftFactor = 1 + strokeWidth / 2 / compositionData.ballRadius;
 
-    var travelLine = Line2d(start: end, end: start);
+    var startLine = Line2d(start: start, end: destination)..padEnd(.7), endLine = Line2d(start: end, end: destination)..padEnd(.7), travelLine = Line2d(start: end, end: start);
 
-    travelLine = travelLine
-        // Pad by the ball radius on both sides.
-//        .padding(compositionData.ballRadius / travelLine.length)
-        // The line should touch the ball's bottom.
-//        .shift(Offset(0, compositionData.ballRadius))
-    ;
+    // The start line should touch the ball on its side.
+    // The same also goes for the end line, which is
+    // why startLeft is required.
+    startLine.shift(startLine.normal.offset * compositionData.ballRadius * (startLeft ? shiftFactor : -shiftFactor));
+    endLine.shift(endLine.normal.offset * compositionData.ballRadius * (startLeft ? -shiftFactor : shiftFactor));
 
-    final paint = Paint()..color = _curveColor, strokeWidth = size.shortestSide / 51;
+    travelLine
+      // Pad by the ball radius on both sides.
+      ..pad(compositionData.ballRadius / travelLine.length)
+      // The line should touch the ball's bottom.
+      ..shift(travelLine.normal.offset * compositionData.ballRadius * -shiftFactor);
+
+    final paint = Paint()..color = _curveColor;
 
     canvas.drawPath(travelLine.pathWithWidth(strokeWidth), paint);
     canvas.drawPath(startLine.pathWithWidth(strokeWidth), paint);
     canvas.drawPath(endLine.pathWithWidth(strokeWidth), paint);
-
-    canvas.drawPath(Line2d(start: Offset(50, 50), end: Offset(50, 200))
-        .endPadding(1)
-        .pathWithWidth(20), paint);
-
-    canvas.drawCircle(destination, compositionData.ballRadius, paint);
 
     canvas.restore();
   }

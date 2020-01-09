@@ -199,11 +199,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
           .inflate(ball.size.longestSide / 2);
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
+
       slideData
         ..offset = slideRect.topLeft
-        ..end = ballEndPosition
-        ..start = ballStartPosition
-        ..destination = ballDestination
+        ..end = ballEndPosition - slideRect.topLeft
+        ..start = ballStartPosition - slideRect.topLeft
+        ..destination = ballDestination - slideRect.topLeft
         ..ballRadius = ball.size.longestSide / 2;
 
       final travelDistance = ballTravelTween.distance,

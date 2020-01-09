@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:gdr_clock/clock.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector2, Vector3;
 
 extension ExtendedOffset on Offset {
@@ -65,9 +66,9 @@ extension ExtendedRect on Rect {
 }
 
 class Line2d {
-  final Offset start, end;
+  Line2d({this.start, this.end});
 
-  const Line2d({this.start, this.end});
+  Offset start, end;
 
   /// Positions the new [start]/[end] [startFactor]/[endFactor]
   /// away from [end]/[start].
@@ -77,30 +78,41 @@ class Line2d {
   /// ```dart
   /// newLine = line.paddingStartEnd(0, 1 / 2);
   /// ```
-  Line2d paddingStartEnd(double startFactor, double endFactor) => Line2d(start: end + (start - end) * startFactor, end: start + (end - start) * endFactor);
+  void padStartEnd(double startFactor, double endFactor) {
+    final ps = start;
 
-  Line2d padding(double factor) => paddingStartEnd(factor, factor);
+    start = end + (start - end) * startFactor;
+    end = ps + (end - ps) * endFactor;
+  }
 
-  Line2d startPadding(double factor) => Line2d(start: end + (start - end) * factor, end: end);
+  void pad(double factor) => padStartEnd(factor, factor);
 
-  Line2d endPadding(double factor) => Line2d(start: start, end: start + (end - start) * factor);
+  void padStart(double factor) {
+    start = end + (start - end) * factor;
+  }
+
+  void padEnd(double factor) {
+    end = start + (end - start) * factor;
+  }
+
+  void shift(Offset offset) {
+    start += offset;
+    end += offset;
+  }
 
   double get length => (end - start).distance;
 
   Offset get offset => end - start;
 
-  Line2d shift(Offset offset) => Line2d(start: start + offset, end: end + offset);
-
-  /// This returns one of the two normals to this
-  /// line. It does not matter which one it is because
-  /// this is only used in [pathWithWidth], which
-  /// will extend in both directions anyway :)
+  /// Returns one of the two normals to this line in normalized form.
+  ///
+  /// The other one can be retrieved using `normal * -1`.
   Vector2 get normal {
-    return Vector2(-(end.dy - start.dy), end.dx - start.dx);
+    return Vector2(start.dy - end.dy, end.dx - start.dx)..normalize();
   }
 
   Path pathWithWidth(double width) {
-    final normalVector = normal..normalize(), normalOffset = Offset(normalVector.x, normalVector.y);
+    final normalOffset = normal.offset;
 
     final s1 = start - normalOffset * width / 2, s2 = start + normalOffset * width / 2, e1 = end - normalOffset * width / 2, e2 = end + normalOffset * width / 2;
 
