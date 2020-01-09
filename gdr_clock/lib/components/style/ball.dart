@@ -110,7 +110,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   /// because the only purpose of it is to
   /// keep visual consistency. The visuals are
   /// always drawn in here.
-  double _initialRotaion;
+  double _initialRotation;
 
   double _previousRotation, _previousDistance;
 
@@ -119,6 +119,8 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     super.attach(owner);
 
     compositionData.hasSemanticsInformation = false;
+
+    _previousRotation = _previousDistance = _initialRotation = 0;
   }
 
   @override
@@ -147,12 +149,21 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // it is its length when unwrapping its circle.
     final ballLength = _radius * 2 * pi;
 
-    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius),
-        // Rotate the ball as if it rolled when it falls down and
-        // flies back up.
-        angle = 2 * pi * (compositionData.distanceTraveled / ballLength);
+    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius), distance = compositionData.distanceTraveled;
+
+    // Rotate the ball as if it rolled.
+    var angle = _initialRotation + 2 * pi * (distance / ballLength);
+
+    // If the rotation change does not
+    if (2 * pi * ((distance - _previousDistance) / ballLength) + _initialRotation != angle - _previousRotation) {
+      _initialRotation = _previousRotation % (2 * pi);
+
+      angle = _initialRotation + 2 * pi * (distance / ballLength);
+    }
 
     canvas.rotate(angle);
+    _previousRotation = angle;
+    _previousDistance = distance;
 
     canvas.drawOval(
       rect,
