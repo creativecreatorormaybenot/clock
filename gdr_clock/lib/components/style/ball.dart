@@ -105,6 +105,15 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     markNeedsPaint();
   }
 
+  /// It makes sense to handle this in this
+  /// render object and to update it in [paimt]
+  /// because the only purpose of it is to
+  /// keep visual consistency. The visuals are
+  /// always drawn in here.
+  double _initialRotaion;
+
+  double _previousRotation, _previousDistance;
+
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
