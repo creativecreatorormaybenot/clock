@@ -273,6 +273,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
     updateTimer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
 
+    print('_ClockState.update ${ballTravelController.isAnimating} ${ballArrivalController.isAnimating} ${ballDepartureController.isAnimating}');
     if (!ballArrivalController.isAnimating && !ballDepartureController.isAnimating) {
       // toGo is the time until the next ball
       // arrival animation should start in microseconds.

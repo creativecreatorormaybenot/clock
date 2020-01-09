@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/customizer.dart';
 import 'package:gdr_clock/clock.dart';
@@ -31,6 +32,7 @@ const useVibrantPalette = true;
 const ballEverySeconds = 30;
 
 void main() {
+  timeDilation = 6;
   runApp(
     ClockCustomizer(
       (model) => Builder(

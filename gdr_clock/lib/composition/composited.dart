@@ -160,14 +160,18 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
       final ballStartPosition = Offset(
         size.width * 3 / 4,
-        // It should slowly come a bit more into view
-        // (h / 2 for the end position).
-        -ball.size.height / 4,
+        // It should slowly come a bit more into view.
+        // The ball shows h / 2 at the end position
+        // as the positions mark the center point.
+        ball.size.height / 4,
       ),
-          ballDestination = analogClockBasePosition + analogTime.size.onlyWidth.offset / 2 - Offset(ball.size.width / 2, ball.size.height / 1.42),
+          ballDestination = analogClockBasePosition +
+              analogTime.size.onlyWidth.offset / 2 -
+              // The ball should only touch the clock and not fly into it.
+              ball.size.onlyHeight.offset / 2,
           ballEndPosition = Offset(
         size.width * 1.2 / 4,
-        -ball.size.height / 2,
+        0,
       );
 
       final ballArrivalTween = Tween(
@@ -184,13 +188,9 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       );
 
       final slideRect = Rect.fromPoints(
-        Offset.lerp(
-          ballStartPosition,
-          ballDestination,
-          3 / 4,
-        ).plus(ball.size),
-        ballStartPosition.plus(ball.size),
-      );
+        ballEndPosition,
+        ballStartPosition,
+      ).include(ballDestination);
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
       slideData
@@ -220,31 +220,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
           ..distanceTraveled = travelDistance + arrivalDistance * ballArrivalAnimation.value;
       }
 
-      final ballRect = ballData.offset & ball.size, analogClockBaseRect = analogClockBasePosition & analogTime.size;
+      // Draw the ball about the point, not at the point.
+      ballData.offset -= ball.size.offset / 2;
 
-      var intersection = Offset.zero;
+      final bounce = ball.size.onlyHeight.offset / 2 * (bounceAwayAnimation.value - bounceBackAnimation.value);
 
-      if (ballDepartureAnimation.status == AnimationStatus.forward) {
-        // This is not really the intersection anymore, but it ensures
-        // that the analog component is not dragged back when the animation
-        // has not caught up to the intersection and the ball is already
-        // departing again.
-        intersection = Offset(0, (ballDestination.dy + ball.size.height) - analogClockBasePosition.dy);
-      } else if (analogClockBaseRect.overlaps(ballRect)) {
-        intersection = ballRect.intersect(analogClockBaseRect).size.onlyHeight.offset;
-      }
-
-      final animatedBounce = ball.size.onlyHeight.offset / 2 * (bounceAwayAnimation.value - bounceBackAnimation.value);
-
-      Offset offset;
-
-      if (intersection.dy > animatedBounce.dy && bounceAwayAnimation.status == AnimationStatus.forward) {
-        offset = intersection;
-      } else {
-        offset = animatedBounce;
-      }
-
-      analogTimeData.offset = analogClockBasePosition + offset;
+      analogTimeData.offset = analogClockBasePosition + bounce;
     }();
     provideRect(ball);
 

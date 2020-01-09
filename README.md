@@ -1,5 +1,7 @@
 ## TODO
 
+* Test in real life how the ball should bounce.
+
 * Finish ball slide (see sketch).
 
 * Use a smaller acceleration for the travel curve.

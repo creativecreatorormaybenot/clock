@@ -57,3 +57,9 @@ class Line {
     return Offset(dx, end);
   }
 }
+
+extension ExtendedRect on Rect {
+  Rect include(Offset offset) {
+    return expandToInclude(Rect.fromCenter(center: offset, width: 0, height: 0));
+  }
+}

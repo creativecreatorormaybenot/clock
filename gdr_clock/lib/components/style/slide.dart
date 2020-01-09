@@ -69,15 +69,6 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    final area = Offset.zero & size;
-
-    canvas.drawLine(
-        area.topRight,
-        area.bottomLeft,
-        Paint()
-          ..color = _curveColor
-          ..strokeWidth = area.shortestSide / 35);
-
     canvas.restore();
   }
 }
