@@ -82,13 +82,14 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     final startLeft = start.dx < end.dx;
 
     final startLine = Line2d(start: start, end: destination)
-            .endPadding(.7)
+//            .endPadding(.7)
             // The start line should touch the ball on its side.
             // The same also goes for the end line, which is
             // why startLeft is required.
 //            .shift(Offset(compositionData.ballRadius * (startLeft ? -1 : 1), 0))
     ,
-        endLine = Line2d(start: end, end: destination).endPadding(.7)
+        endLine = Line2d(start: end, end: destination)
+//            .endPadding(.7)
 //            .shift(Offset(compositionData.ballRadius * (startLeft ? 1 : -1), 0))
     ;
 
@@ -96,9 +97,10 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
     travelLine = travelLine
         // Pad by the ball radius on both sides.
-        .padding(compositionData.ballRadius / travelLine.length)
+//        .padding(compositionData.ballRadius / travelLine.length)
         // The line should touch the ball's bottom.
-        .shift(Offset(0, compositionData.ballRadius));
+//        .shift(Offset(0, compositionData.ballRadius))
+    ;
 
     final paint = Paint()..color = _curveColor, strokeWidth = size.shortestSide / 51;
 
@@ -109,6 +111,8 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     canvas.drawPath(Line2d(start: Offset(50, 50), end: Offset(50, 200))
         .endPadding(1)
         .pathWithWidth(20), paint);
+
+    canvas.drawCircle(destination, compositionData.ballRadius, paint);
 
     canvas.restore();
   }
