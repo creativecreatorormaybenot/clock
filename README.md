@@ -2,6 +2,8 @@
 
 * Draw ball slide (see sketch).
 
+  + Draw them in an adaptive way (should not matter if start is left or right of end).
+
 * Use a smaller acceleration for the travel curve.
 
 * Draw shadows for the slides in `Slide` .

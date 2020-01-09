@@ -190,14 +190,21 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       final slideRect = Rect.fromPoints(
         ballEndPosition,
         ballStartPosition,
-      ).include(ballDestination);
+      )
+          .include(ballDestination)
+          // The positions are the center of where the ball should be.
+          // Thus, the slide rect needs to be inflated.
+          // Slide could also take the whole canvas area of the clock,
+          // but it is not necessary.
+          .inflate(ball.size.longestSide / 2);
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
       slideData
         ..offset = slideRect.topLeft
         ..end = ballEndPosition
         ..start = ballStartPosition
-        ..destination = ballDestination;
+        ..destination = ballDestination
+        ..ballRadius = ball.size.longestSide / 2;
 
       final travelDistance = ballTravelTween.distance,
           // Negative as the ball rolls backwards along this path.

@@ -554,10 +554,10 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
 
     // Constraints for the positioning of the numbers, lines, brackets, and tube.
     final addedIndentFactor = 3.2,
-        mount = Line.fromEE(end: size.height - bradIndent * addedIndentFactor, extent: size.height / 13),
-        tube = Line(end: mount.start, start: unitIndent + unitPainter.height / 1.4 + bradIndent * addedIndentFactor),
-        brackets = Line.fromSEI(start: tube.start, end: tube.end, indent: tube.extent / 7.42),
-        lines = Line.fromSEI(start: brackets.start, end: brackets.end, indent: -mount.extent / 3);
+        mount = Line1d.fromEE(end: size.height - bradIndent * addedIndentFactor, extent: size.height / 13),
+        tube = Line1d(end: mount.start, start: unitIndent + unitPainter.height / 1.4 + bradIndent * addedIndentFactor),
+        brackets = Line1d.fromSEI(start: tube.start, end: tube.end, indent: tube.extent / 7.42),
+        lines = Line1d.fromSEI(start: brackets.start, end: brackets.end, indent: -mount.extent / 3);
 
     _drawLines(canvas, lines);
 
@@ -712,7 +712,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     canvas.restore();
   }
 
-  void _drawLines(Canvas canvas, Line constraints) {
+  void _drawLines(Canvas canvas, Line1d constraints) {
     final linePaint = Paint()
       ..color = _textColor
       ..strokeWidth = size.height / 1e3;
@@ -734,7 +734,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       if (i % minorValue != 0 && i % intermediateValue != 0 && i % majorValue != 0) continue;
 
       if (i % majorValue == 0) {
-        final line = Line.fromCenter(center: size.width / 2, extent: size.width / 1.46);
+        final line = Line1d.fromCenter(center: size.width / 2, extent: size.width / 1.46);
 
         canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
 
@@ -766,11 +766,11 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
         leftPainter.paint(canvas, Offset(line.start + fontIndent, h - leftPainter.height / reduction));
         rightPainter.paint(canvas, Offset(line.end - fontIndent - rightPainter.width / reduction, h - rightPainter.height / reduction));
       } else if (i % intermediateValue == 0) {
-        final line = Line.fromCenter(center: size.width / 2, extent: size.width / 2.1);
+        final line = Line1d.fromCenter(center: size.width / 2, extent: size.width / 2.1);
 
         canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
       } else if (i % minorValue == 0) {
-        final line = Line.fromCenter(center: size.width / 2, extent: size.width / 3.3);
+        final line = Line1d.fromCenter(center: size.width / 2, extent: size.width / 3.3);
 
         canvas.drawLine(line.startOffset(dy: h), line.endOffset(dy: h), linePaint);
       }
@@ -779,7 +779,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     }
   }
 
-  void _drawTemperature(Canvas canvas, Line tube, Line lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
+  void _drawTemperature(Canvas canvas, Line1d tube, Line1d lines, double strokeWidth, double temperature, Color color, {String text, bool textLeft = true}) {
     final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
@@ -826,7 +826,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     }
 
     // Add little tick marks to make it more clear what value this bar indicates.
-    final horizontalLine = Line.fromCenter(center: offset.dx, extent: strokeWidth);
+    final horizontalLine = Line1d.fromCenter(center: offset.dx, extent: strokeWidth);
     canvas.drawLine(
         horizontalLine.startOffset(dy: offset.dy),
         horizontalLine.endOffset(dy: offset.dy),

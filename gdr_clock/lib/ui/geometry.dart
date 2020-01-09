@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:vector_math/vector_math_64.dart' show Vector3;
+import 'package:vector_math/vector_math_64.dart' show Vector2, Vector3;
 
 extension ExtendedOffset on Offset {
   Offset operator +(Size size) => Offset(dx + size.width, dy + size.height);
@@ -24,18 +24,18 @@ extension ExtendedSize on Size {
 }
 
 /// Line with functionality tailored to the needs of this clock challenge entry.
-class Line {
+class Line1d {
   final double start, end;
 
-  const Line({this.start, this.end});
+  const Line1d({this.start, this.end});
 
-  factory Line.fromSE({double start, double extent}) => Line(start: start, end: start + extent);
+  factory Line1d.fromSE({double start, double extent}) => Line1d(start: start, end: start + extent);
 
-  factory Line.fromEE({double end, double extent}) => Line(start: end - extent, end: end);
+  factory Line1d.fromEE({double end, double extent}) => Line1d(start: end - extent, end: end);
 
-  factory Line.fromSEI({double start, double end, double indent}) => Line(start: start + indent, end: end - indent);
+  factory Line1d.fromSEI({double start, double end, double indent}) => Line1d(start: start + indent, end: end - indent);
 
-  factory Line.fromCenter({double center, double extent}) => Line(start: center - extent / 2, end: center + extent / 2);
+  factory Line1d.fromCenter({double center, double extent}) => Line1d(start: center - extent / 2, end: center + extent / 2);
 
   double get extent => end - start;
 
@@ -61,5 +61,49 @@ class Line {
 extension ExtendedRect on Rect {
   Rect include(Offset offset) {
     return expandToInclude(Rect.fromCenter(center: offset, width: 0, height: 0));
+  }
+}
+
+class Line2d {
+  final Offset start, end;
+
+  const Line2d({this.start, this.end});
+
+  /// Positions the new [start]/[end] [startFactor]/[endFactor]
+  /// away from [end]/[start].
+  ///
+  /// For example, the following code will remove the end half of the line:
+  ///
+  /// ```dart
+  /// newLine = line.paddingStartEnd(0, 1 / 2);
+  /// ```
+  Line2d paddingStartEnd(double startFactor, double endFactor) => Line2d(start: end + (start - end) * startFactor, end: start + (end - start) * endFactor);
+
+  Line2d padding(double factor) => paddingStartEnd(factor, factor);
+
+  Line2d startPadding(double factor) => Line2d(start: start, end: start + (end - start) * factor);
+
+  Line2d endPadding(double factor) => Line2d(start: end + (start - end) * factor, end: end);
+
+  double get length => (end - start).distance;
+
+  Offset get offset => end - start;
+
+  Line2d shift(Offset offset) => Line2d(start: start + offset, end: end + offset);
+
+  /// This returns one of the two normals to this
+  /// line. It does not matter which one it is because
+  /// this is only used in [pathWithWidth], which
+  /// will extend in both directions anyway :)
+  Vector2 get normal {
+    return Vector2(-(end.dy - start.dy), end.dx - start.dx);
+  }
+
+  Path pathWithWidth(double width) {
+    final normalVector = normal..normalize(), normalOffset = Offset(normalVector.x, normalVector.y);
+
+    final s1 = start - normalOffset * width / 2, s2 = start + normalOffset * width / 2, e1 = end - normalOffset * width / 2, e2 = end + normalOffset * width / 2;
+
+    return Path()..addPolygon([s1, s2, e1, e2], false);
   }
 }
