@@ -1,8 +1,8 @@
 ## TODO
 
-* Draw ball slide (see sketch).
+* Color the dots based on the current ball trip stage.
 
-  + Draw them in an adaptive way (should not matter if start is left or right of end).
+* Contract the travel slide at the correct times.
 
 * Use a smaller acceleration for the travel curve.
 

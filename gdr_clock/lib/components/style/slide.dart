@@ -85,7 +85,13 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     // if they should only touch the ball instead of overlapping.
     final strokeWidth = size.shortestSide / 51, shiftFactor = 1 + strokeWidth / 2 / compositionData.ballRadius;
 
-    var startLine = Line2d(start: start, end: destination)..padEnd(.7), endLine = Line2d(start: end, end: destination)..padEnd(.7), travelLine = Line2d(start: end, end: start);
+    var startLine = Line2d(start: start, end: destination)
+          ..padEnd(.7)
+          ..padStart(1.6),
+        endLine = Line2d(start: end, end: destination)
+          ..padEnd(.7)
+          ..padStart(1.5),
+        travelLine = Line2d(start: end, end: start);
 
     // The start line should touch the ball on its side.
     // The same also goes for the end line, which is
@@ -94,8 +100,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     endLine.shift(endLine.normal.offset * compositionData.ballRadius * (startLeft ? -shiftFactor : shiftFactor));
 
     travelLine
-      // Pad by the ball radius on both sides.
-      ..pad(compositionData.ballRadius / travelLine.length)
+      ..pad(compositionData.ballRadius / travelLine.length * 0)
       // The line should touch the ball's bottom.
       ..shift(travelLine.normal.offset * compositionData.ballRadius * -shiftFactor);
 
