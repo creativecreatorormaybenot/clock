@@ -32,7 +32,6 @@ const useVibrantPalette = true;
 const ballEverySeconds = 30;
 
 void main() {
-  timeDilation = 6;
   runApp(
     ClockCustomizer(
       (model) => Builder(

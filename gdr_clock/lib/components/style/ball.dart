@@ -13,7 +13,7 @@ const arrivalDuration = Duration(milliseconds: 920),
     travelCurve = AccelerateCurve(),
     bounceAwayDuration = Duration(milliseconds: 546),
     bounceBackDuration = Duration(milliseconds: 671),
-    bounceAwayCurve = Curves.elasticOut,
+    bounceAwayCurve = Curves.bounceInOut,
     bounceBackCurve = Curves.elasticOut;
 
 class Ball extends LeafRenderObjectWidget {
