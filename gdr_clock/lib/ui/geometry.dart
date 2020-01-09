@@ -81,9 +81,9 @@ class Line2d {
 
   Line2d padding(double factor) => paddingStartEnd(factor, factor);
 
-  Line2d startPadding(double factor) => Line2d(start: start, end: start + (end - start) * factor);
+  Line2d startPadding(double factor) => Line2d(start: end + (start - end) * factor, end: end);
 
-  Line2d endPadding(double factor) => Line2d(start: end + (start - end) * factor, end: end);
+  Line2d endPadding(double factor) => Line2d(start: start, end: start + (end - start) * factor);
 
   double get length => (end - start).distance;
 
@@ -104,6 +104,6 @@ class Line2d {
 
     final s1 = start - normalOffset * width / 2, s2 = start + normalOffset * width / 2, e1 = end - normalOffset * width / 2, e2 = end + normalOffset * width / 2;
 
-    return Path()..addPolygon([s1, s2, e1, e2], false);
+    return Path()..addPolygon([s1, s2, e2, e1], false);
   }
 }
