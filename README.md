@@ -1,10 +1,10 @@
 ## TODO
 
+* Swap between vibrant and subtle color themes on every ball drop.
+
 * Do not use 24 hour divisions in 24 hour mode. Instead, draw the 24 hour numbers (> 12) further inwards, smaller, and potentially using a different blend mode (in 24 hour mode).
 
   + Maybe also add another design element to comoplement this.
-
-* Swap between vibrant and subtle color themes on every ball drop.
 
 * Contract the travel slide at the correct times.
 
