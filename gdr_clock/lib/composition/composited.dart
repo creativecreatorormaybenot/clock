@@ -217,19 +217,22 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       if (ballDepartureAnimation.status == AnimationStatus.forward) {
         ballData
           ..offset = ballDepartureTween.evaluate(ballDepartureAnimation)
-          ..distanceTraveled = travelDistance + arrivalDistance + departureDistance * ballDepartureAnimation.value
+          ..distanceTraveled = travelDistance + arrivalDistance + departureDistance * ballDepartureAnimation.value;
+        slideData
           ..stage = BallTripStage.departure
           ..animationValue = ballDepartureAnimation.value;
       } else if (ballTravelAnimation.status == AnimationStatus.forward) {
         ballData
           ..offset = ballTravelTween.evaluate(ballTravelAnimation)
-          ..distanceTraveled = travelDistance * ballTravelAnimation.value
+          ..distanceTraveled = travelDistance * ballTravelAnimation.value;
+        slideData
           ..stage = BallTripStage.travel
           ..animationValue = ballTravelAnimation.value;
       } else {
         ballData
           ..offset = ballArrivalTween.evaluate(ballArrivalAnimation)
-          ..distanceTraveled = travelDistance + arrivalDistance * ballArrivalAnimation.value
+          ..distanceTraveled = travelDistance + arrivalDistance * ballArrivalAnimation.value;
+        slideData
           ..stage = BallTripStage.arrival
           ..animationValue = ballArrivalAnimation.value;
       }

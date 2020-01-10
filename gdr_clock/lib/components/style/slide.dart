@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
@@ -29,6 +31,14 @@ class SlideParentData extends ClockChildrenParentData {
   Offset start, end, destination;
 
   double ballRadius;
+
+  BallTripStage stage;
+
+  /// Animation value for the current [stage].
+  ///
+  /// This is needed to easily determine when the
+  /// travel slide needs to be contracted.
+  double animationValue;
 }
 
 class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
@@ -80,10 +90,14 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     // properly add padding to account for the ball's size.
     final startLeft = start.dx < end.dx;
 
+    final ballRadius = compositionData.ballRadius,
+        // The ball's circumference.
+        ballLength = ballRadius * 2 * pi;
+
     // The stroke width is drawn out equally in both directions from
     // the 0 width line and thus, the lines need to be shifted a bit more
     // if they should only touch the ball instead of overlapping.
-    final strokeWidth = size.shortestSide / 51, shiftFactor = 1 + strokeWidth / 2 / compositionData.ballRadius;
+    final strokeWidth = size.shortestSide / 51, shiftFactor = 1 + strokeWidth / 2 / ballRadius;
 
     var startLine = Line2d(start: start, end: destination)
           ..padEnd(.7)
@@ -96,13 +110,46 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     // The start line should touch the ball on its side.
     // The same also goes for the end line, which is
     // why startLeft is required.
-    startLine.shift(startLine.normal.offset * compositionData.ballRadius * (startLeft ? shiftFactor : -shiftFactor));
-    endLine.shift(endLine.normal.offset * compositionData.ballRadius * (startLeft ? -shiftFactor : shiftFactor));
+    startLine.shift(startLine.normal.offset * ballRadius * (startLeft ? shiftFactor : -shiftFactor));
+    endLine.shift(endLine.normal.offset * ballRadius * (startLeft ? -shiftFactor : shiftFactor));
 
     travelLine
-      ..pad(compositionData.ballRadius / travelLine.length * 0)
-      // The line should touch the ball's bottom.
-      ..shift(travelLine.normal.offset * compositionData.ballRadius * -shiftFactor);
+        // The line should touch the ball's bottom.
+        .shift(travelLine.normal.offset * ballRadius * -shiftFactor);
+
+    switch (compositionData.stage) {
+      case BallTripStage.travel:
+        final travelLength = travelLine.length, ballLengthFraction = ballLength / travelLength;
+        final leftSequence = TweenSequence([
+          TweenSequenceItem(tween: null, weight: ballRadius),
+          TweenSequenceItem(tween: null, weight: travelLength),
+        ]),
+            rightSequence = TweenSequence([
+          TweenSequenceItem(tween: null, weight: travelLength),
+          TweenSequenceItem(tween: null, weight: ballRadius),
+        ]);
+        ;
+        break;
+      case BallTripStage.arrival:
+        final arrivalLength = startLine.length, ballLengthFraction = ballLength / arrivalLength;
+        final sequence = TweenSequence([
+          TweenSequenceItem(tween: null, weight: ballRadius),
+          TweenSequenceItem(tween: null, weight: arrivalLength),
+        ]);
+        break;
+      case BallTripStage.departure:
+        final departureLength = endLine.length, ballLengthFraction = ballLength / departureLength;
+        final sequence = TweenSequence([
+          TweenSequenceItem(tween: ConstantTween(1), weight: departureLength),
+          TweenSequenceItem(
+            tween: Tween(begin: 1, end: 1 - ballLengthFraction).chain(CurveTween(curve: const AccelerateCurve())),
+            weight: ballRadius,
+          ),
+        ]);
+
+        travelLine.padEnd(sequence.transform(compositionData.animationValue));
+        break;
+    }
 
     final paint = Paint()..color = _curveColor;
 
