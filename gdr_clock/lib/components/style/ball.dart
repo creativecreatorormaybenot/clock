@@ -96,6 +96,14 @@ class BallParentData extends ClockChildrenParentData {
   double distanceTraveled;
 
   double totalDistance;
+
+  BallTripStage stage;
+
+  /// Animation value for the current [stage].
+  ///
+  /// This is needed to easily determine when the
+  /// travel slide needs to be contracted.
+  double animationValue;
 }
 
 /// Renders a ball moving about the scene.
