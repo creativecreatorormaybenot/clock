@@ -19,16 +19,22 @@ const arrivalDuration = Duration(milliseconds: 920),
 class Ball extends LeafRenderObjectWidget {
   final BallTrips trips;
 
-  final Color primaryColor, secondaryColor;
+  final Color primaryColor, secondaryColor, dotsIdleColor, dotsPrimedColor, dotsDisengagedColor;
 
   const Ball({
     Key key,
     @required this.trips,
     @required this.primaryColor,
     @required this.secondaryColor,
+    @required this.dotsIdleColor,
+    @required this.dotsPrimedColor,
+    @required this.dotsDisengagedColor,
   })  : assert(trips != null),
         assert(primaryColor != null),
         assert(secondaryColor != null),
+        assert(dotsIdleColor != null),
+        assert(dotsPrimedColor != null),
+        assert(dotsDisengagedColor != null),
         super(key: key);
 
   @override
@@ -37,6 +43,9 @@ class Ball extends LeafRenderObjectWidget {
       trips: trips,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
+      dotsIdleColor: dotsIdleColor,
+      dotsPrimedColor: dotsPrimedColor,
+      dotsDisengagedColor: dotsDisengagedColor,
     );
   }
 
@@ -44,8 +53,18 @@ class Ball extends LeafRenderObjectWidget {
   void updateRenderObject(BuildContext context, RenderBall renderObject) {
     renderObject
       ..primaryColor = primaryColor
-      ..secondaryColor = secondaryColor;
+      ..secondaryColor = secondaryColor
+      ..dotsIdleColor = dotsIdleColor
+      ..dotsPrimedColor = dotsPrimedColor
+      ..dotsIdleColor = dotsIdleColor;
   }
+}
+
+/// For information on what this is see [RenderBall].
+enum BallTripStage {
+  travel,
+  arrival,
+  departure,
 }
 
 /// A way to count the ball's trips while being able to
@@ -61,6 +80,8 @@ class BallTrips {
   BallTrips([this.count = 0]);
 
   double count;
+
+  BallTripStage currentStage;
 }
 
 class BallParentData extends ClockChildrenParentData {
@@ -95,11 +116,17 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     this.trips,
     Color primaryColor,
     Color secondaryColor,
+    Color dotsIdleColor,
+    Color dotsPrimedColor,
+    Color dotsDisengagedColor,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
+        _dotsIdleColor = dotsIdleColor,
+        _dotsPrimedColor = dotsPrimedColor,
+        _dotsDisengagedColor = dotsDisengagedColor,
         super(ClockComponent.ball);
 
-  Color _primaryColor, _secondaryColor;
+  Color _primaryColor, _secondaryColor, _dotsIdleColor, _dotsPrimedColor, _dotsDisengagedColor;
 
   set primaryColor(Color value) {
     assert(value != null);
@@ -120,6 +147,39 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     }
 
     _secondaryColor = value;
+    markNeedsPaint();
+  }
+
+  set dotsIdleColor(Color value) {
+    assert(value != null);
+
+    if (_dotsIdleColor == value) {
+      return;
+    }
+
+    _dotsIdleColor = value;
+    markNeedsPaint();
+  }
+
+  set dotsPrimedColor(Color value) {
+    assert(value != null);
+
+    if (_dotsPrimedColor == value) {
+      return;
+    }
+
+    _dotsPrimedColor = value;
+    markNeedsPaint();
+  }
+
+  set dotsDisengagedColor(Color value) {
+    assert(value != null);
+
+    if (_dotsDisengagedColor == value) {
+      return;
+    }
+
+    _dotsDisengagedColor = value;
     markNeedsPaint();
   }
 
@@ -207,6 +267,18 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     _drawDot(canvas, pi);
   }
 
+  Color get dotColor {
+    switch (trips.currentStage) {
+      case BallTripStage.travel:
+        return _dotsIdleColor;
+      case BallTripStage.arrival:
+        return _dotsPrimedColor;
+      case BallTripStage.departure:
+        return _dotsDisengagedColor;
+    }
+    throw ArgumentError.value(trips.currentStage);
+  }
+
   /// Draw small dot onto the ball.
   /// The point is to indicate the rotation (rolling)
   /// even when the radial shader has to be used because
@@ -220,7 +292,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
           center: Offset(0, _radius * 5 / 7),
           radius: _radius / 9,
         ),
-        Paint()..color = _primaryColor);
+        Paint()..color = dotColor);
 
     canvas.restore();
   }

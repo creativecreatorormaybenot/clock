@@ -50,6 +50,15 @@ enum ClockColor {
   minuteHand,
   secondHand,
   shadow,
+
+  /// The two dots that are drawn onto the ball
+  /// in order to always show rotation turned
+  /// into more than that and also have a signaling
+  /// function. They show what state the ball is
+  /// currently in.
+  dotsIdleColor,
+  dotsPrimedColor,
+  dotsDisengagedColor,
 }
 
 Map<ClockColor, Color> resolvePalette(BuildContext context) {
@@ -112,6 +121,9 @@ class Clock extends StatefulWidget {
     ClockColor.minuteHand: Color(0xff000000),
     ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
+    ClockColor.dotsIdleColor: Color(0xa0e5e4e2),
+    ClockColor.dotsPrimedColor: Color(0xc3e00201),
+    ClockColor.dotsDisengagedColor: Color(0xa04682b4),
   },
       baseLightPalette = {},
       baseDarkPalette = {
@@ -181,6 +193,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballTravelController.reset();
 
           ballArrivalController.forward(from: 0);
+          ballTrips.currentStage = BallTripStage.arrival;
         }
       });
     ballArrivalController = AnimationController(
@@ -191,6 +204,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballArrivalController.reset();
 
           ballDepartureController.forward(from: 0);
+          ballTrips.currentStage = BallTripStage.departure;
 
           // Starting the animation for the bouncing
           // of the element hit.
@@ -207,6 +221,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballTrips.count++;
 
           ballTravelController.forward(from: ballTravelProgress(DateTime.now()));
+          ballTrips.currentStage = BallTripStage.travel;
         }
       });
 
@@ -287,6 +302,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
       ballTravelController.forward(from: ballTravelProgress(time));
+      ballTrips.currentStage = BallTripStage.travel;
     }
 
     if (initial) return;
@@ -305,13 +321,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         backgroundWaveController.forward(from: progress);
       }
     }();
-  }
-
-  void ball() {
-    if (ballArrivalController.isAnimating || ballDepartureController.isAnimating) return;
-
-    ballDepartureController.reset();
-    ballArrivalController.forward(from: 0);
   }
 
   Animation<double> get analogBounceAnimation => analogBounceController;
@@ -402,6 +411,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             trips: ballTrips,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
+            dotsIdleColor: widget.palette[ClockColor.dotsIdleColor],
+            dotsPrimedColor: widget.palette[ClockColor.dotsPrimedColor],
+            dotsDisengagedColor: widget.palette[ClockColor.dotsDisengagedColor],
           ),
           Location(
             text: model.location,
