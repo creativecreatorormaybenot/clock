@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gdr_clock/main.dart';
 
 enum ClockColor {
   /// This is also used for tick marks or lines on the
@@ -112,14 +113,11 @@ class Palette extends StatefulWidget {
   },
       subtleDark = {};
 
-  final bool forceVibrant;
-
   final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
 
   const Palette({
-    this.forceVibrant,
-    this.builder,
-  });
+    @required this.builder,
+  }) : assert(builder != null);
 
   @override
   _PaletteState createState() => _PaletteState();
@@ -132,22 +130,11 @@ class _PaletteState extends State<Palette> {
   void initState() {
     super.initState();
 
-    _vibrant = widget.forceVibrant ?? true;
-  }
-
-  @override
-  void didUpdateWidget(Palette oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.forceVibrant != widget.forceVibrant && widget.forceVibrant != null) {
-      setState(() {
-        _vibrant = widget.forceVibrant;
-      });
-    }
+    _vibrant = true;
   }
 
   set vibrant(bool value) {
-    if (_vibrant == value || widget.forceVibrant != null) return;
+    if (_vibrant == value) return;
 
     setState(() {
       _vibrant = value;
@@ -162,7 +149,7 @@ class _PaletteState extends State<Palette> {
     if (Theme.of(context).brightness == Brightness.light) {
       palette.addAll(Palette.baseLight);
 
-      if (_vibrant) {
+      if (forceVibrantPalette ?? _vibrant) {
         palette.addAll(Palette.vibrantLight);
       } else {
         palette.addAll(Palette.subtleLight);
@@ -170,7 +157,7 @@ class _PaletteState extends State<Palette> {
     } else {
       palette.addAll(Palette.baseDark);
 
-      if (_vibrant) {
+      if (forceVibrantPalette ?? _vibrant) {
         palette.addAll(Palette.vibrantDark);
       } else {
         palette.addAll(Palette.subtleDark);

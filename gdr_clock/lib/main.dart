@@ -42,7 +42,6 @@ void main() {
   runApp(
     ClockCustomizer(
       (model) => Palette(
-        forceVibrant: forceVibrantPalette,
         builder: (context, palette) {
           return AnimatedClock(
             model: model,
