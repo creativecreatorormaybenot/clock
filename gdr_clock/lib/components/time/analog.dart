@@ -538,7 +538,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
   void _drawLid(Canvas canvas) {
     final rect = Rect.fromCircle(
       center: Offset.zero,
-      radius: _radius / 24,
+      radius: _radius / 27,
     ),
         shader = ui.Gradient.radial(
       Offset.zero,

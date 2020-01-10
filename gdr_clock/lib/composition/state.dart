@@ -114,8 +114,8 @@ class Clock extends StatefulWidget {
     ClockColor.minuteHand: Color(0xff000000),
     ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
-    ClockColor.lid: Color(0xffa8a7ae),
-    ClockColor.lidHighlight: Color(0xffe5e4e2),
+    ClockColor.lid: Color(0xffeaffd8),
+    ClockColor.lidHighlight: Color(0xffffffff),
   },
       baseLightPalette = {},
       baseDarkPalette = {
