@@ -7,138 +7,10 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:gdr_clock/clock.dart';
 import 'package:gdr_clock/main.dart';
 
-enum ClockColor {
-  /// This is also used for tick marks or lines on the
-  /// analog clock and thermometer.
-  text,
-
-  /// Used to outline some components.
-  border,
-  ballPrimary,
-  ballSecondary,
-  thermometerBackgroundPrimary,
-  thermometerBackgroundSecondary,
-  brad,
-
-  /// Highlight colors here are used to resemble a shining material,
-  /// i.e. some parts of the object should appear closer to the light source
-  /// and e.g. metal will be lighter in those areas.
-  bradHighlight,
-  thermometerTube,
-  thermometerMount,
-  thermometerTemperature,
-  thermometerTemperatureMax,
-  thermometerTemperatureMin,
-  thermometerBracket,
-  thermometerBracketHighlight,
-  weatherArrow,
-  weatherBackground,
-  weatherBackgroundHighlight,
-  cloud,
-  fog,
-  raindrop,
-  snowflake,
-  sun,
-  lightning,
-  windPrimary,
-  windSecondary,
-  background,
-  goo,
-  analogTimeBackground,
-  analogTimeBackgroundHighlight,
-  hourHand,
-  minuteHand,
-  secondHand,
-  shadow,
-
-  /// The two dots that are drawn onto the ball
-  /// in order to always show rotation turned
-  /// into more than that and also have a signaling
-  /// function. They show what state the ball is
-  /// currently in.
-  dotsIdleColor,
-  dotsPrimedColor,
-  dotsDisengagedColor,
-}
-
-Map<ClockColor, Color> resolvePalette(BuildContext context) {
-  final palette = Map.of(Clock.basePalette);
-
-  if (Theme.of(context).brightness == Brightness.light) {
-    palette.addAll(Clock.baseLightPalette);
-
-    if (useVibrantPalette) {
-      palette.addAll(Clock.vibrantLightPalette);
-    } else {
-      palette.addAll(Clock.subtleLightPalette);
-    }
-  } else {
-    palette.addAll(Clock.baseDarkPalette);
-
-    if (useVibrantPalette) {
-      palette.addAll(Clock.vibrantDarkPalette);
-    } else {
-      palette.addAll(Clock.subtleDarkPalette);
-    }
-  }
-
-  return palette;
-}
-
 class Clock extends StatefulWidget {
-  static const Map<ClockColor, Color> basePalette = {
-    ClockColor.text: Color(0xcd000000),
-    ClockColor.ballPrimary: Color(0xffd3d3ff),
-    ClockColor.ballSecondary: Color(0xff9a9aff),
-    ClockColor.thermometerTube: Color(0xffffe3d1),
-    ClockColor.thermometerMount: Color(0xffa38d1c),
-    ClockColor.thermometerBackgroundPrimary: Color(0xffcc9933),
-    ClockColor.thermometerBackgroundSecondary: Color(0xffc9bd6c),
-    ClockColor.border: Color(0xff000000),
-    ClockColor.brad: Color(0xff898984),
-    ClockColor.bradHighlight: Color(0xff43464b),
-    ClockColor.thermometerTemperature: Color(0xde6ab7ff),
-    ClockColor.thermometerTemperatureMax: Color(0x9cff3a4b),
-    ClockColor.thermometerTemperatureMin: Color(0xae2a42ff),
-    ClockColor.thermometerBracket: Color(0xff87898c),
-    ClockColor.thermometerBracketHighlight: Color(0xffe0e1e2),
-    ClockColor.weatherArrow: Color(0xffffddbb),
-    ClockColor.weatherBackground: Color(0xff2c6aee),
-    ClockColor.weatherBackgroundHighlight: Color(0xffffffff),
-    ClockColor.cloud: Color(0xcbc1beba),
-    ClockColor.fog: Color(0xc5cdc8be),
-    ClockColor.raindrop: Color(0xdda1c6cc),
-    ClockColor.snowflake: Color(0xbbfffafa),
-    ClockColor.sun: Color(0xfffcd440),
-    ClockColor.lightning: Color(0xfffdd023),
-    ClockColor.windPrimary: Color(0xff96c4e8),
-    ClockColor.windSecondary: Color(0xff008abf),
-    ClockColor.background: Color(0xffffe312),
-    ClockColor.goo: Color(0xffff4683),
-    ClockColor.analogTimeBackground: Color(0xffeaffd8),
-    ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
-    ClockColor.hourHand: Color(0xff3a1009),
-    ClockColor.minuteHand: Color(0xff000000),
-    ClockColor.secondHand: Color(0xff09103a),
-    ClockColor.shadow: Color(0xff000000),
-    ClockColor.dotsIdleColor: Color(0xa0e5e4e2),
-    ClockColor.dotsPrimedColor: Color(0xc3e00201),
-    ClockColor.dotsDisengagedColor: Color(0xa04682b4),
-  },
-      baseLightPalette = {},
-      baseDarkPalette = {
-    // Test values todo
-    ClockColor.text: Color(0xff424242),
-    ClockColor.background: Color(0xffffffff),
-  },
-      vibrantLightPalette = {},
-      vibrantDarkPalette = {},
-      subtleLightPalette = {},
-      subtleDarkPalette = {};
-
   final ClockModel model;
 
-  /// Predefined palettes are [vibrantLightPalette] and [subtleLightPalette] or [vibrantDarkPalette] and [subtleDarkPalette].
+  /// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark].
   final Map<ClockColor, Color> palette;
 
   const Clock({
@@ -187,7 +59,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballTrips = BallTrips();
     ballTravelController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: ballEverySeconds) - departureDuration - arrivalDuration,
+      duration: const Duration(seconds: ballEvery) - departureDuration - arrivalDuration,
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           ballTravelController.reset();
@@ -205,6 +77,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
           ballDepartureController.forward(from: 0);
           ballTrips.currentStage = BallTripStage.departure;
+          Palette.of(context).vibrant = !Palette.of(context).vibrant;
 
           // Starting the animation for the bouncing
           // of the element hit.
@@ -286,7 +159,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   double ballTravelProgress(DateTime time) {
     // toGo is the time until the next ball
     // arrival animation should start in microseconds.
-    final toGo = ballEverySeconds * 1e6 ~/ 1 - (time.second % ballEverySeconds) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
+    final toGo = ballEvery * 1e6 ~/ 1 - (time.second % ballEvery) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
 
     return max(0, 1 - toGo / ballTravelController.duration.inMicroseconds);
   }

@@ -47,7 +47,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
               // Distance for the second.
               pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
       hourDivisions: model.is24HourFormat ? 24 : 12,
-      ballEverySeconds: ballEverySeconds,
+      ballEverySeconds: ballEvery,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
       backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
