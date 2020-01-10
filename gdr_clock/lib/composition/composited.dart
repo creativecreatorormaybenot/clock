@@ -231,7 +231,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       // Draw the ball about the point, not at the point.
       ballData.offset -= ball.size.offset / 2;
 
-      final bounce = ball.size.onlyHeight.offset / 2 * (bounceAwayAnimation.value - bounceBackAnimation.value);
+      final bounce = ball.size.onlyHeight.offset / 4 * (bounceAwayAnimation.value - bounceBackAnimation.value);
 
       analogTimeData.offset = analogClockBasePosition + bounce;
     }();

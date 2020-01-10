@@ -103,51 +103,49 @@ class _ClockCustomizerState extends State<ClockCustomizer> {
   }
 
   Widget _configDrawer(BuildContext context) {
-    return SafeArea(
-      child: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _textField(_model.location, 'Location', (String location) {
-                  setState(() {
-                    _model.location = location;
-                  });
-                }),
-                _textField(_model.temperature.toString(), 'Temperature',
-                    (String temperature) {
-                  setState(() {
-                    _model.temperature = double.parse(temperature);
-                  });
-                }),
-                _enumMenu('Theme', _themeMode,
-                    ThemeMode.values.toList()..remove(ThemeMode.system),
-                    (ThemeMode mode) {
-                  setState(() {
-                    _themeMode = mode;
-                  });
-                }),
-                _switch('24-hour format', _model.is24HourFormat, (bool value) {
-                  setState(() {
-                    _model.is24HourFormat = value;
-                  });
-                }),
-                _enumMenu(
-                    'Weather', _model.weatherCondition, WeatherCondition.values,
-                    (WeatherCondition condition) {
-                  setState(() {
-                    _model.weatherCondition = condition;
-                  });
-                }),
-                _enumMenu('Units', _model.unit, TemperatureUnit.values,
-                    (TemperatureUnit unit) {
-                  setState(() {
-                    _model.unit = unit;
-                  });
-                }),
-              ],
-            ),
+    return Drawer(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _textField(_model.location, 'Location', (String location) {
+                setState(() {
+                  _model.location = location;
+                });
+              }),
+              _textField(_model.temperature.toString(), 'Temperature',
+                  (String temperature) {
+                setState(() {
+                  _model.temperature = double.parse(temperature);
+                });
+              }),
+              _enumMenu('Theme', _themeMode,
+                  ThemeMode.values.toList()..remove(ThemeMode.system),
+                  (ThemeMode mode) {
+                setState(() {
+                  _themeMode = mode;
+                });
+              }),
+              _switch('24-hour format', _model.is24HourFormat, (bool value) {
+                setState(() {
+                  _model.is24HourFormat = value;
+                });
+              }),
+              _enumMenu(
+                  'Weather', _model.weatherCondition, WeatherCondition.values,
+                  (WeatherCondition condition) {
+                setState(() {
+                  _model.weatherCondition = condition;
+                });
+              }),
+              _enumMenu('Units', _model.unit, TemperatureUnit.values,
+                  (TemperatureUnit unit) {
+                setState(() {
+                  _model.unit = unit;
+                });
+              }),
+            ],
           ),
         ),
       ),
@@ -196,28 +194,26 @@ class _ClockCustomizerState extends State<ClockCustomizer> {
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
         endDrawer: _configDrawer(context),
-        body: SafeArea(
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              setState(() {
-                _configButtonShown = !_configButtonShown;
-              });
-            },
-            child: Stack(
-              children: [
-                clock,
-                if (_configButtonShown)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Opacity(
-                      opacity: 0.7,
-                      child: _configButton(),
-                    ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            setState(() {
+              _configButtonShown = !_configButtonShown;
+            });
+          },
+          child: Stack(
+            children: [
+              clock,
+              if (_configButtonShown)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: 0.7,
+                    child: _configButton(),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),

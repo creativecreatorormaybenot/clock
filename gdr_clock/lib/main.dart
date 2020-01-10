@@ -1,4 +1,5 @@
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/customizer.dart';
 import 'package:gdr_clock/clock.dart';
@@ -44,4 +45,6 @@ void main() {
       ),
     ),
   );
+  // This makes the app run in full screen mode.
+  SystemChrome.setEnabledSystemUIOverlays([]);
 }
