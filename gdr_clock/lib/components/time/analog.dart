@@ -56,8 +56,6 @@ class AnimatedAnalogTime extends AnimatedWidget {
       secondHandColor: palette[ClockColor.secondHand],
       shadowColor: palette[ClockColor.shadow],
       borderColor: palette[ClockColor.border],
-      lidColor: palette[ClockColor.lid],
-      lidHighlightColor: palette[ClockColor.lidHighlight],
     );
   }
 }
@@ -77,7 +75,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   /// icon drawn at `θ = 0` and one at `θ = π`.
   final int ballEverySeconds;
 
-  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor, lidColor, lidHighlightColor;
+  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
 
   const AnalogTime({
     Key key,
@@ -94,8 +92,6 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.secondHandColor,
     @required this.shadowColor,
     @required this.borderColor,
-    @required this.lidColor,
-    @required this.lidHighlightColor,
   })  : assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
@@ -109,8 +105,6 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(secondHandColor != null),
         assert(shadowColor != null),
         assert(borderColor != null),
-        assert(lidColor != null),
-        assert(lidHighlightColor != null),
         assert(60 % ballEverySeconds == 0),
         super(key: key);
 
@@ -130,8 +124,6 @@ class AnalogTime extends LeafRenderObjectWidget {
       secondHandColor: secondHandColor,
       shadowColor: shadowColor,
       borderColor: borderColor,
-      lidColor: lidColor,
-      lidHighlightColor: lidHighlightColor,
     );
   }
 
@@ -150,9 +142,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..minuteHandColor = minuteHandColor
       ..secondHandColor = secondHandColor
       ..shadowColor = shadowColor
-      ..borderColor = borderColor
-      ..lidColor = lidColor
-      ..lidHighlightColor = lidHighlightColor;
+      ..borderColor = borderColor;
   }
 }
 
@@ -171,8 +161,6 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     Color secondHandColor,
     Color shadowColor,
     Color borderColor,
-    Color lidColor,
-    Color lidHighlightColor,
   })  : _secondHandAngle = secondHandAngle,
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
@@ -186,8 +174,6 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
         _secondHandColor = secondHandColor,
         _shadowColor = shadowColor,
         _borderColor = borderColor,
-        _lidColor = lidColor,
-        _lidHighlightColor = lidHighlightColor,
         super(ClockComponent.analogTime);
 
   double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
@@ -253,7 +239,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     markNeedsPaint();
   }
 
-  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor, _lidColor, _lidHighlightColor;
+  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
 
   set textColor(Color value) {
     assert(value != null);
@@ -340,28 +326,6 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     }
 
     _borderColor = value;
-    markNeedsPaint();
-  }
-
-  set lidColor(Color value) {
-    assert(value != null);
-
-    if (_lidColor == value) {
-      return;
-    }
-
-    _lidColor = value;
-    markNeedsPaint();
-  }
-
-  set lidHighlightColor(Color value) {
-    assert(value != null);
-
-    if (_lidHighlightColor == value) {
-      return;
-    }
-
-    _lidHighlightColor = value;
     markNeedsPaint();
   }
 
@@ -544,8 +508,10 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
       Offset.zero,
       rect.shortestSide / 2,
       [
-        _lidHighlightColor,
-        _lidColor,
+        // It probably makes sense to have the lid made
+        // of the same material as the clock body.
+        _backgroundHighlightColor,
+        _backgroundColor,
       ],
     ),
         paint = Paint()
