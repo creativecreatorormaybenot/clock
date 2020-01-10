@@ -1,14 +1,12 @@
 ## TODO
 
+* Contract the travel slide at the correct times.
+
+* Put `ballEverySeconds` back to a reasonable (relaxing) value.
+
 * Do not use 24 hour divisions in 24 hour mode. Instead, draw the 24 hour numbers (> 12) further inwards, smaller, and potentially using a different blend mode (in 24 hour mode).
 
   + Maybe also add another design element to comoplement this.
-
-* Contract the travel slide at the correct times.
-
-* Use a smaller acceleration for the travel curve.
-
-* Put `ballEverySeconds` back to a reasonable (relaxing) value.
 
 * Draw shadows for the slides in `Slide` .
 
