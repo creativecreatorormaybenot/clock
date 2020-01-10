@@ -570,11 +570,28 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
         tubeStart = tube.startOffset(dx: size.width / 2),
         tubeEnd = tube.endOffset(dx: size.width / 2),
         tubePath = Path()
-          ..moveTo(tubeEnd.dx - tubeWidth / 2, tubeEnd.dy)
-          ..lineTo(tubeStart.dx - tubeWidth / 2, tubeStart.dy)
-          ..conicTo(tubeStart.dx, tubeStart.dy - tubeWidth, tubeStart.dx + tubeWidth / 2, tubeStart.dy, 1 / 2)
-          ..lineTo(tubeEnd.dx + tubeWidth / 2, tubeEnd.dy)
-          ..conicTo(tubeEnd.dx, tubeEnd.dy + tubeWidth, tubeEnd.dx - tubeWidth / 2, tubeEnd.dy, 1 / 2)
+          ..moveTo(
+            tubeEnd.dx - tubeWidth / 2,
+            tubeEnd.dy,
+          )
+          ..lineTo(
+            tubeStart.dx - tubeWidth / 2,
+            tubeStart.dy,
+          )
+          ..halfCircleTo(
+            tubeStart.dx + tubeWidth / 2,
+            tubeStart.dy,
+            tubeWidth / 2,
+          )
+          ..lineTo(
+            tubeEnd.dx + tubeWidth / 2,
+            tubeEnd.dy,
+          )
+          ..halfCircleTo(
+            tubeEnd.dx - tubeWidth / 2,
+            tubeEnd.dy,
+            tubeWidth / 2,
+          )
           ..close();
     //</editor-fold>
 
@@ -602,13 +619,11 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
         )
         ..lineTo(end.dx + w / 2, end.dy)
         // Round cap at the bottom
-        ..conicTo(
-          end.dx,
-          end.dy + w,
+        ..halfCircleTo(
           // This is obviously the starting point again.
           end.dx - w / 2,
           end.dy,
-          1 / 2,
+          w / 2,
         )
         ..close();
 

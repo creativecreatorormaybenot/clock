@@ -357,17 +357,10 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..lineTo(w / 2, h + s)
           ..lineTo(w / 2, 0)
           // Round cap
-          ..conicTo(
-            0,
-            // The round cap Bézier curve could obviously also
-            // be drawn as a half circle, but it seems easier to
-            // continue drawing lines like this :)
-            // The arc syntax is pretty obnoxious in this context.
-            w,
+          ..halfCircleTo(
             -w / 2,
             0,
-            // Judging by looks, this is exactly like a half circle.
-            1 / 2,
+            w / 2,
           )
           ..close(),
         paint = Paint()

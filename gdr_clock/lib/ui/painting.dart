@@ -61,3 +61,21 @@ extension ExtendedCanvas on Canvas {
     drawPath(path, paint);
   }
 }
+
+extension ExtendedPath on Path {
+  /// Draws a half circle to the given position.
+  ///
+  /// Instead of using [conicTo] for conic curves
+  /// for drawing round caps, this has better syntax than
+  /// [arcToPoint] for where it is used and an accurate half circle,
+  /// which [conicTo] does not seem to have.
+  ///
+  /// This is supposed to be an alternative to using
+  /// [conicTo] with a weight of `1 / 2` because it
+  /// will draw an actual half circle and has
+  /// syntax that resembles [lineTo] and others more
+  /// than [arcToPoint] does.
+  void halfCircleTo(double x, double y, double radius) {
+    arcToPoint(Offset(x, y), radius: Radius.circular(radius));
+  }
+}
