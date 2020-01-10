@@ -1,5 +1,7 @@
 ## TODO
 
+* Replace `conicTo` by an extension of `Path` that has similar syntax, but use `arcTo` internally to get a proper half circle and not crash on small resolutions.
+
 * Color the dots based on the current ball trip stage.
 
 * Do not use 24 hour divisions in 24 hour mode. Instead, draw the 24 hour numbers (> 12) further inwards, smaller, and potentially using a different blend mode (in 24 hour mode).

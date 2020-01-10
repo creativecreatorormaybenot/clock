@@ -240,7 +240,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, ClockChil
     final
         // The text should go fully off screen about the new minute.
         h = _amPmPainter.height / 2,
-        inDistance = h * 2.3;
+        inDistance = _timePainter.text.style.fontSize / 1.5;
 
     // Describes the center position of the element.
     yMovementSequence = TweenSequence([
