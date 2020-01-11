@@ -35,8 +35,8 @@ class HandBounceCurve extends Curve {
 
 /// Based on [Curves.decelerate].
 /// I could have used [Curve.flipped], but that is not a `const` value.
-class AcceleratationCurve extends Curve {
-  const AcceleratationCurve();
+class AccelerationCurve extends Curve {
+  const AccelerationCurve();
 
   @override
   double transformInternal(double t) {

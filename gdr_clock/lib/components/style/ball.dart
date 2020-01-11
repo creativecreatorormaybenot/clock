@@ -8,9 +8,9 @@ import 'package:gdr_clock/clock.dart';
 
 const arrivalDuration = Duration(milliseconds: 920),
     departureDuration = Duration(milliseconds: 1242),
-    arrivalCurve = AcceleratationCurve(),
+    arrivalCurve = AccelerationCurve(),
     departureCurve = Curves.decelerate,
-    travelCurve = AcceleratationCurve(),
+    travelCurve = AccelerationCurve(),
     bounceAwayDuration = Duration(milliseconds: 546),
     bounceBackDuration = Duration(milliseconds: 671),
     bounceAwayCurve = Curves.elasticOut,

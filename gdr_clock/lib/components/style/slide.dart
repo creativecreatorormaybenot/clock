@@ -111,27 +111,54 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
     switch (compositionData.stage) {
       case BallTripStage.travel:
-//        final leftSequence = TweenSequence([
-//          TweenSequenceItem(tween: null, weight: ballRadius),
-//          TweenSequenceItem(tween: null, weight: travelLength),
-//        ]),
-//            rightSequence = TweenSequence([
-//          TweenSequenceItem(tween: null, weight: travelLength),
-//          TweenSequenceItem(tween: null, weight: ballRadius),
-//        ]);
-        ;
+        final leftSequence = TweenSequence([
+          TweenSequenceItem(
+            tween: Tween(
+              begin: 1 - ballLengthFraction,
+              end: 1,
+            ).chain(CurveTween(curve: Curves.decelerate)),
+            weight: ballRadius,
+          ),
+          TweenSequenceItem(tween: ConstantTween<double>(1), weight: travelLength),
+        ]),
+            rightSequence = TweenSequence([
+          TweenSequenceItem(tween: ConstantTween<double>(1), weight: travelLength),
+          TweenSequenceItem(
+            tween: Tween(
+              begin: 1,
+              end: 1 - ballLengthFraction,
+            ).chain(CurveTween(curve: const AccelerationCurve())),
+            weight: ballRadius,
+          ),
+        ]);
+
+        travelLine.padStartEnd(
+          leftSequence.transform(compositionData.animationValue),
+          rightSequence.transform(compositionData.animationValue),
+        );
         break;
       case BallTripStage.arrival:
-//        final sequence = TweenSequence([
-//          TweenSequenceItem(tween: null, weight: ballRadius),
-//          TweenSequenceItem(tween: null, weight: startLine.length),
-//        ]);
+        final sequence = TweenSequence([
+          TweenSequenceItem(tween: ConstantTween<double>(1), weight: startLine.length),
+          TweenSequenceItem(
+            tween: Tween(
+              begin: 1 - ballLengthFraction,
+              end: 1,
+            ).chain(CurveTween(curve: Curves.decelerate)),
+            weight: ballRadius,
+          ),
+        ]);
+
+        travelLine.padEnd(sequence.transform(compositionData.animationValue));
         break;
       case BallTripStage.departure:
         final sequence = TweenSequence([
           TweenSequenceItem(tween: ConstantTween<double>(1), weight: endLine.length),
           TweenSequenceItem(
-            tween: Tween(begin: 1, end: 1 - ballLengthFraction).chain(CurveTween(curve: const AcceleratationCurve())),
+            tween: Tween(
+              begin: 1,
+              end: 1 - ballLengthFraction,
+            ).chain(CurveTween(curve: const AccelerationCurve())),
             weight: ballRadius,
           ),
         ]);
