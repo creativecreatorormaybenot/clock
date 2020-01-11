@@ -128,7 +128,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
               begin: 1,
               end: 1 - ballLengthFraction,
             ).chain(CurveTween(curve: const AccelerationCurve())),
-            weight: ballRadius,
+            weight: ballRadius * 3,
           ),
         ]);
 
@@ -139,14 +139,14 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
         break;
       case BallTripStage.arrival:
         final sequence = TweenSequence([
-          TweenSequenceItem(tween: ConstantTween<double>(1), weight: startLine.length),
           TweenSequenceItem(
             tween: Tween(
               begin: 1 - ballLengthFraction,
               end: 1,
-            ).chain(CurveTween(curve: Curves.decelerate)),
+            ).chain(CurveTween(curve: const AccelerationCurve())),
             weight: ballRadius,
           ),
+          TweenSequenceItem(tween: ConstantTween<double>(1), weight: startLine.length),
         ]);
 
         travelLine.padEnd(sequence.transform(compositionData.animationValue));
