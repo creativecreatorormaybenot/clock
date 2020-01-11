@@ -1,14 +1,16 @@
 ## TODO
 
+* Do not use 24 hour divisions in 24 hour mode. Instead, draw the 24 hour numbers (> 12) further inwards, smaller, and potentially using a different blend mode (in 24 hour mode).
+
+  + Add another ring with marks as can be seen in the inspiration.
+
+* Write temperature as a number at the top, where it only says the unit at the moment.
+
 * Draw shadows for the slides in `Slide` .
 
 * Draw shadow for the ball in `Background` (below everything but the ground).
 
 * Find better curves and durations for the bounce away and back animations of the clock.
-
-* Do not use 24 hour divisions in 24 hour mode. Instead, draw the 24 hour numbers (> 12) further inwards, smaller, and potentially using a different blend mode (in 24 hour mode).
-
-  + Maybe also add another design element to comoplement this.
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
