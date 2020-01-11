@@ -41,12 +41,12 @@ class AnimatedAnalogTime extends AnimatedWidget {
           (time.second != 0 ? 0 : pi * 2 / 60 * (bounce - 1)),
       hourHandAngle:
           // Distance for the hour.
-          pi * 2 / (model.is24HourFormat ? 24 : 12) * (model.is24HourFormat ? time.hour : time.hour % 12) +
+          pi * 2 / 12 * (time.hour % 12) +
               // Distance for the minute.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 * time.minute +
+              pi * 2 / 12 / 60 * time.minute +
               // Distance for the second.
-              pi * 2 / (model.is24HourFormat ? 24 : 12) / 60 / 60 * time.second,
-      hourDivisions: model.is24HourFormat ? 24 : 12,
+              pi * 2 / 12 / 60 / 60 * time.second,
+      use24HourFormat: model.is24HourFormat,
       ballEverySeconds: ballEvery,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
@@ -63,7 +63,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
 class AnalogTime extends LeafRenderObjectWidget {
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
 
-  final int hourDivisions;
+  final bool use24HourFormat;
 
   /// This dictates where the ball icon will be drawn.
   ///
@@ -82,7 +82,7 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.secondHandAngle,
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
-    @required this.hourDivisions,
+    @required this.use24HourFormat,
     @required this.ballEverySeconds,
     @required this.textColor,
     @required this.backgroundColor,
@@ -95,7 +95,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   })  : assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
-        assert(hourDivisions != null),
+        assert(use24HourFormat != null),
         assert(ballEverySeconds != null),
         assert(textColor != null),
         assert(backgroundColor != null),
@@ -114,7 +114,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
-      hourDivisions: hourDivisions,
+      use24HourFormat: use24HourFormat,
       ballEverySeconds: ballEverySeconds,
       textColor: textColor,
       backgroundColor: backgroundColor,
@@ -133,7 +133,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..secondHandAngle = secondHandAngle
       ..minuteHandAngle = minuteHandAngle
       ..hourHandAngle = hourHandAngle
-      ..hourDivisions = hourDivisions
+      ..use24HourFormat = use24HourFormat
       ..ballEverySeconds = ballEverySeconds
       ..textColor = textColor
       ..backgroundColor = backgroundColor
@@ -151,7 +151,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     double secondHandAngle,
     double minuteHandAngle,
     double hourHandAngle,
-    int hourDivisions,
+    bool use24HourFormat,
     int ballEverySeconds,
     Color textColor,
     Color backgroundColor,
@@ -164,7 +164,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
   })  : _secondHandAngle = secondHandAngle,
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
-        _hourDivisions = hourDivisions,
+        _use24HourFormat = use24HourFormat,
         _ballEverySeconds = ballEverySeconds,
         _textColor = textColor,
         _backgroundColor = backgroundColor,
@@ -214,19 +214,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     markNeedsSemanticsUpdate();
   }
 
-  int _hourDivisions, _ballEverySeconds;
-
-  set hourDivisions(int value) {
-    assert(value != null);
-
-    if (_hourDivisions == value) {
-      return;
-    }
-
-    _hourDivisions = value;
-    markNeedsPaint();
-    markNeedsSemanticsUpdate();
-  }
+  int _ballEverySeconds;
 
   set ballEverySeconds(int value) {
     assert(value != null);
@@ -236,6 +224,19 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     }
 
     _ballEverySeconds = value;
+    markNeedsPaint();
+  }
+
+  bool _use24HourFormat;
+
+  set use24HourFormat(bool value) {
+    assert(value != null);
+
+    if (_use24HourFormat == value) {
+      return;
+    }
+
+    _use24HourFormat = value;
     markNeedsPaint();
   }
 
@@ -345,7 +346,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
 
   int get minute => (_minuteHandAngle / pi / 2 * 60).round();
 
-  int get hour => (_hourHandAngle / pi / 2 * _hourDivisions).round();
+  int get hour => (_hourHandAngle / pi / 2 * 12).round();
 
   @override
   void attach(PipelineOwner owner) {
@@ -359,7 +360,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     super.describeSemanticsConfiguration(config);
 
     config
-      ..label = 'Analog clock showing hour $hour, minute $minute, and second $second'
+      ..label = 'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr;
   }
@@ -399,7 +400,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
       canvas.drawOval(circle, paint);
     }
 
-    final largeDivisions = _hourDivisions, smallDivisions = 60;
+    final largeDivisions = 12, smallDivisions = 60;
 
     // Ticks indicating minutes and seconds (both 60).
     for (var n = smallDivisions; n > 0; n--) {
