@@ -36,7 +36,7 @@ const bool forceVibrantPalette = null;
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
-const ballEvery = 6;
+const ballEvery = 30;
 
 void main() {
   runApp(

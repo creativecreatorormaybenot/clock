@@ -117,7 +117,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
               begin: 1 - ballLengthFraction,
               end: 1,
             ).chain(CurveTween(curve: Curves.decelerate)),
-            weight: ballRadius / 2,
+            weight: ballRadius / 5,
           ),
           TweenSequenceItem(
             tween: ConstantTween<double>(1),
@@ -134,7 +134,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
               begin: 1,
               end: 1 - ballLengthFraction,
             ).chain(CurveTween(curve: const AccelerationCurve())),
-            weight: ballRadius,
+            weight: ballRadius / 2,
           ),
         ]);
 
