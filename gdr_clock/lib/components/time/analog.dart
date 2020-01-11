@@ -430,6 +430,21 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
               ..blendMode = BlendMode.darken);
       }
 
+      // Draw 24 hour minute tick marks further inwards.
+      if (_use24HourFormat) {
+        final w = _radius / 197, h = _radius / 45;
+        canvas.drawRect(
+            Rect.fromLTWH(
+              -w / 2,
+              -radius24,
+              w,
+              -h,
+            ),
+            Paint()
+              ..color = _textColor
+              ..blendMode = BlendMode.darken);
+      }
+
       // This will go back to 0 at the end of loop,
       // i.e. at `-pi * 2` which is rendered as the same.
       canvas.rotate(-pi * 2 / smallDivisions);
@@ -472,7 +487,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
       if (_use24HourFormat) {
         // Draw hours 13-24 and marks further inwards.
         () {
-          final w = _radius / 92, h = _radius / 35;
+          final w = _radius / 124, h = _radius / 35;
           canvas.drawRect(
               Rect.fromLTWH(
                 -w / 2,
