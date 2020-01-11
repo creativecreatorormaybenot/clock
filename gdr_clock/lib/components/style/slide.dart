@@ -203,17 +203,15 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
         // The line should touch the ball's bottom.
         .shift(travelLine.normal.offset * ballRadius * shiftFactor);
 
+    final travelPath = travelLine.pathWithWidth(strokeWidth), startPath = startLine.pathWithWidth(strokeWidth), endPath = endLine.pathWithWidth(strokeWidth);
+    canvas.drawShadow(
+      Path.from(travelPath)..addPath(startPath, Offset.zero)..addPath(endPath, Offset.zero),
+      _shadowColor,
+      size.height / 99,
+      false,
+    );
+
     final paint = Paint()..color = _curveColor;
-
-    final travelPath = travelLine.pathWithWidth(strokeWidth);
-    canvas.drawShadow(travelPath, _shadowColor, size.height / 148, false);
-
-    final startPath = startLine.pathWithWidth(strokeWidth);
-    canvas.drawShadow(startPath, _shadowColor, size.height / 148, false);
-
-    final endPath = endLine.pathWithWidth(strokeWidth);
-    canvas.drawShadow(endPath, _shadowColor, size.height / 148, false);
-
     canvas.drawPath(travelPath, paint);
     canvas.drawPath(startPath, paint);
     canvas.drawPath(endPath, paint);
