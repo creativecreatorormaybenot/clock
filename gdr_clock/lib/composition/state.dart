@@ -301,6 +301,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
               widget.palette[ClockColor.ballSecondary],
               1 / 2,
             ),
+            shadowColor: widget.palette[ClockColor.shadow],
           ),
           UpdatedDate(palette: widget.palette),
         ],

@@ -3,24 +3,29 @@ import 'package:flutter/widgets.dart';
 import 'package:gdr_clock/clock.dart';
 
 class Slide extends LeafRenderObjectWidget {
-  final Color curveColor;
+  final Color curveColor, shadowColor;
 
   Slide({
     Key key,
     @required this.curveColor,
+    @required this.shadowColor,
   })  : assert(curveColor != null),
+        assert(shadowColor != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderSlide(
       curveColor: curveColor,
+      shadowColor: shadowColor,
     );
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderSlide renderObject) {
-    renderObject..curveColor = curveColor;
+    renderObject
+      ..curveColor = curveColor
+      ..shadowColor = shadowColor;
   }
 }
 
@@ -42,10 +47,12 @@ class SlideParentData extends ClockChildrenParentData {
 class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
   RenderSlide({
     Color curveColor,
+    Color shadowColor,
   })  : _curveColor = curveColor,
+        _shadowColor = shadowColor,
         super(ClockComponent.slide);
 
-  Color _curveColor;
+  Color _curveColor, _shadowColor;
 
   set curveColor(Color value) {
     assert(value != null);
@@ -55,6 +62,17 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     }
 
     _curveColor = value;
+    markNeedsPaint();
+  }
+
+  set shadowColor(Color value) {
+    assert(value != null);
+
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
     markNeedsPaint();
   }
 
@@ -187,9 +205,18 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
     final paint = Paint()..color = _curveColor;
 
-    canvas.drawPath(travelLine.pathWithWidth(strokeWidth), paint);
-    canvas.drawPath(startLine.pathWithWidth(strokeWidth), paint);
-    canvas.drawPath(endLine.pathWithWidth(strokeWidth), paint);
+    final travelPath = travelLine.pathWithWidth(strokeWidth);
+    canvas.drawShadow(travelPath, _shadowColor, size.height / 148, false);
+
+    final startPath = startLine.pathWithWidth(strokeWidth);
+    canvas.drawShadow(startPath, _shadowColor, size.height / 148, false);
+
+    final endPath = endLine.pathWithWidth(strokeWidth);
+    canvas.drawShadow(endPath, _shadowColor, size.height / 148, false);
+
+    canvas.drawPath(travelPath, paint);
+    canvas.drawPath(startPath, paint);
+    canvas.drawPath(endPath, paint);
 
     canvas.restore();
   }
