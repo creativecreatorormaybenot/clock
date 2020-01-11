@@ -4,8 +4,6 @@
 
   + Add another ring with marks as can be seen in the inspiration.
 
-* Write temperature as a number at the top, where it only says the unit at the moment.
-
 * Draw shadows for the slides in `Slide` .
 
 * Draw shadow for the ball in `Background` (below everything but the ground).

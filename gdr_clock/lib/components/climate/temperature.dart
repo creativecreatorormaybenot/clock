@@ -539,7 +539,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     final unitIndent = size.width / 8,
         unitPainter = TextPainter(
       text: TextSpan(
-        text: _unitString,
+        text: '$_unitString',
         style: TextStyle(
           color: _textColor,
           fontSize: size.width / 6,
