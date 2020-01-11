@@ -382,9 +382,9 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
         // Need to subtract a quarter of the circle because
         // Offset.fromDirection starts at positive x.
         angle - pi / 2,
-        _radius / 2.1,
+        _radius / 2.56,
       ),
-          circle = Rect.fromCircle(center: center, radius: _radius / 14),
+          circle = Rect.fromCircle(center: center, radius: _radius / 15),
           paint = Paint()
             // Using the text color because the purpose of this icon is the same
             // as what text or tick marks do in here: indicate something.
@@ -400,13 +400,25 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
       canvas.drawOval(circle, paint);
     }
 
+    final radius24 = _radius * .711;
+
+    if (_use24HourFormat) {
+      // Draw smaller ring.
+      canvas.drawOval(
+          Rect.fromCircle(center: Offset.zero, radius: radius24),
+          Paint()
+            ..color = _borderColor
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = _radius / 348);
+    }
+
     final largeDivisions = 12, smallDivisions = 60;
 
     // Ticks indicating minutes and seconds (both 60).
     for (var n = smallDivisions; n > 0; n--) {
       // Do not draw small ticks when large ones will be drawn afterwards anyway.
       if (n % (smallDivisions / largeDivisions) != 0) {
-        final height = _radius / 31;
+        final height = _radius / 27;
         canvas.drawRect(
             Rect.fromCenter(
               center: Offset(0, (-size.width + height) / 2),
@@ -425,11 +437,11 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
 
     // Ticks and numbers indicating hours.
     for (var n = largeDivisions; n > 0; n--) {
-      final height = _radius / 65;
+      final height = _radius / 61;
       canvas.drawRect(
           Rect.fromCenter(
             center: Offset(0, (-size.width + height) / 2),
-            width: _radius / 86,
+            width: _radius / 68,
             height: height,
           ),
           Paint()
@@ -441,20 +453,57 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
           text: '$n',
           style: TextStyle(
             color: _textColor,
-            fontSize: _radius / 8.2,
+            fontSize: _radius / 7.5,
           ),
         ),
         textDirection: TextDirection.ltr,
       );
       painter.layout();
       painter.paint(
-          canvas,
-          Offset(
-            -painter.width / 2,
-            -size.height / 2 +
-                // Push the numbers inwards a bit.
-                _radius / 24,
-          ));
+        canvas,
+        Offset(
+          -painter.width / 2,
+          -_radius +
+              // Push the numbers inwards a bit.
+              _radius / 18,
+        ),
+      );
+
+      if (_use24HourFormat) {
+        // Draw hours 13-24 and marks further inwards.
+        () {
+          final w = _radius / 92, h = _radius / 35;
+          canvas.drawRect(
+              Rect.fromLTWH(
+                -w / 2,
+                -radius24,
+                w,
+                -h,
+              ),
+              Paint()
+                ..color = _textColor
+                ..blendMode = BlendMode.darken);
+
+          final painter = TextPainter(
+            text: TextSpan(
+              text: '${n + 12}',
+              style: TextStyle(
+                color: _textColor,
+                fontSize: _radius / 9,
+              ),
+            ),
+            textDirection: TextDirection.ltr,
+          );
+          painter.layout();
+          painter.paint(
+            canvas,
+            Offset(
+              -painter.width / 2,
+              -radius24 + _radius / 29,
+            ),
+          );
+        }();
+      }
 
       // Like above, this will go back to 0 at the end of loop,
       // i.e. at `-pi * 2` which is rendered as the same.
@@ -533,7 +582,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
           ..color = _hourHandColor
           ..style = PaintingStyle.fill,
         w = _radius / 42,
-        h = -_radius / 2.29,
+        h = -_radius / 2.49,
         bw = _radius / 6.3,
         bh = _radius / 7,
         path = Path()
