@@ -468,7 +468,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   /// Set this to debug an icon for any [WeatherCondition].
   ///
   /// `null` will disable the debug painting.
-  static const WeatherCondition debugCondition = WeatherCondition.cloudy;
+  static const WeatherCondition debugCondition = WeatherCondition.thunderstorm;
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
@@ -1088,15 +1088,21 @@ class RenderThunderstorm extends RenderWeatherIcon {
     // Draw raindrops
     _drawRain(canvas, _raindropColor, radius, 435, _raindrops, 1);
 
+    canvas.save();
+    // The cloud in here should be mirrored horizontally.
+    canvas.scale(-1, 1);
+
     _drawCloud(
       canvas,
       _cloudColor,
       radius,
       indentationFactor,
       0,
-      0,
+      -radius * indentationFactor / 4,
       1,
     );
+
+    canvas.restore();
   }
 }
 
