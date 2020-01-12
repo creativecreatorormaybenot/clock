@@ -1,7 +1,5 @@
 ## TODO
 
-* Redo thunderstorm.
-
 * Redo cloudy.
 
 * Add animations to every weather conditions.

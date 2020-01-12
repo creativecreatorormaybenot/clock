@@ -980,7 +980,7 @@ class Thunderstorm extends LeafRenderObjectWidget {
 
   Thunderstorm({
     Key key,
-    this.raindrops = 11,
+    this.raindrops = 13,
     @required this.lightningColor,
     @required this.raindropColor,
     @required this.cloudColor,
@@ -1075,7 +1075,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
 
     // Draw lightning
     canvas.save();
-    canvas.translate(-s / 15, s / -7);
+    canvas.translate(-s / 18, s / -6.7);
 
     final l = s / 9.7,
         lightningPath = Path()
@@ -1097,7 +1097,12 @@ class RenderThunderstorm extends RenderWeatherIcon {
     canvas.restore();
 
     // Draw raindrops
-    _drawRain(canvas, _raindropColor, radius, 435, _raindrops, 1);
+    canvas.save();
+
+    canvas.translate(0, s / 7);
+    _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1);
+
+    canvas.restore();
 
     canvas.save();
     // The cloud in here should be mirrored horizontally.
