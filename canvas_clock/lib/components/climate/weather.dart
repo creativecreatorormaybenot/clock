@@ -89,6 +89,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
         return Thunderstorm(
           lightningColor: widget.palette[ClockColor.lightning],
           raindropColor: widget.palette[ClockColor.raindrop],
+          cloudColor: widget.palette[ClockColor.cloud],
         );
       case WeatherCondition.windy:
         return Windy(
@@ -467,7 +468,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   /// Set this to debug an icon for any [WeatherCondition].
   ///
   /// `null` will disable the debug painting.
-  static const WeatherCondition debugCondition = WeatherCondition.rainy;
+  static const WeatherCondition debugCondition = WeatherCondition.cloudy;
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
@@ -547,57 +548,91 @@ class RenderCloudy extends RenderWeatherIcon {
     // but I only realized that I wanted a different position later and it is easier to
     // adjust it like this.
     canvas.translate(0, radius * indentationFactor / 6);
-    canvas.scale(1.1);
 
-    _drawCloud(canvas, -radius * indentationFactor / 4, -radius * indentationFactor / 18, .8);
-    _drawCloud(canvas, radius * indentationFactor / 4, -radius * indentationFactor / 8, .8);
-    _drawCloud(canvas, 0, 0, 1.3);
-    _drawCloud(canvas, -radius * indentationFactor / 4.2, -radius * indentationFactor / 3.7, .6);
+    _drawCloud(
+      canvas,
+      _cloudColor,
+      radius,
+      indentationFactor,
+      -radius * indentationFactor / 6,
+      -radius * indentationFactor / 18,
+      .64,
+    );
+    _drawCloud(
+      canvas,
+      _cloudColor,
+      radius,
+      indentationFactor,
+      radius * indentationFactor / 6,
+      -radius * indentationFactor / 8,
+      .64,
+    );
+
+    // Big cloud
+    _drawCloud(
+      canvas,
+      _cloudColor,
+      radius,
+      indentationFactor,
+      0,
+      0,
+      1.1,
+    );
+
+    _drawCloud(
+      canvas,
+      _cloudColor,
+      radius,
+      indentationFactor,
+      -radius * indentationFactor / 8,
+      -radius * indentationFactor / 3.7,
+      .5,
+    );
   }
+}
 
-  void _drawCloud(Canvas canvas, double tx, double ty, double s) {
-    canvas.save();
+void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentationFactor, double tx, double ty, double s) {
+  canvas.save();
 
-    canvas.translate(tx, ty);
-    canvas.scale(s);
+  canvas.translate(tx, ty);
+  canvas.scale(s);
 
-    final h = radius * indentationFactor / 4, w = h * 2.7;
+  final h = radius * indentationFactor / 4, w = h * 2.7;
 
-    canvas.drawPath(
-        Path()
-          ..moveTo(0, h / 2)
-          ..lineTo(-w / 2, h / 2)
-          ..quadraticBezierTo(
-            -w / 2 - h / 4,
-            h / 3,
-            -w / 2.2,
-            h / 12,
-          )
-          ..quadraticBezierTo(
-            w / -2.9,
-            h / -2.3,
-            w / -7,
-            h / -5,
-          )
-          ..quadraticBezierTo(
-            w / 5,
-            h / -1.1,
-            w / 2.2,
-            h / 9,
-          )
-          ..quadraticBezierTo(
-            w / 2 + h / 4,
-            h / 3,
-            w / 2,
-            h / 2,
-          )
-          ..close(),
-        Paint()
-          ..color = _cloudColor
-          ..style = PaintingStyle.fill);
+  canvas.drawPath(
+      Path()
+        ..moveTo(0, h / 2)
+        ..lineTo(-w / 2, h / 2)
+        ..quadraticBezierTo(
+          -w / 2 - h / 4,
+          h / 3,
+          -w / 2.2,
+          h / 12,
+        )
+        ..quadraticBezierTo(
+          w / -2.9,
+          h / -2.3,
+          w / -7,
+          h / -5,
+        )
+        ..quadraticBezierTo(
+          w / 5,
+          h / -1.1,
+          w / 2.2,
+          h / 9,
+        )
+        ..quadraticBezierTo(
+          w / 2 + h / 4,
+          h / 3,
+          w / 2,
+          h / 2,
+        )
+        ..close(),
+      Paint()
+        ..color = cloudColor
+        ..style = PaintingStyle.fill);
 
-    canvas.restore();
-  }
+  canvas.restore();
 }
 
 class Foggy extends LeafRenderObjectWidget {
@@ -740,7 +775,10 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
         ..strokeWidth = radius / 142;
 
   for (var i = 0; i < raindrops; i++) {
-    final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, radius / -25 + verticalShift * radius / 5);
+    final horizontalShift = random.nextDouble() - 1 / 2,
+        verticalShift = random.nextDouble() - 1 / 2,
+        heightShift = random.nextDouble(),
+        start = Offset(horizontalShift * radius / 4, radius / -25 + verticalShift * radius / 5);
 
     canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
   }
@@ -838,7 +876,7 @@ class RenderSnowy extends RenderWeatherIcon {
     for (var i = 0; i < _snowflakes; i++) {
       final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, - radius / 23 + radius / 4 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, -radius / 23 + radius / 4 * verticalShift), radius: diameter / 2), paint);
     }
 
     // Draw some laying on the ground
@@ -936,15 +974,17 @@ class RenderSunny extends RenderWeatherIcon {
 class Thunderstorm extends LeafRenderObjectWidget {
   final int raindrops;
 
-  final Color lightningColor, raindropColor;
+  final Color lightningColor, raindropColor, cloudColor;
 
   Thunderstorm({
     Key key,
     this.raindrops = 11,
     @required this.lightningColor,
     @required this.raindropColor,
+    @required this.cloudColor,
   })  : assert(lightningColor != null),
         assert(raindropColor != null),
+        assert(cloudColor != null),
         super(key: key);
 
   @override
@@ -953,6 +993,7 @@ class Thunderstorm extends LeafRenderObjectWidget {
       raindrops: raindrops,
       lightningColor: lightningColor,
       raindropColor: raindropColor,
+      cloudColor: cloudColor,
     );
   }
 
@@ -961,7 +1002,8 @@ class Thunderstorm extends LeafRenderObjectWidget {
     renderObject
       ..raindrops = raindrops
       ..lightningColor = lightningColor
-      ..raindropColor = raindropColor;
+      ..raindropColor = raindropColor
+      ..cloudColor = cloudColor;
   }
 }
 
@@ -970,9 +1012,11 @@ class RenderThunderstorm extends RenderWeatherIcon {
     int raindrops,
     Color lightningColor,
     Color raindropColor,
+    Color cloudColor,
   })  : _raindrops = raindrops,
         _lightningColor = lightningColor,
         _raindropColor = raindropColor,
+        _cloudColor = cloudColor,
         super(WeatherCondition.thunderstorm);
 
   int _raindrops;
@@ -988,7 +1032,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
     markNeedsPaint();
   }
 
-  Color _lightningColor, _raindropColor;
+  Color _lightningColor, _raindropColor, _cloudColor;
 
   set lightningColor(Color value) {
     assert(value != null);
@@ -1012,6 +1056,17 @@ class RenderThunderstorm extends RenderWeatherIcon {
     markNeedsPaint();
   }
 
+  set cloudColor(Color value) {
+    assert(value != null);
+
+    if (_cloudColor == value) {
+      return;
+    }
+
+    _cloudColor = value;
+    markNeedsPaint();
+  }
+
   @override
   void drawCondition(Canvas canvas) {
     // Draw lightning
@@ -1032,6 +1087,16 @@ class RenderThunderstorm extends RenderWeatherIcon {
 
     // Draw raindrops
     _drawRain(canvas, _raindropColor, radius, 435, _raindrops, 1);
+
+    _drawCloud(
+      canvas,
+      _cloudColor,
+      radius,
+      indentationFactor,
+      0,
+      0,
+      1,
+    );
   }
 }
 
