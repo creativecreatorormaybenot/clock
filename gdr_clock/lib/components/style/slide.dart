@@ -113,7 +113,9 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     // if they should only touch the ball instead of overlapping.
     final strokeWidth = size.shortestSide / 43, shiftFactor = 1 + strokeWidth / 2 / ballRadius;
 
-    var startLine = Line2d(start: start, end: destination)..padStart(1.6),
+    var startLine = Line2d(start: start, end: destination)
+          ..padStart(1.6)
+          ..padEnd(.99),
         endLine = Line2d(start: end, end: destination)
           ..padEnd(.7)
           ..padStart(1.5),
