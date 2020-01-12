@@ -1,5 +1,19 @@
 ## TODO
 
+* Add animations to every weather conditions.
+
+  + Only animate the current weather condition.
+
+  + Have a looping animation, i.e.</a> every condition has a loop.
+
+  + Use the opportunity to finish/clean off the icons (for now).
+
+    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
+
+* Create spin-up animation for when the widget is created or updated? 
+
+  + This could show that the goo actually reacts to the components (even more than the ball push already does).
+
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
   + Ensure that sufficient contrast is present for accessibility reasons.
@@ -15,20 +29,6 @@
   + Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
   + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
-
-* Add animations to every weather conditions.
-
-  + Only animate the current weather condition.
-
-  + Have a looping animation, i.e.</a> every condition has a loop.
-
-  + Use the opportunity to finish/clean off the icons (for now).
-
-    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
-
-* Create spin-up animation for when the widget is created or updated? 
-
-  + This could show that the goo actually reacts to the components (even more than the ball push already does).
 
 * Finish all eight themes and ensure that dark mode, light mode, subtle, and vibrant look proper.
 
