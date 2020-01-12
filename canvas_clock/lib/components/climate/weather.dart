@@ -30,7 +30,7 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
   }
 }
 
-class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
+class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> with TickerProviderStateMixin {
   AngleTween _angle;
 
   double get _angleValue => _angle?.evaluate(animation) ?? 0;
@@ -50,8 +50,49 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
     _angle = visitor(_angle, _angleFromModel, (value) => AngleTween(begin: value)) as AngleTween;
   }
 
+  List<AnimationController> iconLoopControllers;
+
+  @override
+  void initState() {
+    super.initState();
+
+    iconLoopControllers = List.generate(
+        WeatherCondition.values.length,
+        (_) => AnimationController(
+              vsync: this,
+              duration: const Duration(seconds: 3),
+            ));
+  }
+
+  @override
+  void dispose() {
+    for (final controller in iconLoopControllers) {
+      controller.dispose();
+    }
+
+    super.dispose();
+  }
+
+  AnimationController currentlyAnimating;
+
+  int get currentIndex => (_angleValue / pi / 2 * WeatherCondition.values.length).round();
+
+  void animateIcon() {
+    final n = iconLoopControllers[currentIndex];
+
+    if (n == currentlyAnimating) return;
+
+    currentlyAnimating?.stop();
+
+    currentlyAnimating = n;
+    currentlyAnimating.repeat();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Calling this in build because it depends on the angle value.
+    animateIcon();
+
     return Weather(
       angle: _angleValue,
       arrowColor: widget.palette[ClockColor.weatherArrow],
@@ -67,32 +108,39 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> {
     switch (condition) {
       case WeatherCondition.cloudy:
         return Cloudy(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           cloudColor: widget.palette[ClockColor.cloud],
         );
       case WeatherCondition.foggy:
         return Foggy(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           fogColor: widget.palette[ClockColor.fog],
         );
       case WeatherCondition.rainy:
         return Rainy(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           raindropColor: widget.palette[ClockColor.raindrop],
         );
       case WeatherCondition.snowy:
         return Snowy(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           snowflakeColor: widget.palette[ClockColor.snowflake],
         );
       case WeatherCondition.sunny:
         return Sunny(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           sunColor: widget.palette[ClockColor.sun],
         );
       case WeatherCondition.thunderstorm:
         return Thunderstorm(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           lightningColor: widget.palette[ClockColor.lightning],
           raindropColor: widget.palette[ClockColor.raindrop],
           cloudColor: widget.palette[ClockColor.cloud],
         );
       case WeatherCondition.windy:
         return Windy(
+          animation: iconLoopControllers[WeatherCondition.values.indexOf(condition)],
           primaryColor: widget.palette[ClockColor.windPrimary],
           secondaryColor: widget.palette[ClockColor.windSecondary],
         );
@@ -410,7 +458,23 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 /// It is possible that I forget to remove this section or that I leave it intentionally - in order
 /// to make it easier to find.
 abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
-  RenderWeatherIcon(WeatherCondition condition) : super(condition);
+  final Animation<double> animation;
+
+  RenderWeatherIcon(WeatherCondition condition, this.animation) : super(condition);
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    animation.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    animation.removeListener(markNeedsPaint);
+
+    super.detach();
+  }
 
   WeatherCondition get condition => childType;
 
@@ -501,17 +565,22 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
 }
 
 class Cloudy extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final Color cloudColor;
 
   Cloudy({
     Key key,
     @required this.cloudColor,
+    @required this.animation,
   })  : assert(cloudColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderCloudy(
+      animation: animation,
       cloudColor: cloudColor,
     );
   }
@@ -524,9 +593,10 @@ class Cloudy extends LeafRenderObjectWidget {
 
 class RenderCloudy extends RenderWeatherIcon {
   RenderCloudy({
+    Animation<double> animation,
     Color cloudColor,
   })  : _cloudColor = cloudColor,
-        super(WeatherCondition.cloudy);
+        super(WeatherCondition.cloudy, animation);
 
   Color _cloudColor;
 
@@ -633,17 +703,22 @@ void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentati
 }
 
 class Foggy extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final Color fogColor;
 
   Foggy({
     Key key,
+    @required this.animation,
     @required this.fogColor,
   })  : assert(fogColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderFoggy(
+      animation: animation,
       fogColor: fogColor,
     );
   }
@@ -656,9 +731,10 @@ class Foggy extends LeafRenderObjectWidget {
 
 class RenderFoggy extends RenderWeatherIcon {
   RenderFoggy({
+    Animation<double> animation,
     Color fogColor,
   })  : _fogColor = fogColor,
-        super(WeatherCondition.foggy);
+        super(WeatherCondition.foggy, animation);
 
   Color _fogColor;
 
@@ -675,6 +751,8 @@ class RenderFoggy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
+    print('RenderFoggy.drawCondition ${DateTime.now()}');
+
     final g = radius * indentationFactor / 14;
 
     // Once again, it is easier to adjust it like this afterwards.
@@ -695,20 +773,25 @@ class RenderFoggy extends RenderWeatherIcon {
 }
 
 class Rainy extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final int raindrops;
 
   final Color raindropColor;
 
   Rainy({
     Key key,
+    @required this.animation,
     this.raindrops = 42,
     @required this.raindropColor,
   })  : assert(raindropColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderRainy createRenderObject(BuildContext context) {
     return RenderRainy(
+      animation: animation,
       raindrops: raindrops,
       raindropColor: raindropColor,
     );
@@ -724,11 +807,12 @@ class Rainy extends LeafRenderObjectWidget {
 
 class RenderRainy extends RenderWeatherIcon {
   RenderRainy({
+    Animation<double> animation,
     int raindrops,
     Color raindropColor,
   })  : _raindrops = raindrops,
         _raindropColor = raindropColor,
-        super(WeatherCondition.rainy);
+        super(WeatherCondition.rainy, animation);
 
   int _raindrops;
 
@@ -784,6 +868,8 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
 }
 
 class Snowy extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final int snowflakes,
 
       /// How many snowflakes are lying on the ground.
@@ -793,15 +879,18 @@ class Snowy extends LeafRenderObjectWidget {
 
   Snowy({
     Key key,
+    @required this.animation,
     this.snowflakes = 61,
     this.snow = 23,
     @required this.snowflakeColor,
   })  : assert(snowflakeColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderSnowy createRenderObject(BuildContext context) {
     return RenderSnowy(
+      animation: animation,
       snowflakes: snowflakes,
       snow: snow,
       snowflakeColor: snowflakeColor,
@@ -819,13 +908,14 @@ class Snowy extends LeafRenderObjectWidget {
 
 class RenderSnowy extends RenderWeatherIcon {
   RenderSnowy({
+    Animation<double> animation,
     int snowflakes,
     int snow,
     Color snowflakeColor,
   })  : _snowflakes = snowflakes,
         _snow = snow,
         _snowflakeColor = snowflakeColor,
-        super(WeatherCondition.snowy);
+        super(WeatherCondition.snowy, animation);
 
   int _snowflakes, _snow;
 
@@ -886,20 +976,25 @@ class RenderSnowy extends RenderWeatherIcon {
 }
 
 class Sunny extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final int sunRays;
 
   final Color sunColor;
 
   Sunny({
     Key key,
+    @required this.animation,
     this.sunRays = 12,
     @required this.sunColor,
   })  : assert(sunColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderSunny(
+      animation: animation,
       sunRays: sunRays,
       sunColor: sunColor,
     );
@@ -915,11 +1010,12 @@ class Sunny extends LeafRenderObjectWidget {
 
 class RenderSunny extends RenderWeatherIcon {
   RenderSunny({
+    Animation<double> animation,
     int sunRays,
     Color sunColor,
   })  : _sunRays = sunRays,
         _sunColor = sunColor,
-        super(WeatherCondition.sunny);
+        super(WeatherCondition.sunny, animation);
 
   int _sunRays;
 
@@ -951,6 +1047,9 @@ class RenderSunny extends RenderWeatherIcon {
   void drawCondition(Canvas canvas) {
     canvas.save();
 
+    // Animation loop
+    canvas.rotate(pi * 2 * animation.value / _sunRays);
+
     canvas.scale(1.17);
 
     final paint = Paint()
@@ -969,12 +1068,15 @@ class RenderSunny extends RenderWeatherIcon {
 }
 
 class Thunderstorm extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final int raindrops;
 
   final Color lightningColor, raindropColor, cloudColor;
 
   Thunderstorm({
     Key key,
+    @required this.animation,
     this.raindrops = 13,
     @required this.lightningColor,
     @required this.raindropColor,
@@ -982,11 +1084,13 @@ class Thunderstorm extends LeafRenderObjectWidget {
   })  : assert(lightningColor != null),
         assert(raindropColor != null),
         assert(cloudColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderThunderstorm(
+      animation: animation,
       raindrops: raindrops,
       lightningColor: lightningColor,
       raindropColor: raindropColor,
@@ -1006,6 +1110,7 @@ class Thunderstorm extends LeafRenderObjectWidget {
 
 class RenderThunderstorm extends RenderWeatherIcon {
   RenderThunderstorm({
+    Animation<double> animation,
     int raindrops,
     Color lightningColor,
     Color raindropColor,
@@ -1014,7 +1119,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
         _lightningColor = lightningColor,
         _raindropColor = raindropColor,
         _cloudColor = cloudColor,
-        super(WeatherCondition.thunderstorm);
+        super(WeatherCondition.thunderstorm, animation);
 
   int _raindrops;
 
@@ -1118,19 +1223,24 @@ class RenderThunderstorm extends RenderWeatherIcon {
 }
 
 class Windy extends LeafRenderObjectWidget {
+  final Animation<double> animation;
+
   final Color primaryColor, secondaryColor;
 
   Windy({
     Key key,
+    @required this.animation,
     @required this.primaryColor,
     @required this.secondaryColor,
   })  : assert(primaryColor != null),
         assert(secondaryColor != null),
+        assert(animation != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderWindy(
+      animation: animation,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
     );
@@ -1146,11 +1256,12 @@ class Windy extends LeafRenderObjectWidget {
 
 class RenderWindy extends RenderWeatherIcon {
   RenderWindy({
+    Animation<double> animation,
     Color primaryColor,
     Color secondaryColor,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
-        super(WeatherCondition.windy);
+        super(WeatherCondition.windy, animation);
 
   Color _primaryColor, _secondaryColor;
 

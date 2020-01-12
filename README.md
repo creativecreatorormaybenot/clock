@@ -1,5 +1,7 @@
 ## TODO
 
+* Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
+
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
