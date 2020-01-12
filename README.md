@@ -1,9 +1,5 @@
 ## TODO
 
-* Rename to `canvas_clock` .
-
-  + Change article theme to that (title + introduction).
-
 * Finish/clean off the weather icons (for now).
 
     - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
@@ -72,7 +68,7 @@
 
     - Mention that people can, if they are interested in doing custom layouts but `MultiChildRenderObjectWidget` seems too complicated for them, check out https://stackoverflow.com/a/59483482/6509751 to get started with `CustomMultiChildLayout` .
 
-  + The title could be something like "How I made a Flutter Clock Face using only Custom Render Objects", as in no use of prebuilt widgets.
+  + The title could be something like "How I made a Flutter Clock Face using only Custom Canvas", everything painted by Flutter's `Canvas` manually and no use of prebuilt widgets.
 
   + Consider embedding some visualizations made by https://debugger.skia.org/.
 
