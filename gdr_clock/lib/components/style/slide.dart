@@ -111,7 +111,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     // The stroke width is drawn out equally in both directions from
     // the 0 width line and thus, the lines need to be shifted a bit more
     // if they should only touch the ball instead of overlapping.
-    final strokeWidth = size.shortestSide / 51, shiftFactor = 1 + strokeWidth / 2 / ballRadius;
+    final strokeWidth = size.shortestSide / 43, shiftFactor = 1 + strokeWidth / 2 / ballRadius;
 
     var startLine = Line2d(start: start, end: destination)..padStart(1.6),
         endLine = Line2d(start: end, end: destination)

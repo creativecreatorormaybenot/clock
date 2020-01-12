@@ -1,7 +1,5 @@
 ## TODO
 
-* Draw shadow for the ball in `Background` (below everything but the ground).
-
 * Find better curves and durations for the bounce away and back animations of the clock.
 
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
