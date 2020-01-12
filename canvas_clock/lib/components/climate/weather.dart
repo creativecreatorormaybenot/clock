@@ -610,20 +610,20 @@ void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentati
           h / 2,
         )
         ..halfCircleTo(
-          -w / 2 + cr,
-          h / 2 - cr * 2,
+          -w / 2 + cr * 1.2,
+          h / 2 - cr * 1.8,
         )
         ..quadraticBezierTo(
-          -w / 3.5,
-          -h / 3,
+          -w / 3.6,
+          -h / 3.2,
           -w / 16,
           h / 2 - cr * 2.7,
         )
         ..quadraticBezierTo(
-          w / 4.8,
-          -h / 2,
-          w / 2 - cr,
-          h / 2 - cr * 2,
+          w / 4,
+          -h / 2.2,
+          w / 2 - cr * 1.1,
+          h / 2 - cr * 1.7,
         )
         ..halfCircleTo(
           w / 2 - cr,
