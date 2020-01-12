@@ -47,7 +47,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
               // Distance for the second.
               pi * 2 / 12 / 60 / 60 * time.second,
       use24HourFormat: model.is24HourFormat,
-      ballEverySeconds: ballEvery,
+      ballEvery: ballEvery,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
       backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
@@ -67,13 +67,13 @@ class AnalogTime extends LeafRenderObjectWidget {
 
   /// This dictates where the ball icon will be drawn.
   ///
-  /// `60` has to be evenly divisible by [ballEverySeconds]
+  /// `60` has to be evenly divisible by [ballEvery]
   /// because otherwise it is not clear where ball
   /// icons should be drawn.
   ///
   /// For example, if this is `30`, there will be a ball
   /// icon drawn at `θ = 0` and one at `θ = π`.
-  final int ballEverySeconds;
+  final int ballEvery;
 
   final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
 
@@ -83,7 +83,7 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
     @required this.use24HourFormat,
-    @required this.ballEverySeconds,
+    @required this.ballEvery,
     @required this.textColor,
     @required this.backgroundColor,
     @required this.backgroundHighlightColor,
@@ -96,7 +96,7 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
         assert(use24HourFormat != null),
-        assert(ballEverySeconds != null),
+        assert(ballEvery != null),
         assert(textColor != null),
         assert(backgroundColor != null),
         assert(backgroundHighlightColor != null),
@@ -105,7 +105,7 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(secondHandColor != null),
         assert(shadowColor != null),
         assert(borderColor != null),
-        assert(60 % ballEverySeconds == 0),
+        assert(60 % ballEvery == 0),
         super(key: key);
 
   @override
@@ -115,7 +115,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
       use24HourFormat: use24HourFormat,
-      ballEverySeconds: ballEverySeconds,
+      ballEvery: ballEvery,
       textColor: textColor,
       backgroundColor: backgroundColor,
       backgroundHighlightColor: backgroundHighlightColor,
@@ -134,7 +134,7 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..minuteHandAngle = minuteHandAngle
       ..hourHandAngle = hourHandAngle
       ..use24HourFormat = use24HourFormat
-      ..ballEverySeconds = ballEverySeconds
+      ..ballEvery = ballEvery
       ..textColor = textColor
       ..backgroundColor = backgroundColor
       ..backgroundHighlightColor = backgroundHighlightColor
@@ -152,7 +152,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     double minuteHandAngle,
     double hourHandAngle,
     bool use24HourFormat,
-    int ballEverySeconds,
+    int ballEvery,
     Color textColor,
     Color backgroundColor,
     Color backgroundHighlightColor,
@@ -165,7 +165,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
         _use24HourFormat = use24HourFormat,
-        _ballEverySeconds = ballEverySeconds,
+        _ballEvery = ballEvery,
         _textColor = textColor,
         _backgroundColor = backgroundColor,
         _backgroundHighlightColor = backgroundHighlightColor,
@@ -214,16 +214,16 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
     markNeedsSemanticsUpdate();
   }
 
-  int _ballEverySeconds;
+  int _ballEvery;
 
-  set ballEverySeconds(int value) {
+  set ballEvery(int value) {
     assert(value != null);
 
-    if (_ballEverySeconds == value) {
+    if (_ballEvery == value) {
       return;
     }
 
-    _ballEverySeconds = value;
+    _ballEvery = value;
     markNeedsPaint();
   }
 
@@ -375,9 +375,9 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
 
     _drawBackground(canvas);
 
-    final balls = 60 ~/ _ballEverySeconds;
+    final balls = 60 ~/ _ballEvery;
     for (var i = 0; i < balls; i++) {
-      final angle = pi * 2 / 60 * _ballEverySeconds * i,
+      final angle = pi * 2 / 60 * _ballEvery * i,
           center = Offset.fromDirection(
         // Need to subtract a quarter of the circle because
         // Offset.fromDirection starts at positive x.
@@ -394,7 +394,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChild
               // If the ball is currently hitting the clock, i.e. the second hand
               // matches up with the ball icon, then the ball icon should light up.
               // Need to round because of the hand bounce.
-              i * _ballEverySeconds % 60 == second ? 1 / 2 : 1 / 19,
+              i * _ballEvery % 60 == second ? 1 / 2 : 1 / 19,
             );
 
       canvas.drawOval(circle, paint);

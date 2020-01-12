@@ -4,9 +4,7 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
-  static const petalColor = Color(0xffbab33c),
-      petals = 14,
-      petalWeightDivisor = 2.0;
+  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2.0;
 
   /// Paints a petals design based on a full [radius], that is not the radius of the petals.
   ///
@@ -75,7 +73,7 @@ extension ExtendedPath on Path {
   /// will draw an actual half circle and has
   /// syntax that resembles [lineTo] and others more
   /// than [arcToPoint] does.
-  void halfCircleTo(double x, double y, double radius) {
-    arcToPoint(Offset(x, y), radius: Radius.circular(radius));
+  void halfCircleTo(double x, double y, [bool clockwise = true]) {
+    arcToPoint(Offset(x, y), radius: const Radius.circular(1), clockwise: clockwise);
   }
 }

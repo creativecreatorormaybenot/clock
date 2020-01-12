@@ -1,7 +1,5 @@
 ## TODO
 
-* Redo `_drawCloud`.
-
 * Redo thunderstorm.
 
 * Redo cloudy.

@@ -362,7 +362,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
           ..halfCircleTo(
             -w / 2,
             0,
-            w / 2,
           )
           ..close(),
         paint = Paint()
@@ -483,7 +482,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
 
       canvas.save();
       canvas.translate(offset.dx + size.width / 2, offset.dy + size.height);
-      canvas.scale(2);
+      canvas.scale(4);
 
       final w = size.width / 5, h = size.height / 5;
       canvas.drawRect(
@@ -597,34 +596,37 @@ void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentati
   canvas.translate(tx, ty);
   canvas.scale(s);
 
-  final h = radius * indentationFactor / 4, w = h * 2.7;
+  final h = radius * indentationFactor / 4,
+      w = h * 1.75,
+      // The radius for the circles on the left
+      // and on the right of the cloud.
+      cr = h / 3.7;
 
   canvas.drawPath(
       Path()
         ..moveTo(0, h / 2)
-        ..lineTo(-w / 2, h / 2)
-        ..quadraticBezierTo(
-          -w / 2 - h / 4,
-          h / 3,
-          -w / 2.2,
-          h / 12,
+        ..lineTo(
+          -w / 2 + cr,
+          h / 2,
+        )
+        ..halfCircleTo(
+          -w / 2 + cr,
+          h / 2 - cr * 2,
         )
         ..quadraticBezierTo(
-          w / -2.9,
-          h / -2.3,
-          w / -7,
-          h / -5,
+          -w / 3.8,
+          -h / 3,
+          -w / 16,
+          h / 2 - cr * 2.7,
         )
         ..quadraticBezierTo(
           w / 5,
-          h / -1.1,
-          w / 2.2,
-          h / 9,
+          -h / 2,
+          w / 2 - cr,
+          h / 2 - cr * 2,
         )
-        ..quadraticBezierTo(
-          w / 2 + h / 4,
-          h / 3,
-          w / 2,
+        ..halfCircleTo(
+          w / 2 - cr,
           h / 2,
         )
         ..close(),
@@ -1099,7 +1101,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
       indentationFactor,
       0,
       -radius * indentationFactor / 4,
-      1,
+      1.7,
     );
 
     canvas.restore();

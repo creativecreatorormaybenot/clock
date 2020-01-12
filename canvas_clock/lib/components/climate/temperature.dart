@@ -581,7 +581,6 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
           ..halfCircleTo(
             tubeStart.dx + tubeWidth / 2,
             tubeStart.dy,
-            tubeWidth / 2,
           )
           ..lineTo(
             tubeEnd.dx + tubeWidth / 2,
@@ -590,7 +589,6 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
           ..halfCircleTo(
             tubeEnd.dx - tubeWidth / 2,
             tubeEnd.dy,
-            tubeWidth / 2,
           )
           ..close();
     //</editor-fold>
@@ -623,7 +621,6 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
           // This is obviously the starting point again.
           end.dx - w / 2,
           end.dy,
-          w / 2,
         )
         ..close();
 

@@ -40,7 +40,7 @@ const bool forceVibrantPalette = null;
 /// Adjusting this value only works partially with a hot reload because
 /// the animation controllers are not set up again, which means that
 /// you really need a hot restart if you want to change this value.
-const ballEvery = 30;
+const ballEvery = 60;
 
 void main() {
   runApp(
