@@ -1,10 +1,10 @@
 ## TODO
 
-* Redo cloudy and thunderstorm.
+* Redo `_drawCloud`.
 
-  + Add cloud to thunderstorm.
+* Redo thunderstorm.
 
-    - Extract `drawCloud` for that purpose.
+* Redo cloudy.
 
 * Add animations to every weather conditions.
 
