@@ -467,7 +467,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   /// Set this to debug an icon for any [WeatherCondition].
   ///
   /// `null` will disable the debug painting.
-  static const WeatherCondition debugCondition = null;
+  static const WeatherCondition debugCondition = WeatherCondition.windy;
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
@@ -1090,14 +1090,18 @@ class RenderWindy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
+    canvas.save();
+
     // Primary wind symbol
-    _drawWind(canvas, _primaryColor, 0, radius * indentationFactor / 17, .96, 2, 1.8, 1);
+    _drawWind(canvas, _primaryColor, -radius * indentationFactor / 7, radius * indentationFactor / 36, .83, 2, 1.8, 1);
 
     // Upper wind symbol
-    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -3, radius * indentationFactor / -5, .8, 2, 1.8, 1);
+    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -2.7, radius * indentationFactor / -4.4, .69, 2, 1.8, 1);
 
     // Lower wind symbol
-    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -6, radius * indentationFactor / 3, .7, 1, 1, 1);
+    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -3.5, radius * indentationFactor / 3.8, .61, 1, 1, 1);
+
+    canvas.restore();
   }
 
   void _drawWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3) {
