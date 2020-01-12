@@ -1,14 +1,14 @@
 ## TODO
 
+* Finish/clean off the weather icons (for now).
+
+    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
+
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
 
   + Have a looping animation, i.e.</a> every condition has a loop.
-
-  + Use the opportunity to finish/clean off the icons (for now).
-
-    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
 
 * Create spin-up animation for when the widget is created or updated? 
 
