@@ -467,7 +467,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   /// Set this to debug an icon for any [WeatherCondition].
   ///
   /// `null` will disable the debug painting.
-  static const WeatherCondition debugCondition = WeatherCondition.windy;
+  static const WeatherCondition debugCondition = WeatherCondition.rainy;
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
@@ -646,12 +646,12 @@ class RenderFoggy extends RenderWeatherIcon {
     final g = radius * indentationFactor / 14;
 
     // Once again, it is easier to adjust it like this afterwards.
-    canvas.translate(g * .71, g * .62);
+    canvas.translate(g * .71, g * .31);
     canvas.scale(.96);
 
     final paint = Paint()
       ..color = _fogColor
-      ..strokeWidth = g
+      ..strokeWidth = g * .93
       ..strokeCap = StrokeCap.round;
 
     canvas
@@ -740,7 +740,7 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
         ..strokeWidth = radius / 142;
 
   for (var i = 0; i < raindrops; i++) {
-    final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, verticalShift * radius / 7);
+    final horizontalShift = random.nextDouble() - 1 / 2, verticalShift = random.nextDouble() - 1 / 2, heightShift = random.nextDouble(), start = Offset(horizontalShift * radius / 4, radius / -25 + verticalShift * radius / 5);
 
     canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
   }
@@ -838,14 +838,14 @@ class RenderSnowy extends RenderWeatherIcon {
     for (var i = 0; i < _snowflakes; i++) {
       final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, radius / 5 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, - radius / 23 + radius / 4 * verticalShift), radius: diameter / 2), paint);
     }
 
     // Draw some laying on the ground
     for (var i = 0; i < _snow; i++) {
       final verticalShift = random.nextDouble(), horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 33 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 9 + radius / 42 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 6.2 + radius / 42 * verticalShift), radius: diameter / 2), paint);
     }
   }
 }
@@ -914,6 +914,10 @@ class RenderSunny extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
+    canvas.save();
+
+    canvas.scale(1.17);
+
     final paint = Paint()
       ..color = _sunColor
       ..strokeWidth = radius / 124;
@@ -924,6 +928,8 @@ class RenderSunny extends RenderWeatherIcon {
       final direction = pi * 2 / _sunRays * i;
       canvas.drawLine(Offset.fromDirection(direction, radius / 8), Offset.fromDirection(direction, radius / 6), paint);
     }
+
+    canvas.restore();
   }
 }
 

@@ -1,8 +1,10 @@
 ## TODO
 
-* Finish/clean off the weather icons (for now).
+* Redo cloudy and thunderstorm.
 
-  + Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
+  + Add cloud to thunderstorm.
+
+    - Extract `drawCloud` for that purpose.
 
 * Add animations to every weather conditions.
 
