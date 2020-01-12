@@ -1,5 +1,7 @@
 ## TODO
 
+* Remove `parentUsesSize` from all children (set to `false` ) because the size can be determined in the clock composition itself easily.
+
 * Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
 
 * Add animations to every weather conditions.

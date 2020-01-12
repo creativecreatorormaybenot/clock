@@ -125,6 +125,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void performLayout() {
     super.performLayout();
 
+    print('RenderCompositedClock.performLayout ${DateTime.now()}'); // todo
+
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
 

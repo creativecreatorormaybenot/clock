@@ -174,7 +174,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // controller is already animating because it should be
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
-      ballTravelController.forward(from: ballTravelProgress(time));
+//      ballTravelController.forward(from: ballTravelProgress(time)); todo
       ballTrips.currentStage = BallTripStage.travel;
     }
 

@@ -751,7 +751,7 @@ class RenderFoggy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    print('RenderFoggy.drawCondition ${DateTime.now()}');
+    print('RenderFoggy.drawCondition ${DateTime.now()}'); // todo
 
     final g = radius * indentationFactor / 14;
 
