@@ -1,5 +1,13 @@
 ## TODO
 
+* Rename to `canvas_clock` .
+
+  + Add the playful nature of it to the description.
+
+  + Add that everything is manually drawn using Flutter's `Canvas` (obviously most widgets are, but no prebuilt ones used).
+
+  + Change article theme to that (title + introduction).
+
 * Finish/clean off the weather icons (for now).
 
     - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
