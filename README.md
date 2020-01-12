@@ -10,6 +10,8 @@
 
   + Have a looping animation, i.e.</a> every condition has a loop.
 
+* Find better start and end positions for the ball.
+
 * Create spin-up animation for when the widget is created or updated? 
 
   + This could show that the goo actually reacts to the components (even more than the ball push already does).
