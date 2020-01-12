@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gdr_clock/main.dart';
+import 'package:canvas_clock/main.dart';
 
 enum ClockColor {
   /// This is also used for tick marks or lines on the

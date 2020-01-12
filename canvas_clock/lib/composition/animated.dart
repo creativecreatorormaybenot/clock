@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 
 /// This takes care of animating between different [palette]s,
 /// which works very well because [Color.lerp], i.e. [ColorTween],

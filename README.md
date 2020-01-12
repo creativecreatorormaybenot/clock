@@ -2,10 +2,6 @@
 
 * Rename to `canvas_clock` .
 
-  + Add the playful nature of it to the description.
-
-  + Add that everything is manually drawn using Flutter's `Canvas` (obviously most widgets are, but no prebuilt ones used).
-
   + Change article theme to that (title + introduction).
 
 * Finish/clean off the weather icons (for now).
@@ -99,13 +95,15 @@
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
-I was inspired by the design of an old analog barometer and hygrometer kind of device.
+This is a playful clock display and uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
 
 ![Quick screen capture showing the final result of the submission]()
 
-The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/lib/main.dart).
+The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
 
 ## Notes
+
+* I was inspired by the design of an old analog barometer and hygrometer kind of device initially and took many design ideas away from that. Later on, many other inspirations came my way :)
 
 * You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)
 
@@ -115,7 +113,7 @@ The code entry point of the clock face is [ `gdr_clock/lib/main.dart` ](https://
 
 ### Implementation
 
-* No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/gdr_clock/pubspec.yaml)).
+* No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/pubspec.yaml)).
 
 * No premade widgets from the standard library were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.
 

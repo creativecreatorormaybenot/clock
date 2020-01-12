@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 
 const arrivalDuration = Duration(milliseconds: 920),
     departureDuration = Duration(milliseconds: 1242),

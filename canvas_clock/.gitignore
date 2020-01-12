@@ -36,7 +36,7 @@ lib/generated_plugin_registrant.dart
 pubspec.lock
 .metadata
 .packages
-gdr_clock.iml
+canvas_clock.iml
 android
 ios
 test

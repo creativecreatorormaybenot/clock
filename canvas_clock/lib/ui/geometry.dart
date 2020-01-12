@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector2, Vector3;
 
 extension ExtendedOffset on Offset {

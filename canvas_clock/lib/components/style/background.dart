@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 
 const waveDuration = Duration(minutes: 1), waveCurve = Curves.easeInOut;
 

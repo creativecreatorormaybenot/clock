@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:gdr_clock/clock.dart';
-import 'package:gdr_clock/main.dart';
+import 'package:canvas_clock/clock.dart';
+import 'package:canvas_clock/main.dart';
 
 const handBounceDuration = Duration(milliseconds: 274);
 

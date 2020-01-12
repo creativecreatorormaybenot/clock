@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/customizer.dart';
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 
 /// Hello and welcome to my Flutter Clock submission :)
 ///

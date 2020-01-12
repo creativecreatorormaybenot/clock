@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gdr_clock/clock.dart';
+import 'package:canvas_clock/clock.dart';
 
 class UpdatedDate extends StatefulWidget {
   final Map<ClockColor, Color> palette;
