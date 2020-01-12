@@ -1,9 +1,5 @@
 ## TODO
 
-* Take inspiration from https://github.com/JustinFincher/FlutterClock.
-
-* Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
-
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
   + Ensure that sufficient contrast is present for accessibility reasons.
@@ -15,6 +11,10 @@
     - Potentially rotate whole components because it better shows what the individual parts are :)
 
   + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
+
+  + Take inspiration from https://github.com/JustinFincher/FlutterClock.
+
+  + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
 
 * Add animations to every weather conditions.
 
