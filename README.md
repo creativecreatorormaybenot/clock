@@ -2,7 +2,7 @@
 
 * Finish/clean off the weather icons (for now).
 
-    - Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
+  + Make sure that they are all in the same boundaries (draw a debug rect to achieve this).
 
 * Add animations to every weather conditions.
 

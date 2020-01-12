@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:canvas_clock/clock.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:canvas_clock/clock.dart';
 
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
   final ClockModel model;
@@ -289,7 +290,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
   }
 
-  static const indentationFactor = .48;
+  static const indentationFactor = .50;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -409,9 +410,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 /// It is possible that I forget to remove this section or that I leave it intentionally - in order
 /// to make it easier to find.
 abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition, WeatherChildrenParentData> {
-  final bool debugPaintConditionEnabled;
-
-  RenderWeatherIcon(WeatherCondition condition, [this.debugPaintConditionEnabled = false]) : super(condition);
+  RenderWeatherIcon(WeatherCondition condition) : super(condition);
 
   WeatherCondition get condition => childType;
 
@@ -465,20 +464,33 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
 
   void drawCondition(Canvas canvas);
 
+  /// Set this to debug an icon for any [WeatherCondition].
+  ///
+  /// `null` will disable the debug painting.
+  static const WeatherCondition debugCondition = null;
+
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
       // Leaving this as an option for now as I want to be able to come back later to improve the icons.
-      if (!debugPaintConditionEnabled) return true;
+      if (debugCondition == null || debugCondition != condition) return true;
 
       final canvas = context.canvas;
 
-      canvas.drawPaint(Paint()..color = const Color(0x22000000));
+      canvas.drawPaint(Paint()..color = const Color(0x72000000));
 
       canvas.save();
-      canvas.translate(534, 350);
+      canvas.translate(offset.dx + size.width / 2, offset.dy + size.height);
       canvas.scale(2);
+
+      final w = size.width / 5, h = size.height / 5;
+      canvas.drawRect(
+          Rect.fromLTWH(w / -2, h / -2, w, h),
+          Paint()
+            ..color = const Color(0xffddaa00)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = size.width / 481);
       drawCondition(canvas);
 
       canvas.restore();
