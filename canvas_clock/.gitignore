@@ -33,9 +33,10 @@
 # Web related
 lib/generated_plugin_registrant.dart
 
-pubspec.lock
+*/pubspec.lock
+*/.packages
+*/.dart_tool
 .metadata
-.packages
 canvas_clock.iml
 android
 ios
