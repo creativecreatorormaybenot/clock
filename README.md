@@ -1,7 +1,5 @@
 ## TODO
 
-* Redo cloudy.
-
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.

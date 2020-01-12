@@ -16,7 +16,7 @@ class AnimatedWeather extends ImplicitlyAnimatedWidget {
 
   const AnimatedWeather({
     Key key,
-    Curve curve = const ElasticInOutCurve(.6),
+    Curve curve = const ElasticInOutCurve(.73),
     Duration duration = const Duration(seconds: 1),
     @required this.model,
     @required this.palette,
@@ -467,7 +467,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   /// Set this to debug an icon for any [WeatherCondition].
   ///
   /// `null` will disable the debug painting.
-  static const WeatherCondition debugCondition = WeatherCondition.thunderstorm;
+  static const WeatherCondition debugCondition = null;
 
   /// Paints icon in neutral orientation in big in order to easily design it.
   @override
@@ -543,28 +543,23 @@ class RenderCloudy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    // I could also achieve this by passing different values to _drawCloud,
-    // but I only realized that I wanted a different position later and it is easier to
-    // adjust it like this.
-    canvas.translate(0, radius * indentationFactor / 6);
-
     _drawCloud(
       canvas,
       _cloudColor,
       radius,
       indentationFactor,
-      -radius * indentationFactor / 6,
-      -radius * indentationFactor / 18,
-      .64,
+      -radius * indentationFactor / 15,
+      radius * indentationFactor / 4,
+      1.24,
     );
     _drawCloud(
       canvas,
       _cloudColor,
       radius,
       indentationFactor,
-      radius * indentationFactor / 6,
-      -radius * indentationFactor / 8,
-      .64,
+      radius * indentationFactor / 5,
+      -radius * indentationFactor / 5,
+      .75,
     );
 
     // Big cloud
@@ -575,7 +570,7 @@ class RenderCloudy extends RenderWeatherIcon {
       indentationFactor,
       0,
       0,
-      1.1,
+      1.9,
     );
 
     _drawCloud(
@@ -583,9 +578,9 @@ class RenderCloudy extends RenderWeatherIcon {
       _cloudColor,
       radius,
       indentationFactor,
-      -radius * indentationFactor / 8,
-      -radius * indentationFactor / 3.7,
-      .5,
+      -radius * indentationFactor / 4.5,
+      -radius * indentationFactor / 4,
+      .6,
     );
   }
 }
