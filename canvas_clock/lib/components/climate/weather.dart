@@ -600,7 +600,7 @@ void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentati
       w = h * 1.75,
       // The radius for the circles on the left
       // and on the right of the cloud.
-      cr = h / 3.7;
+      cr = h / 3.8;
 
   canvas.drawPath(
       Path()
@@ -614,13 +614,13 @@ void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentati
           h / 2 - cr * 2,
         )
         ..quadraticBezierTo(
-          -w / 3.8,
+          -w / 3.5,
           -h / 3,
           -w / 16,
           h / 2 - cr * 2.7,
         )
         ..quadraticBezierTo(
-          w / 5,
+          w / 4.8,
           -h / 2,
           w / 2 - cr,
           h / 2 - cr * 2,
