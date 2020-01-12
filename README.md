@@ -4,7 +4,7 @@
 
   + Add the playful nature of it to the description.
 
-  + Add that everything is manually drawn using `Canvas` (obviously most widgets are, but no prebuilt ones used).
+  + Add that everything is manually drawn using Flutter's `Canvas` (obviously most widgets are, but no prebuilt ones used).
 
   + Change article theme to that (title + introduction).
 
