@@ -36,6 +36,10 @@ const bool forceVibrantPalette = null;
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
+///
+/// Adjusting this value only works partially with a hot reload because
+/// the animation controllers are not set up again, which means that
+/// you really need a hot restart if you want to change this value.
 const ballEvery = 30;
 
 void main() {

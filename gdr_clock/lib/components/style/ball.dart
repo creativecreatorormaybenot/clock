@@ -11,10 +11,10 @@ const arrivalDuration = Duration(milliseconds: 920),
     arrivalCurve = AccelerationCurve(),
     departureCurve = Curves.decelerate,
     travelCurve = AccelerationCurve(),
-    bounceAwayDuration = Duration(milliseconds: 546),
-    bounceBackDuration = Duration(milliseconds: 671),
-    bounceAwayCurve = Curves.elasticOut,
-    bounceBackCurve = Curves.elasticOut;
+    bounceAwayDuration = Duration(milliseconds: 626),
+    bounceBackDuration = Duration(milliseconds: 547),
+    bounceAwayCurve = ElasticOutCurve(.67),
+    bounceBackCurve = Curves.bounceOut;
 
 class Ball extends LeafRenderObjectWidget {
   final BallTrips trips;

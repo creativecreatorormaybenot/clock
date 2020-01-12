@@ -1,7 +1,5 @@
 ## TODO
 
-* Find better curves and durations for the bounce away and back animations of the clock.
-
 * Take inspiration from https://github.com/JustinFincher/FlutterClock.
 
 * Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
