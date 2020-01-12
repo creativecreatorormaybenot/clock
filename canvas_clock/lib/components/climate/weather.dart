@@ -1114,7 +1114,7 @@ class RenderWindy extends RenderWeatherIcon {
     // Draw wind symbol consisting of four paths
     final paint = Paint()
           ..color = c
-          ..strokeWidth = radius / 114
+          ..strokeWidth = radius / 92
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.butt,
         paths = [
