@@ -1071,21 +1071,30 @@ class RenderThunderstorm extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
+    final s = radius * indentationFactor;
+
     // Draw lightning
-    final lightningPath = Path()
-      ..moveTo(radius * -indentationFactor / 4, radius * -indentationFactor / 4)
-      ..relativeLineTo(radius / 14, 0)
-      ..relativeLineTo(radius / 15, radius / 7)
-      ..relativeLineTo(radius / 14, 0)
-      ..relativeLineTo(radius / 17, radius / 8)
-      ..relativeLineTo(-radius / 9, -radius / 13)
-      ..relativeLineTo(-radius / 14, 0)
-      ..close();
+    canvas.save();
+    canvas.translate(-s / 15, s / -7);
+
+    final l = s / 9.7,
+        lightningPath = Path()
+          ..moveTo(0, 0)
+          ..lineTo(-l, 0)
+          ..lineTo(-1.3 * l, 2 * l)
+          ..lineTo(-.6 * l, 2 * l)
+          ..lineTo(-.86 * l, 3.75 * l)
+          ..lineTo(0, 1.5 * l)
+          ..lineTo(-.45 * l, 1.5 * l)
+          ..lineTo(0, 0)
+          ..close();
     canvas.drawPath(
         lightningPath,
         Paint()
           ..color = _lightningColor
           ..style = PaintingStyle.fill);
+
+    canvas.restore();
 
     // Draw raindrops
     _drawRain(canvas, _raindropColor, radius, 435, _raindrops, 1);
