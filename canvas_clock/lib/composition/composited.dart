@@ -287,20 +287,20 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Location
     final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
 
-    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
-    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
+//    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true); todo
+//    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
 
     // Date
     final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
 
-    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
-    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
+//    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false); todo
+//    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
 
     // Digital clock
     final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime];
 
-    digitalTime.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true);
-    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 2.45 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
+//    digitalTime.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true); todo
+//    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 2.45 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
     //</editor-fold>
   }
 
@@ -340,7 +340,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       super.paint(context, offset);
 
       // Draw components in the actual draw order.
-      paintOrder.forEach(paintChild);
+      List.of(paintOrder)..removeWhere((item) => [ClockComponent.digitalTime, ClockComponent.location, ClockComponent.date].contains(item))..forEach(paintChild); // todo
     });
   }
 }
