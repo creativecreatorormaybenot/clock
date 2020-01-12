@@ -1,5 +1,13 @@
 ## TODO
 
+* Rename to `canvas_clock`.
+
+  + Add the playful nature of it to the description.
+
+  + Add that everything is manually drawn using `Canvas` (obviously most widgets are, but no prebuilt ones used).
+
+  + Change article theme to that (title + introduction).
+
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
