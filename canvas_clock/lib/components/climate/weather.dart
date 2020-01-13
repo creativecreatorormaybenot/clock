@@ -361,7 +361,10 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Restore initial rotation.
     canvas.restore();
 
-    // Revert translation before drawing the children.
+    canvas.drawPetals(_radius);
+
+    _drawArrow(canvas);
+
     canvas.restore();
 
     // Need the rotation angle of the whole weather widget and the angle by which each condition is offset.
@@ -378,16 +381,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
       conditionAngle -= pi * 2 / conditions.length;
     }
-
-    canvas.save();
-    // Translate the canvas to the center of the square.
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
-
-    canvas.drawPetals(_radius);
-
-    _drawArrow(canvas);
-
-    canvas.restore();
   }
 
   void _drawArrow(Canvas canvas) {
@@ -463,6 +456,9 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   RenderWeatherIcon(WeatherCondition condition, this.animation) : super(condition);
 
   @override
+  bool get isRepaintBoundary => false; // todo
+
+  @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
@@ -511,8 +507,10 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
     canvas.restore();
   }
 
-  /// Paints (`paintX` because of [PaintingContext]) the appropriate icon.
-  /// Information on the naming scheme I chose can be found at [ExtendedCanvas.drawPetals].
+  /// Paints the appropriate icon.
+  ///
+  /// Named `paintX` because of [PaintingContext]. Information on
+  /// the naming scheme I chose can be found at [ExtendedCanvas.drawPetals].
   void paintIcon(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
 

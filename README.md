@@ -1,6 +1,8 @@
 ## TODO
 
-* Look into `isRepaintBoundary` .
+* Fix the `isRepaintBoundary` bug with weather icons.
+
+* Set `isRepaintBoundary` to `true` where applicable.
 
 * Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
 
