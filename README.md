@@ -6,6 +6,8 @@
 
 * Test if some layouts do not consider the parent's offset.
 
+* Check with repaint rainbow again.
+
 * Draw shadow for the ball.
 
   + Change paint order for this.
@@ -48,13 +50,7 @@
 
   + Choose one as the default scheme for the submission.
 
-* Potentially consider https://api.flutter.dev/flutter/painting/ShaderWarmUp/warmUpOnCanvas.html and https://api.flutter.dev/flutter/painting/ShaderWarmUp-class.html.
-
-  + Even if performance does not need to be optimized, https://debugger.skia.org/ could be a nice tool to visualize the painting process for the article.
-
-* Make clock available on web via GitHub pages.
-
-  + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
+<br>
 
 * Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
 
@@ -71,6 +67,10 @@
 * Add GIF to README.
 
 * Make repository public.
+
+  + Make clock available on web via GitHub pages.
+
+    - Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 
 * Write article about the creation process of the submission on Flutter Community.
 
