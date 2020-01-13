@@ -7,35 +7,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
-  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, ballTravelAnimation, bounceAwayAnimation, bounceBackAnimation;
-
   /// The [children] need to cover each component type in [ClockComponent], which can be specified in the [RenderObject.parentData] using [ClockChildrenParentData].
   /// Every component can only exist exactly once.
   /// Notice that the order of [children] does not affect the layout or paint order.
   CompositedClock({
     Key key,
     List<Widget> children,
-    @required this.ballArrivalAnimation,
-    @required this.ballDepartureAnimation,
-    @required this.ballTravelAnimation,
-    @required this.bounceAwayAnimation,
-    @required this.bounceBackAnimation,
-  })  : assert(ballArrivalAnimation != null),
-        assert(ballDepartureAnimation != null),
-        assert(ballTravelAnimation != null),
-        assert(bounceAwayAnimation != null),
-        assert(bounceBackAnimation != null),
-        super(key: key, children: children);
+  }) : super(key: key, children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderCompositedClock(
-      ballArrivalAnimation: ballArrivalAnimation,
-      ballDepartureAnimation: ballDepartureAnimation,
-      ballTravelAnimation: ballTravelAnimation,
-      bounceAwayAnimation: bounceAwayAnimation,
-      bounceBackAnimation: bounceBackAnimation,
-    );
+    return RenderCompositedClock();
   }
 }
 
@@ -72,15 +54,7 @@ class ClockChildrenParentData extends CompositionChildrenParentData<ClockCompone
 }
 
 class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
-  final Animation<double> ballArrivalAnimation, ballDepartureAnimation, ballTravelAnimation, bounceAwayAnimation, bounceBackAnimation;
-
-  RenderCompositedClock({
-    this.ballArrivalAnimation,
-    this.ballDepartureAnimation,
-    this.ballTravelAnimation,
-    this.bounceAwayAnimation,
-    this.bounceBackAnimation,
-  }) : super(ClockComponent.values);
+  RenderCompositedClock() : super(ClockComponent.values);
 
   @override
   void setupParentData(RenderObject child) {
@@ -104,32 +78,10 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   }
 
   @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-
-    ballArrivalAnimation.addListener(markNeedsLayout);
-    ballDepartureAnimation.addListener(markNeedsLayout);
-    ballTravelAnimation.addListener(markNeedsLayout);
-    bounceAwayAnimation.addListener(markNeedsLayout);
-    bounceBackAnimation.addListener(markNeedsLayout);
-  }
-
-  @override
-  void detach() {
-    ballArrivalAnimation.removeListener(markNeedsLayout);
-    ballDepartureAnimation.removeListener(markNeedsLayout);
-    ballTravelAnimation.removeListener(markNeedsLayout);
-    bounceAwayAnimation.removeListener(markNeedsLayout);
-    bounceBackAnimation.removeListener(markNeedsLayout);
-
-    super.detach();
-  }
-
-  @override
   void performLayout() {
     super.performLayout();
 
-//    print('RenderCompositedClock.performLayout ${DateTime.now()}');
+    print('RenderCompositedClock.performLayout ${DateTime.now()}');
 
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
@@ -144,14 +96,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     // Ball
     final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData, ballSize = Size.fromRadius(constraints.biggest.height / 21);
-    ball.layout(BoxConstraints.tight(ballSize), parentUsesSize: false);
 
     // Slide
     final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
-    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime], analogTimeSize = Size.fromRadius(size.height / 2.9);
-    analogTime.layout(BoxConstraints.tight(analogTimeSize), parentUsesSize: false);
+    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime] as AnalogTimeParentData, analogTimeSize = Size.fromRadius(size.height / 2.9);
 
     // The ball destination depends on where the analog clock is positioned, which depends on the size of the analog component.
     () {
@@ -176,19 +126,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         0,
       );
 
-      final ballArrivalTween = Tween(
-        begin: ballStartPosition,
-        end: ballDestination,
-      ),
-          ballDepartureTween = Tween(
-        begin: ballDestination,
-        end: ballEndPosition,
-      ),
-          ballTravelTween = Tween(
-        begin: ballDepartureTween.end,
-        end: ballArrivalTween.begin,
-      );
-
       final slideRect = Rect.fromPoints(
         ballEndPosition,
         ballStartPosition,
@@ -209,44 +146,22 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         ..destination = ballDestination - slideRect.topLeft
         ..ballRadius = ballSize.longestSide / 2;
 
-      final travelDistance = ballTravelTween.distance,
-          // Negative as the ball rolls backwards along this path.
-          arrivalDistance = -ballArrivalTween.distance,
-          departureDistance = -ballDepartureTween.distance;
+      ballData
+        ..startPosition = ballStartPosition
+        ..endPosition = ballEndPosition
+        ..destination = ballDestination;
+      // Need to provide positions first.
+      ball.layout(BoxConstraints.tight(ballSize), parentUsesSize: false);
 
-      ballData.totalDistance = travelDistance + arrivalDistance + departureDistance;
+      final bounce = ballSize.onlyHeight.offset / 4;
 
-      if (ballDepartureAnimation.status == AnimationStatus.forward) {
-        ballData
-          ..offset = ballDepartureTween.evaluate(ballDepartureAnimation)
-          ..distanceTraveled = travelDistance + arrivalDistance + departureDistance * ballDepartureAnimation.value;
-        slideData
-          ..stage = BallTripStage.departure
-          ..animationValue = ballDepartureAnimation.value;
-      } else if (ballTravelAnimation.status == AnimationStatus.forward) {
-        ballData
-          ..offset = ballTravelTween.evaluate(ballTravelAnimation)
-          ..distanceTraveled = travelDistance * ballTravelAnimation.value;
-        slideData
-          ..stage = BallTripStage.travel
-          ..animationValue = ballTravelAnimation.value;
-      } else {
-        ballData
-          ..offset = ballArrivalTween.evaluate(ballArrivalAnimation)
-          ..distanceTraveled = travelDistance + arrivalDistance * ballArrivalAnimation.value;
-        slideData
-          ..stage = BallTripStage.arrival
-          ..animationValue = ballArrivalAnimation.value;
-      }
+      backgroundData.analogTimeBounce = bounce;
 
-      // Draw the ball about the point, not at the point.
-      ballData.offset -= ballSize.offset / 2;
-
-      final bounce = ballSize.onlyHeight.offset / 4 * (bounceAwayAnimation.value - bounceBackAnimation.value);
-
-      analogTimeData.offset = analogClockBasePosition + bounce;
+      analogTimeData
+        ..bounce = bounce
+        ..position = analogClockBasePosition;
+      analogTime.layout(BoxConstraints.tight(analogTimeSize), parentUsesSize: false);
     }();
-    backgroundData.addRect(ClockComponent.ball, ballData.offset, ballSize);
 
     backgroundData.addRect(ClockComponent.analogTime, analogTimeData.offset, analogTimeSize);
 

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:canvas_clock/clock.dart';
+import 'package:canvas_clock/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:canvas_clock/clock.dart';
-import 'package:canvas_clock/main.dart';
 
 class Clock extends StatefulWidget {
   final ClockModel model;
@@ -30,7 +30,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer updateTimer;
 
-  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, ballTravelController, bounceAwayController, bounceBackController, minuteController;
+  AnimationController analogBounceController, backgroundWaveController, ballArrivalController, ballDepartureController, ballTravelController, bounceController, minuteController;
 
   BallTrips ballTrips;
 
@@ -65,7 +65,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballTravelController.reset();
 
           ballArrivalController.forward(from: 0);
-          ballTrips.currentStage = BallTripStage.arrival;
         }
       });
     ballArrivalController = AnimationController(
@@ -76,13 +75,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballArrivalController.reset();
 
           ballDepartureController.forward(from: 0);
-          ballTrips.currentStage = BallTripStage.departure;
           Palette.of(context).vibrant = !Palette.of(context).vibrant;
 
           // Starting the animation for the bouncing
           // of the element hit.
-          bounceBackController.reset();
-          bounceAwayController.forward(from: 0);
+          bounceController.forward(from: 0);
         }
       });
     ballDepartureController = AnimationController(
@@ -94,21 +91,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballTrips.count++;
 
           ballTravelController.forward(from: ballTravelProgress(DateTime.now()));
-          ballTrips.currentStage = BallTripStage.travel;
         }
       });
 
-    bounceAwayController = AnimationController(
+    bounceController = AnimationController(
       vsync: this,
-      duration: bounceAwayDuration,
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          bounceBackController.forward(from: 0);
-        }
-      });
-    bounceBackController = AnimationController(
-      vsync: this,
-      duration: bounceBackDuration,
+      duration: bounceAwayDuration + bounceBackDuration,
     );
 
     minuteController = AnimationController(
@@ -132,8 +120,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballArrivalController.dispose();
     ballDepartureController.dispose();
 
-    bounceAwayController.dispose();
-    bounceBackController.dispose();
+    bounceController.dispose();
 
     minuteController.dispose();
 
@@ -175,7 +162,6 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // at that exact value at the moment. The real value
       // will be close enough to the theoretical one.
       ballTravelController.forward(from: ballTravelProgress(time));
-      ballTrips.currentStage = BallTripStage.travel;
     }
 
     if (initial) return;
@@ -227,32 +213,27 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Animation<double> get bounceAwayAnimation {
-    return CurvedAnimation(
-      parent: bounceAwayController,
-      curve: bounceAwayCurve,
-    );
-  }
-
-  Animation<double> get bounceBackAnimation {
-    return CurvedAnimation(
-      parent: bounceBackController,
-      curve: bounceBackCurve,
-    );
+  Animation<double> get bounceAnimation {
+    return TweenSequence([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: bounceAwayCurve)),
+        weight: bounceAwayDuration.inMicroseconds / bounceController.duration.inMicroseconds,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1, end: 0).chain(CurveTween(curve: bounceBackCurve)),
+        weight: bounceBackDuration.inMicroseconds / bounceController.duration.inMicroseconds,
+      ),
+    ]).animate(bounceController);
   }
 
   Animation<double> get minuteAnimation => minuteController;
 
   @override
   Widget build(BuildContext context) => CompositedClock(
-        ballArrivalAnimation: ballArrivalAnimation,
-        ballDepartureAnimation: ballDepartureAnimation,
-        ballTravelAnimation: ballTravelAnimation,
-        bounceAwayAnimation: bounceAwayAnimation,
-        bounceBackAnimation: bounceBackAnimation,
         children: <Widget>[
           AnimatedAnalogTime(
             animation: analogBounceAnimation,
+            bounceAnimation: bounceAnimation,
             model: model,
             palette: widget.palette,
           ),
@@ -265,6 +246,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           AnimatedWeather(model: model, palette: widget.palette),
           Background(
             animation: backgroundWaveAnimation,
+            analogTimeBounceAnimation: bounceAnimation,
             ballColor: Color.lerp(
               widget.palette[ClockColor.ballPrimary],
               widget.palette[ClockColor.ballSecondary],
@@ -281,6 +263,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             weatherComponentColor: widget.palette[ClockColor.weatherBackground],
           ),
           Ball(
+            travelAnimation: ballTravelAnimation,
+            arrivalAnimation: ballArrivalAnimation,
+            departureAnimation: ballDepartureAnimation,
             trips: ballTrips,
             primaryColor: widget.palette[ClockColor.ballPrimary],
             secondaryColor: widget.palette[ClockColor.ballSecondary],
@@ -296,6 +281,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             ),
           ),
           Slide(
+            ballTravelAnimation: ballTravelAnimation,
+            ballArrivalAnimation: ballArrivalAnimation,
+            ballDepartureAnimation: ballDepartureAnimation,
             curveColor: Color.lerp(
               widget.palette[ClockColor.ballPrimary],
               widget.palette[ClockColor.ballSecondary],

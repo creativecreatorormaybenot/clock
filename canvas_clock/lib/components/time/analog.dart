@@ -12,7 +12,7 @@ import 'package:flutter_clock_helper/model.dart';
 const handBounceDuration = Duration(milliseconds: 274);
 
 class AnimatedAnalogTime extends AnimatedWidget {
-  final Animation<double> animation;
+  final Animation<double> animation, bounceAnimation;
 
   final ClockModel model;
   final Map<ClockColor, Color> palette;
@@ -20,9 +20,11 @@ class AnimatedAnalogTime extends AnimatedWidget {
   AnimatedAnalogTime({
     Key key,
     @required this.animation,
+    @required this.bounceAnimation,
     @required this.model,
     @required this.palette,
   })  : assert(animation != null),
+        assert(bounceAnimation != null),
         assert(model != null),
         assert(palette != null),
         super(key: key, listenable: animation);
@@ -32,6 +34,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
     final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogTime(
+      bounceAnimation: bounceAnimation,
       secondHandAngle: // Regular distance
           pi * 2 / 60 * time.second +
               // Bounce
@@ -61,6 +64,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
 }
 
 class AnalogTime extends LeafRenderObjectWidget {
+  final Animation<double> bounceAnimation;
+
   final double secondHandAngle, minuteHandAngle, hourHandAngle;
 
   final bool use24HourFormat;
@@ -79,6 +84,7 @@ class AnalogTime extends LeafRenderObjectWidget {
 
   const AnalogTime({
     Key key,
+    @required this.bounceAnimation,
     @required this.secondHandAngle,
     @required this.minuteHandAngle,
     @required this.hourHandAngle,
@@ -92,7 +98,8 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.secondHandColor,
     @required this.shadowColor,
     @required this.borderColor,
-  })  : assert(secondHandAngle != null),
+  })  : assert(bounceAnimation != null),
+        assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
         assert(hourHandAngle != null),
         assert(use24HourFormat != null),
@@ -111,6 +118,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderAnalogTime(
+      bounceAnimation: bounceAnimation,
       secondHandAngle: secondHandAngle,
       minuteHandAngle: minuteHandAngle,
       hourHandAngle: hourHandAngle,
@@ -147,11 +155,14 @@ class AnalogTime extends LeafRenderObjectWidget {
 }
 
 class AnalogTimeParentData extends ClockChildrenParentData {
-  Offset shift;
+  Offset position, bounce;
 }
 
 class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
+  final Animation<double> bounceAnimation;
+
   RenderAnalogTime({
+    this.bounceAnimation,
     double secondHandAngle,
     double minuteHandAngle,
     double hourHandAngle,
@@ -335,15 +346,33 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
   }
 
   @override
-  bool get sizedByParent => true;
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    compositionData.hasSemanticsInformation = true;
+
+    bounceAnimation.addListener(markNeedsLayout);
+  }
+
+  @override
+  void detach() {
+    bounceAnimation.removeListener(markNeedsLayout);
+
+    super.detach();
+  }
+
+  @override
+  bool get sizedByParent => false;
 
   double _radius;
 
   @override
-  void performResize() {
+  void performLayout() {
     size = constraints.biggest;
 
     _radius = size.height / 2;
+
+    compositionData.offset = compositionData.position + compositionData.bounce * bounceAnimation.value;
   }
 
   int get second => (_secondHandAngle / pi / 2 * 60).round();
@@ -351,13 +380,6 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
   int get minute => (_minuteHandAngle / pi / 2 * 60).round();
 
   int get hour => (_hourHandAngle / pi / 2 * 12).round();
-
-  @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-
-    compositionData.hasSemanticsInformation = true;
-  }
 
   @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {

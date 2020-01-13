@@ -3,19 +3,31 @@ import 'package:flutter/widgets.dart';
 import 'package:canvas_clock/clock.dart';
 
 class Slide extends LeafRenderObjectWidget {
+  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
+
   final Color curveColor, shadowColor;
 
   Slide({
     Key key,
+    @required this.ballTravelAnimation,
+    @required this.ballArrivalAnimation,
+    @required this.ballDepartureAnimation,
     @required this.curveColor,
     @required this.shadowColor,
-  })  : assert(curveColor != null),
+  })  :
+        assert(ballTravelAnimation != null),
+        assert(ballArrivalAnimation != null),
+        assert(ballDepartureAnimation != null),
+        assert(curveColor != null),
         assert(shadowColor != null),
         super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderSlide(
+      ballTravelAnimation: ballTravelAnimation,
+      ballArrivalAnimation: ballArrivalAnimation,
+      ballDepartureAnimation: ballDepartureAnimation,
       curveColor: curveColor,
       shadowColor: shadowColor,
     );
@@ -34,18 +46,13 @@ class SlideParentData extends ClockChildrenParentData {
   Offset start, end, destination;
 
   double ballRadius;
-
-  BallTripStage stage;
-
-  /// Animation value for the current [stage].
-  ///
-  /// This is needed to easily determine when the
-  /// travel slide needs to be contracted.
-  double animationValue;
 }
 
 class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
+  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
+
   RenderSlide({
+    this.ballTravelAnimation, this.ballArrivalAnimation, this.ballDepartureAnimation,
     Color curveColor,
     Color shadowColor,
   })  : _curveColor = curveColor,
@@ -84,6 +91,19 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     super.attach(owner);
 
     compositionData.hasSemanticsInformation = false;
+
+    ballTravelAnimation.addListener(markNeedsPaint);
+    ballArrivalAnimation.addListener(markNeedsPaint);
+    ballDepartureAnimation.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    ballTravelAnimation.removeListener(markNeedsPaint);
+    ballArrivalAnimation.removeListener(markNeedsPaint);
+    ballDepartureAnimation.removeListener(markNeedsPaint);
+
+    super.detach();
   }
 
   @override
@@ -93,6 +113,21 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    BallTripStage stage;
+    double animationValue;
+
+    if (ballDepartureAnimation.status == AnimationStatus.forward) {
+      stage = BallTripStage.departure;
+      animationValue = ballDepartureAnimation.value;
+    } else if (ballTravelAnimation.status == AnimationStatus.forward) {
+      stage = BallTripStage.travel;
+      animationValue = ballTravelAnimation.value;
+    } else {
+      stage = BallTripStage.arrival;
+      animationValue = ballArrivalAnimation.value;
+    }
+
+
     final canvas = context.canvas;
 
     canvas.save();
@@ -131,7 +166,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
     travelLine.pad(1.017);
 
-    switch (compositionData.stage) {
+    switch (stage) {
       case BallTripStage.travel:
         final leftSequence = TweenSequence([
           TweenSequenceItem(
@@ -161,8 +196,8 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
         ]);
 
         travelLine.padStartEnd(
-          leftSequence.transform(compositionData.animationValue),
-          rightSequence.transform(compositionData.animationValue),
+          leftSequence.transform(animationValue),
+          rightSequence.transform(animationValue),
         );
         break;
       case BallTripStage.arrival:
@@ -180,7 +215,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
           ),
         ]);
 
-        travelLine.padEnd(sequence.transform(compositionData.animationValue));
+        travelLine.padEnd(sequence.transform(animationValue));
         break;
       case BallTripStage.departure:
         final sequence = TweenSequence([
@@ -197,7 +232,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
           ),
         ]);
 
-        travelLine.padStart(sequence.transform(compositionData.animationValue));
+        travelLine.padStart(sequence.transform(animationValue));
         break;
     }
 

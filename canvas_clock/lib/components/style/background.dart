@@ -9,20 +9,23 @@ const waveDuration = Duration(minutes: 1), waveCurve = Curves.easeInOut;
 double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 
 class Background extends LeafRenderObjectWidget {
-  final Animation<double> animation;
+  final Animation<double> animation, analogTimeBounceAnimation;
 
   final Color ballColor, groundColor, gooColor, analogTimeComponentColor, weatherComponentColor, temperatureComponentColor;
 
   const Background({
     Key key,
     @required this.animation,
+    @required this.analogTimeBounceAnimation,
     @required this.ballColor,
     @required this.groundColor,
     @required this.gooColor,
     @required this.analogTimeComponentColor,
     @required this.weatherComponentColor,
     @required this.temperatureComponentColor,
-  })  : assert(animation != null),
+  })  :
+        assert(animation != null),
+        assert(analogTimeBounceAnimation != null),
         assert(ballColor != null),
         assert(groundColor != null),
         assert(gooColor != null),
@@ -35,6 +38,7 @@ class Background extends LeafRenderObjectWidget {
   RenderBackground createRenderObject(BuildContext context) {
     return RenderBackground(
       animation: animation,
+      analogTimeBounceAnimation: analogTimeBounceAnimation,
       ballColor: ballColor,
       groundColor: groundColor,
       gooColor: gooColor,
@@ -74,14 +78,15 @@ class BackgroundParentData extends ClockChildrenParentData {
     _rects = {};
   }
 
-  Offset analogTimeShift;
+  Offset analogTimeBounce;
 }
 
 class RenderBackground extends RenderCompositionChild<ClockComponent, BackgroundParentData> {
-  final Animation<double> animation;
+  final Animation<double> animation, analogTimeBounceAnimation;
 
   RenderBackground({
     this.animation,
+    this.analogTimeBounceAnimation,
     Color ballColor,
     Color groundColor,
     Color gooColor,
@@ -168,13 +173,16 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
-    animation.addListener(markNeedsPaint);
     compositionData.hasSemanticsInformation = false;
+
+    animation.addListener(markNeedsPaint);
+    analogTimeBounceAnimation.addListener(markNeedsPaint);
   }
 
   @override
   void detach() {
     animation.removeListener(markNeedsPaint);
+    analogTimeBounceAnimation.removeListener(markNeedsPaint);
 
     super.detach();
   }
@@ -194,20 +202,20 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
       double.infinity,
       double.maxFinite,
     ),
-        componentRects = [
+        components = [
       compositionData.rectOf(ClockComponent.weather),
       compositionData.rectOf(ClockComponent.temperature),
       // The glow of the clock should be rendered after the other two components.
-      compositionData.rectOf(ClockComponent.analogTime),
+      compositionData.rectOf(ClockComponent.analogTime)
+          // The background animates depending on the analog time's position.
+          .shift(compositionData.analogTimeBounce * analogTimeBounceAnimation.value),
     ],
-        glowComponents = [...componentRects, compositionData.rectOf(ClockComponent.ball)],
         componentColors = [
       _weatherComponentColor,
       _temperatureComponentColor,
       _analogTimeComponentColor,
-      _ballColor,
     ],
-        componentsInGoo = componentRects.where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
+        componentsInGoo = components.where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
 
     final canvas = context.canvas;
 
@@ -285,8 +293,8 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
           ..style = PaintingStyle.fill);
 
     // Draw a kind of glow about the given components
-    for (var i = 0; i < glowComponents.length; i++) {
-      final component = glowComponents[i], rect = Rect.fromCenter(center: component.center, width: component.width * 7 / 4, height: component.height * 7 / 4);
+    for (var i = 0; i < components.length; i++) {
+      final component = components[i], rect = Rect.fromCenter(center: component.center, width: component.width * 7 / 4, height: component.height * 7 / 4);
 
       final color = componentColors[i],
           paint = Paint()

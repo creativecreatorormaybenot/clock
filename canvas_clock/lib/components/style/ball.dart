@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:canvas_clock/clock.dart';
 
 const arrivalDuration = Duration(milliseconds: 920),
     departureDuration = Duration(milliseconds: 1242),
@@ -17,19 +17,27 @@ const arrivalDuration = Duration(milliseconds: 920),
     bounceBackCurve = Curves.bounceOut;
 
 class Ball extends LeafRenderObjectWidget {
+  final Animation<double> travelAnimation, arrivalAnimation, departureAnimation;
+
   final BallTrips trips;
 
   final Color primaryColor, secondaryColor, dotsIdleColor, dotsPrimedColor, dotsDisengagedColor;
 
   const Ball({
     Key key,
+    @required this.travelAnimation,
+    @required this.arrivalAnimation,
+    @required this.departureAnimation,
     @required this.trips,
     @required this.primaryColor,
     @required this.secondaryColor,
     @required this.dotsIdleColor,
     @required this.dotsPrimedColor,
     @required this.dotsDisengagedColor,
-  })  : assert(trips != null),
+  })  : assert(travelAnimation != null),
+        assert(arrivalAnimation != null),
+        assert(departureAnimation != null),
+        assert(trips != null),
         assert(primaryColor != null),
         assert(secondaryColor != null),
         assert(dotsIdleColor != null),
@@ -40,6 +48,9 @@ class Ball extends LeafRenderObjectWidget {
   @override
   RenderBall createRenderObject(BuildContext context) {
     return RenderBall(
+      travelAnimation: travelAnimation,
+      arrivalAnimation: arrivalAnimation,
+      departureAnimation: departureAnimation,
       trips: trips,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
@@ -80,22 +91,10 @@ class BallTrips {
   BallTrips([this.count = 0]);
 
   double count;
-
-  BallTripStage currentStage;
 }
 
 class BallParentData extends ClockChildrenParentData {
-  /// Indicates how far the ball has rolled
-  /// along the track, i.e. along the ball's movement stages
-  /// (see [RenderBall]).
-  /// This can rise or decline while moving through the
-  /// stages because the ball can roll backwards sometimes.
-  ///
-  /// However, the distance resets to `0` when
-  /// the travel stage begins.
-  double distanceTraveled;
-
-  double totalDistance;
+  Offset startPosition, endPosition, destination;
 }
 
 /// Renders a ball moving about the scene.
@@ -110,9 +109,14 @@ class BallParentData extends ClockChildrenParentData {
 /// by taking the circumference of the circle, the distance of the current stage, and
 /// the progress of the current movement.
 class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> {
+  final Animation<double> travelAnimation, arrivalAnimation, departureAnimation;
+
   final BallTrips trips;
 
   RenderBall({
+    this.travelAnimation,
+    this.arrivalAnimation,
+    this.departureAnimation,
     this.trips,
     Color primaryColor,
     Color secondaryColor,
@@ -188,18 +192,76 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     super.attach(owner);
 
     compositionData.hasSemanticsInformation = false;
+
+    travelAnimation.addListener(markNeedsLayout);
+    arrivalAnimation.addListener(markNeedsLayout);
+    departureAnimation.addListener(markNeedsLayout);
   }
 
   @override
-  bool get sizedByParent => true;
+  void detach() {
+    travelAnimation.removeListener(markNeedsLayout);
+    arrivalAnimation.removeListener(markNeedsLayout);
+    departureAnimation.removeListener(markNeedsLayout);
 
-  double _radius;
+    super.detach();
+  }
 
   @override
-  void performResize() {
+  bool get sizedByParent => false;
+
+  double _radius, _totalDistance, _distanceTraveled;
+
+  BallTripStage stage;
+
+  @override
+  void performLayout() {
     size = constraints.biggest;
 
     _radius = size.height / 2;
+
+    final ballArrivalTween = Tween(
+      begin: compositionData.startPosition,
+      end: compositionData.destination,
+    ),
+        ballDepartureTween = Tween(
+      begin: compositionData.destination,
+      end: compositionData.endPosition,
+    ),
+        ballTravelTween = Tween(
+      begin: ballDepartureTween.end,
+      end: ballArrivalTween.begin,
+    );
+
+    final travelDistance = ballTravelTween.distance,
+        // Negative as the ball rolls backwards along this path.
+        arrivalDistance = -ballArrivalTween.distance,
+        departureDistance = -ballDepartureTween.distance;
+
+    _totalDistance = travelDistance + arrivalDistance + departureDistance;
+
+    if (departureAnimation.status == AnimationStatus.forward) {
+      compositionData..offset = ballDepartureTween.evaluate(departureAnimation);
+
+      _distanceTraveled = travelDistance + arrivalDistance + departureDistance * departureAnimation.value;
+
+      stage = BallTripStage.departure;
+    } else if (travelAnimation.status == AnimationStatus.forward) {
+      compositionData..offset = ballTravelTween.evaluate(travelAnimation);
+
+      _distanceTraveled = travelDistance * travelAnimation.value;
+
+      stage = BallTripStage.travel;
+    } else {
+      compositionData..offset = ballArrivalTween.evaluate(arrivalAnimation);
+
+      _distanceTraveled = travelDistance + arrivalDistance * arrivalAnimation.value;
+
+      stage = BallTripStage.arrival;
+    }
+
+    // Draw the ball about the point, not at the point.
+    compositionData.offset -= size.offset / 2;
   }
 
   List<Color> get shaderColors => [_primaryColor, _secondaryColor];
@@ -224,12 +286,12 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // using modulo.
     // It is fine because the Canvas.rotate also takes any multiples
     // of the rotation value and accepts it.
-    final progress = (compositionData.distanceTraveled +
+    final progress = (_distanceTraveled +
             // After every trip there will probably be some additional
             // distance that is not evenly divisible by the circumference,
             // which would cause the rotation to visually reset if
             // not accounted for.
-            (compositionData.totalDistance % ballLength) * trips.count)
+            (_totalDistance % ballLength) * trips.count)
         // The ball needs to rotate once for every circumference
         // on the track.
         /
@@ -268,7 +330,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   }
 
   Color get dotColor {
-    switch (trips.currentStage) {
+    switch (stage) {
       case BallTripStage.travel:
         return _dotsIdleColor;
       case BallTripStage.arrival:
@@ -276,7 +338,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
       case BallTripStage.departure:
         return _dotsDisengagedColor;
     }
-    throw ArgumentError.value(trips.currentStage);
+    throw ArgumentError.value(stage);
   }
 
   /// Draw small dot onto the ball.

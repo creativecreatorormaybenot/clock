@@ -4,6 +4,10 @@
 
 * Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
 
+* Draw shadow for the ball.
+
+  + Change paint order for this.
+
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
