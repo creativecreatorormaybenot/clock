@@ -95,6 +95,12 @@ class BallTrips {
 
 class BallParentData extends ClockChildrenParentData {
   Offset startPosition, endPosition, destination;
+
+  /// Declares the radius that the circular ball should use.
+  ///
+  /// See [RenderBall.isRepaintBoundary] for why it is necessary
+  /// to send this instead of sizing the ball to it.
+  double radius;
 }
 
 /// Renders a ball moving about the scene.
@@ -187,22 +193,34 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     markNeedsPaint();
   }
 
+  /// Ensures that the constant repaints from the ball
+  /// do not cause the whole composition to repaint.
+  ///
+  /// It would be possible layout the ball with a box
+  /// enclosing just its radius and calling [markNeedsLayout]
+  /// to update its position instead.
+  /// I did it like this before, but I do not
+  /// want the ball causing the whole clock face to
+  /// repaint - same goes for the analog clock.
+  @override
+  bool get isRepaintBoundary => true;
+
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
     compositionData.hasSemanticsInformation = false;
 
-    travelAnimation.addListener(markNeedsLayout);
-    arrivalAnimation.addListener(markNeedsLayout);
-    departureAnimation.addListener(markNeedsLayout);
+    travelAnimation.addListener(markNeedsPaint);
+    arrivalAnimation.addListener(markNeedsPaint);
+    departureAnimation.addListener(markNeedsPaint);
   }
 
   @override
   void detach() {
-    travelAnimation.removeListener(markNeedsLayout);
-    arrivalAnimation.removeListener(markNeedsLayout);
-    departureAnimation.removeListener(markNeedsLayout);
+    travelAnimation.removeListener(markNeedsPaint);
+    arrivalAnimation.removeListener(markNeedsPaint);
+    departureAnimation.removeListener(markNeedsPaint);
 
     super.detach();
   }
@@ -210,7 +228,11 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   @override
   bool get sizedByParent => false;
 
-  double _radius, _totalDistance, _distanceTraveled;
+  double _radius, _totalDistance;
+
+  Tween<Offset> _travelTween, _arrivalTween, _departureTween;
+
+  double _travelDistance, _arrivalDistance, _departureDistance;
 
   BallTripStage stage;
 
@@ -218,50 +240,28 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   void performLayout() {
     size = constraints.biggest;
 
-    _radius = size.height / 2;
+    // The data passed only updates in ClockComposition.performLayout.
+    _radius = compositionData.radius;
 
-    final ballArrivalTween = Tween(
+    _travelTween = Tween(
+      begin: compositionData.endPosition,
+      end: compositionData.startPosition,
+    );
+    _arrivalTween = Tween(
       begin: compositionData.startPosition,
       end: compositionData.destination,
-    ),
-        ballDepartureTween = Tween(
+    );
+    _departureTween = Tween(
       begin: compositionData.destination,
       end: compositionData.endPosition,
-    ),
-        ballTravelTween = Tween(
-      begin: ballDepartureTween.end,
-      end: ballArrivalTween.begin,
     );
 
-    final travelDistance = ballTravelTween.distance,
-        // Negative as the ball rolls backwards along this path.
-        arrivalDistance = -ballArrivalTween.distance,
-        departureDistance = -ballDepartureTween.distance;
+    _travelDistance = _travelTween.distance;
+    // Negative as the ball rolls backwards along this path.
+    _arrivalDistance = -_arrivalTween.distance;
+    _departureDistance = -_departureTween.distance;
 
-    _totalDistance = travelDistance + arrivalDistance + departureDistance;
-
-    if (departureAnimation.status == AnimationStatus.forward) {
-      compositionData..offset = ballDepartureTween.evaluate(departureAnimation);
-
-      _distanceTraveled = travelDistance + arrivalDistance + departureDistance * departureAnimation.value;
-
-      stage = BallTripStage.departure;
-    } else if (travelAnimation.status == AnimationStatus.forward) {
-      compositionData..offset = ballTravelTween.evaluate(travelAnimation);
-
-      _distanceTraveled = travelDistance * travelAnimation.value;
-
-      stage = BallTripStage.travel;
-    } else {
-      compositionData..offset = ballArrivalTween.evaluate(arrivalAnimation);
-
-      _distanceTraveled = travelDistance + arrivalDistance * arrivalAnimation.value;
-
-      stage = BallTripStage.arrival;
-    }
-
-    // Draw the ball about the point, not at the point.
-    compositionData.offset -= size.offset / 2;
+    _totalDistance = _travelDistance + _arrivalDistance + _departureDistance;
   }
 
   List<Color> get shaderColors => [_primaryColor, _secondaryColor];
@@ -271,8 +271,35 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     final canvas = context.canvas;
 
     canvas.save();
+
+    var translation = offset;
+    double distanceTraveled;
+
+    if (departureAnimation.status == AnimationStatus.forward) {
+      translation += _departureTween.evaluate(departureAnimation);
+
+      distanceTraveled = _travelDistance + _arrivalDistance + _departureDistance * departureAnimation.value;
+
+      stage = BallTripStage.departure;
+    } else if (travelAnimation.status == AnimationStatus.forward) {
+      translation += _travelTween.evaluate(travelAnimation);
+
+      distanceTraveled = _travelDistance * travelAnimation.value;
+
+      stage = BallTripStage.travel;
+    } else {
+      translation += _arrivalTween.evaluate(arrivalAnimation);
+
+      distanceTraveled = _travelDistance + _arrivalDistance * arrivalAnimation.value;
+
+      stage = BallTripStage.arrival;
+    }
+
+    // Draw the ball about the point, not at the point.
+    translation += Size.fromRadius(_radius).offset / 2;
+
     // Translate to the center of the ball.
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+    canvas.translate(translation.dx, offset.dy);
 
     // This is the circumference of the ball. Basically,
     // it is its length when unwrapping its circle.
@@ -286,7 +313,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // using modulo.
     // It is fine because the Canvas.rotate also takes any multiples
     // of the rotation value and accepts it.
-    final progress = (_distanceTraveled +
+    final progress = (distanceTraveled +
             // After every trip there will probably be some additional
             // distance that is not evenly divisible by the circumference,
             // which would cause the rotation to visually reset if

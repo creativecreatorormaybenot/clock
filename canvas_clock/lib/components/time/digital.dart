@@ -184,6 +184,9 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
   String get amPm => _hour > 12 ? 'PM' : 'AM';
 
   @override
+  bool get isRepaintBoundary => true;
+
+  @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 

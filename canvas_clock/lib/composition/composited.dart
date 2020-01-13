@@ -84,7 +84,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void performLayout() {
     super.performLayout();
 
-//    print('RenderCompositedClock.performLayout ${DateTime.now()}');
+    print('RenderCompositedClock.performLayout ${DateTime.now()}');
 
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
@@ -98,7 +98,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     background.layout(BoxConstraints.tight(size));
 
     // Ball
-    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData, ballSize = Size.fromRadius(constraints.biggest.height / 21);
+    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData, ballRadius = constraints.biggest.height / 21, ballSize = Size.fromRadius(ballRadius);
 
     // Slide
     final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
@@ -129,32 +129,31 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         0,
       );
 
-      final slideRect = Rect.fromPoints(
+      final ballRect = Rect.fromPoints(
         ballEndPosition,
         ballStartPosition,
       )
           .include(ballDestination)
           // The positions are the center of where the ball should be.
           // Thus, the slide rect needs to be inflated.
-          // Slide could also take the whole canvas area of the clock,
-          // but it is not necessary.
           .inflate(ballSize.longestSide / 2);
 
-      slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
-
+      // Slide sizes and positions itself accordingly.
       slideData
-        ..offset = slideRect.topLeft
-        ..end = ballEndPosition - slideRect.topLeft
-        ..start = ballStartPosition - slideRect.topLeft
-        ..destination = ballDestination - slideRect.topLeft
+        ..end = ballEndPosition
+        ..start = ballStartPosition
+        ..destination = ballDestination
         ..ballRadius = ballSize.longestSide / 2;
+      slide.layout(constraints.loosen(), parentUsesSize: false);
 
       ballData
         ..startPosition = ballStartPosition
         ..endPosition = ballEndPosition
-        ..destination = ballDestination;
+        ..destination = ballDestination
+        ..radius = ballRadius
+        ..offset = ballRect.topLeft;
       // Need to provide positions first.
-      ball.layout(BoxConstraints.tight(ballSize), parentUsesSize: false);
+      ball.layout(BoxConstraints.tight(ballRect.size), parentUsesSize: false);
 
       final bounce = ballSize.onlyHeight.offset / 4;
 
@@ -257,7 +256,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
   @override
   void paint(PaintingContext context, Offset offset) {
-//    print('RenderCompositedClock.paint ${DateTime.now()}');
+    print('RenderCompositedClock.paint ${DateTime.now()}');
 
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
     context.pushClipRect(needsCompositing, offset, Offset.zero & size, (context, offset) {

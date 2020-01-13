@@ -346,6 +346,9 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
   }
 
   @override
+  bool get isRepaintBoundary => true;
+
+  @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 

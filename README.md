@@ -1,6 +1,6 @@
 ## TODO
 
-* Set `isRepaintBoundary` to `true` where applicable.
+* Test if some layouts do not consider the parent's offset.
 
 * Draw shadow for the ball.
 

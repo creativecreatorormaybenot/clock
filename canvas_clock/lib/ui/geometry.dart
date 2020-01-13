@@ -68,6 +68,8 @@ extension ExtendedRect on Rect {
 class Line2d {
   Line2d({this.start, this.end});
 
+  factory Line2d.from(Line2d other) => Line2d(start: other.start, end: other.end);
+
   Offset start, end;
 
   /// Positions the new [start]/[end] [startFactor]/[endFactor]
@@ -117,5 +119,16 @@ class Line2d {
     final s1 = start - normalOffset * width / 2, s2 = start + normalOffset * width / 2, e1 = end - normalOffset * width / 2, e2 = end + normalOffset * width / 2;
 
     return Path()..addPolygon([s1, s2, e2, e1], false);
+  }
+
+  /// Compares two lines for equality.
+  @override
+  bool operator ==(dynamic other) {
+    if (other is! Line2d) {
+      return false;
+    }
+
+    final typedOther = other as Line2d;
+    return start == typedOther.start && end == typedOther.end;
   }
 }

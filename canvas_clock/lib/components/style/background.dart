@@ -170,6 +170,9 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
   }
 
   @override
+  bool get isRepaintBoundary => true;
+
+  @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
 
