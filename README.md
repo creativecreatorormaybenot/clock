@@ -1,7 +1,5 @@
 ## TODO
 
-* Test if some layouts do not consider the parent's offset.
-
 * Check with repaint rainbow again.
 
 * Draw shadow for the ball.

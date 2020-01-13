@@ -84,8 +84,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void performLayout() {
     super.performLayout();
 
-    print('RenderCompositedClock.performLayout ${DateTime.now()}');
-
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
 
@@ -256,8 +254,6 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    print('RenderCompositedClock.paint ${DateTime.now()}');
-
     // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
     context.pushClipRect(needsCompositing, offset, Offset.zero & size, (context, offset) {
       super.paint(context, offset);
