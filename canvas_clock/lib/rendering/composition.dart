@@ -91,11 +91,13 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
     paintChild = (C child) => context.paintChild(children[child], parentData[child].offset + offset);
   }
 
+  static const bool debugPaintMessageEnabled = false;
+
   @override
   @mustCallSuper
   void debugPaint(PaintingContext context, Offset offset) {
     assert(() {
-      if (debugPaintSizeEnabled) {
+      if (debugPaintMessageEnabled && debugPaintSizeEnabled) {
         final painter = TextPainter(
             text: const TextSpan(
                 text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',

@@ -1,5 +1,7 @@
 ## TODO
 
+* Look into `isRepaintBoundary` .
+
 * Move ball movement and bounce out of composited (pass ball size to analog clock for it to know how to bounce).
 
 * Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
