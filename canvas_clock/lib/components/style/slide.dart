@@ -265,7 +265,9 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     final canvas = context.canvas;
 
     canvas.save();
-    canvas.translate(0, 0);
+    // Need to translate by the offset and subtract the offset
+    // set in performResize again.
+    canvas.translate(offset.dx + -compositionData.offset.dx, offset.dy + -compositionData.offset.dy);
 
     final travelPath = paddedTravelLine.pathWithWidth(strokeWidth), startPath = startLine.pathWithWidth(strokeWidth), endPath = endLine.pathWithWidth(strokeWidth);
     canvas.drawShadow(

@@ -111,6 +111,7 @@ class Palette extends StatefulWidget {
       vibrantDark = {},
       subtleLight = {
     ClockColor.background: Color(0xff8b4513),
+        ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
   },
       subtleDark = {};
 

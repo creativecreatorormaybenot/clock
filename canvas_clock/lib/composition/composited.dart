@@ -57,7 +57,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   RenderCompositedClock() : super(ClockComponent.values);
 
   @override
-  bool get isRepaintBoundary => true;
+  bool get isRepaintBoundary => false;
 
   @override
   void setupParentData(RenderObject child) {

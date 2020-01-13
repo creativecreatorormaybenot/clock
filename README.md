@@ -1,5 +1,9 @@
 ## TODO
 
+* Fix that the ball is gone?
+
+* Fix that the analog clock does not bounce.
+
 * Test if some layouts do not consider the parent's offset.
 
 * Draw shadow for the ball.
@@ -87,6 +91,10 @@
     - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
 
   + Mention `RenderObject.isRepaintBoundary` for performance optimizations (did not use raster caching) and `RepaintBoundary` for widgets.
+
+    - Show illustrations with the **repaint rainbow** enabled.
+
+  + Can also play with commenting components out from the paint order.
 
   + Add an "Everything is implicitly animated" screen recording, where the model values are modified programmatically.
 

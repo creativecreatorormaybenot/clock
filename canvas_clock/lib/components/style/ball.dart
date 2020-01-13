@@ -202,6 +202,9 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   /// I did it like this before, but I do not
   /// want the ball causing the whole clock face to
   /// repaint - same goes for the analog clock.
+  /// The reason this would happen is that a repaint
+  /// boundary is not a relayout boundary and thus
+  /// [markNeedsLayout] will also mark the parent as dirty.
   @override
   bool get isRepaintBoundary => true;
 
@@ -269,7 +272,6 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
-
     canvas.save();
 
     var translation = offset;
