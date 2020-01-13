@@ -1,7 +1,7 @@
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:canvas_clock/clock.dart';
 
 class AnimatedDigitalTime extends AnimatedWidget {
   final Animation<double> animation;

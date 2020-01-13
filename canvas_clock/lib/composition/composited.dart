@@ -160,9 +160,9 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       backgroundData.analogTimeBounce = bounce;
 
       analogTimeData
-        ..bounce = bounce
-        ..position = analogClockBasePosition;
-      analogTime.layout(BoxConstraints.tight(analogTimeSize), parentUsesSize: false);
+        ..offset = analogClockBasePosition
+        ..bounce = bounce;
+      analogTime.layout(BoxConstraints.tight(analogTimeSize + bounce), parentUsesSize: false);
     }();
 
     backgroundData.addRect(ClockComponent.analogTime, analogTimeData.offset, analogTimeSize);

@@ -155,7 +155,7 @@ class AnalogTime extends LeafRenderObjectWidget {
 }
 
 class AnalogTimeParentData extends ClockChildrenParentData {
-  Offset position, bounce;
+  Offset bounce;
 }
 
 class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
@@ -354,28 +354,27 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
 
     compositionData.hasSemanticsInformation = true;
 
-    bounceAnimation.addListener(markNeedsLayout);
+    bounceAnimation.addListener(markNeedsPaint);
   }
 
   @override
   void detach() {
-    bounceAnimation.removeListener(markNeedsLayout);
+    bounceAnimation.removeListener(markNeedsPaint);
 
     super.detach();
   }
 
   @override
-  bool get sizedByParent => false;
+  bool get sizedByParent => true;
 
   double _radius;
 
   @override
-  void performLayout() {
+  void performResize() {
     size = constraints.biggest;
 
-    _radius = size.height / 2;
-
-    compositionData.offset = compositionData.position + compositionData.bounce * bounceAnimation.value;
+    // The height is bigger than the radius to account for the bounce.
+    _radius = size.width / 2;
   }
 
   int get second => (_secondHandAngle / pi / 2 * 60).round();
@@ -400,7 +399,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
 
     canvas.save();
     // Translate the canvas to the center of the square.
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+    canvas.translate(offset.dx + _radius, offset.dy + _radius + compositionData.bounce.dy * bounceAnimation.value);
 
     _drawBackground(canvas);
 
