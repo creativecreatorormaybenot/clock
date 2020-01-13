@@ -297,11 +297,8 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
       stage = BallTripStage.arrival;
     }
 
-    // Draw the ball about the point, not at the point.
-    translation += Size.fromRadius(_radius).offset / 2;
-
     // Translate to the center of the ball.
-    canvas.translate(translation.dx, offset.dy);
+    canvas.translate(translation.dx, translation.dy);
 
     // This is the circumference of the ball. Basically,
     // it is its length when unwrapping its circle.

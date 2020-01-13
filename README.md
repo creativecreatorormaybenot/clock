@@ -1,7 +1,5 @@
 ## TODO
 
-* Fix that the ball is gone?
-
 * Fix that the analog clock does not bounce.
 
 * Test if some layouts do not consider the parent's offset.

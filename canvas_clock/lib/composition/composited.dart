@@ -147,9 +147,9 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       slide.layout(constraints.loosen(), parentUsesSize: false);
 
       ballData
-        ..startPosition = ballStartPosition
-        ..endPosition = ballEndPosition
-        ..destination = ballDestination
+        ..startPosition = ballStartPosition - ballRect.topLeft
+        ..endPosition = ballEndPosition - ballRect.topLeft
+        ..destination = ballDestination - ballRect.topLeft
         ..radius = ballRadius
         ..offset = ballRect.topLeft;
       // Need to provide positions first.
