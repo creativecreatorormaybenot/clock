@@ -456,7 +456,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   RenderWeatherIcon(WeatherCondition condition, this.animation) : super(condition);
 
   @override
-  bool get isRepaintBoundary => false; // todo
+  bool get isRepaintBoundary => true;
 
   @override
   void attach(PipelineOwner owner) {
@@ -502,7 +502,12 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
     // Position and rotate the canvas according to the values stored in the composition data.
     final iconPosition = Offset(0, radius * (indentationFactor - 1));
 
-    context.pushTransform(needsCompositing, offset, Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0), paintIcon);
+    // Cannot use context.pushTransform as it modifies the layer
+    // and that is not allowed when this render object is a
+    // repaint boundary. See https://github.com/flutter/flutter/issues/48737.
+    canvas.transform(Matrix4.translationValues(iconPosition.dx, iconPosition.dy, 0).storage);
+
+    paintIcon(context, offset);
 
     canvas.restore();
   }
@@ -749,7 +754,7 @@ class RenderFoggy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-//    print('RenderFoggy.drawCondition ${DateTime.now()}');
+    print('RenderFoggy.drawCondition ${DateTime.now()}');
 
     final g = radius * indentationFactor / 14;
 

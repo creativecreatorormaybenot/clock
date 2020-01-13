@@ -1,5 +1,7 @@
 ## TODO
 
+* Set `isRepaintBoundary` to `true` where applicable.
+
 * Draw shadow for the ball.
 
   + Change paint order for this.
@@ -17,14 +19,6 @@
     - Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
 
 * Find better start and end positions for the ball.
-
-* Fix the `isRepaintBoundary` bug with weather icons.
-
-  + https://stackoverflow.com/q/59722949/6509751
-
-* Set `isRepaintBoundary` to `true` where applicable.
-
-* Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
 
 * Create spin-up animation for when the widget is created or updated? 
 
@@ -91,6 +85,8 @@
     - Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
 
     - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
+
+  + Mention `RenderObject.isRepaintBoundary` for performance optimizations (did not use raster caching) and `RepaintBoundary` for widgets.
 
   + Add an "Everything is implicitly animated" screen recording, where the model values are modified programmatically.
 
