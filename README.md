@@ -1,8 +1,6 @@
 ## TODO
 
-* Make digital, date, and location have the full canvas size and lay themselves out (given an offset) instead of marking the whole clock face as dirty (can create new parent data for this purpose).
-
-* Remove `parentUsesSize` from all children (set to `false` ) because the size can be determined in the clock composition itself easily.
+* Move ball movement and bounce out of composited (pass ball size to analog clock for it to know how to bounce).
 
 * Fix that e.g.</a> foggy is rebuilt all the time when sunny is selected.
 

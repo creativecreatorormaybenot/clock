@@ -1,10 +1,10 @@
 import 'dart:ui';
 
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:canvas_clock/clock.dart';
 
 class CompositedClock extends MultiChildRenderObjectWidget {
   final Animation<double> ballArrivalAnimation, ballDepartureAnimation, ballTravelAnimation, bounceAwayAnimation, bounceBackAnimation;
@@ -91,6 +91,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         child.parentData = SlideParentData();
       } else if (child is RenderBall) {
         child.parentData = BallParentData();
+      } else if (child is RenderDigitalTime) {
+        child.parentData = DigitalTimeParentData();
       } else {
         child.parentData = ClockChildrenParentData();
       }
@@ -125,7 +127,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void performLayout() {
     super.performLayout();
 
-    print('RenderCompositedClock.performLayout ${DateTime.now()}'); // todo
+    print('RenderCompositedClock.performLayout ${DateTime.now()}');
 
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
@@ -287,20 +289,31 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Location
     final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
 
-//    location.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true); todo
-//    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
+    location.layout(
+      BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+      // This is not critical as long as the location is not updated frequently, which it is not.
+      parentUsesSize: true,
+    );
+    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
 
     // Date
     final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
 
-//    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false); todo
-//    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
+    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
+    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
 
     // Digital clock
-    final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime];
+    final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime] as DigitalTimeParentData;
 
-//    digitalTime.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: true); todo
-//    digitalTimeData.offset = Offset(weatherData.offset.dx + weather.size.width / 2.45 - digitalTime.size.width / 2, size.height - weather.size.height / 3 - digitalTime.size.height / 2);
+    // The position needs to be assigned before layout
+    // as it is used in the layout function of digital time.
+    digitalTimeData.position = Offset(weatherData.offset.dx + weather.size.width / 2.45, size.height - weather.size.height / 3);
+    digitalTime.layout(
+      BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+      // This is crucial because the layout of the
+      // digital time changes all the time.
+      parentUsesSize: false,
+    );
     //</editor-fold>
   }
 
@@ -340,7 +353,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       super.paint(context, offset);
 
       // Draw components in the actual draw order.
-      List.of(paintOrder)..removeWhere((item) => [ClockComponent.digitalTime, ClockComponent.location, ClockComponent.date].contains(item))..forEach(paintChild); // todo
+      paintOrder.forEach(paintChild);
     });
   }
 }

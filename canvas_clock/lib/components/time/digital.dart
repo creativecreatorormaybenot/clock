@@ -83,7 +83,18 @@ class DigitalTime extends LeafRenderObjectWidget {
   }
 }
 
-class RenderDigitalTime extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+/// Provides child with data necessary to position what it draws
+/// properly given full size constraints.
+///
+/// This allows the child to lay itself out when nothing in the
+/// parent depends on the layout of the child.
+/// Otherwise, the parent would be marked as needing to layout again,
+/// which is bad performance wise.
+class DigitalTimeParentData extends ClockChildrenParentData {
+  Offset position;
+}
+
+class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
   RenderDigitalTime({
     double minuteProgress,
     int hour,
@@ -236,6 +247,9 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, ClockChil
           _amPmPainter.width,
       _timePainter.height,
     );
+
+    // The widget should be painted centered about the position.
+    compositionData.offset = compositionData.position - size.offset / 2;
 
     final
         // The text should go fully off screen about the new minute.
