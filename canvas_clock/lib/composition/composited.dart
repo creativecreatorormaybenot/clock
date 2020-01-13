@@ -93,6 +93,8 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         child.parentData = BallParentData();
       } else if (child is RenderDigitalTime) {
         child.parentData = DigitalTimeParentData();
+      } else if (child is RenderAnalogTime) {
+        child.parentData = AnalogTimeParentData();
       } else {
         child.parentData = ClockChildrenParentData();
       }
@@ -127,7 +129,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   void performLayout() {
     super.performLayout();
 
-    print('RenderCompositedClock.performLayout ${DateTime.now()}');
+//    print('RenderCompositedClock.performLayout ${DateTime.now()}');
 
     // The children use this size and the challenge provides a fixed size anyway.
     size = constraints.biggest;
@@ -137,29 +139,25 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background] as BackgroundParentData;
 
     backgroundData.clearRects();
-    final provideRect = backgroundData.addRect;
 
     background.layout(BoxConstraints.tight(size));
 
     // Ball
-    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData;
-    ball.layout(constraints.loosen(), parentUsesSize: true);
+    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData, ballSize = Size.fromRadius(constraints.biggest.height / 21);
+    ball.layout(BoxConstraints.tight(ballSize), parentUsesSize: false);
 
     // Slide
     final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
-    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime];
-    analogTime.layout(
-      BoxConstraints.tight(Size.fromRadius(size.height / 2.9)),
-      parentUsesSize: true,
-    );
+    final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime], analogTimeSize = Size.fromRadius(size.height / 2.9);
+    analogTime.layout(BoxConstraints.tight(analogTimeSize), parentUsesSize: false);
 
     // The ball destination depends on where the analog clock is positioned, which depends on the size of the analog component.
     () {
       final analogClockBasePosition = Offset(
-        size.width / 2 - analogTime.size.width / 2.36,
-        size.height / 2 - analogTime.size.height / 2.7,
+        size.width / 2 - analogTimeSize.width / 2.36,
+        size.height / 2 - analogTimeSize.height / 2.7,
       );
 
       final ballStartPosition = Offset(
@@ -167,12 +165,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         // It should slowly come a bit more into view.
         // The ball shows h / 2 at the end position
         // as the positions mark the center point.
-        ball.size.height / 4,
+        ballSize.height / 4,
       ),
           ballDestination = analogClockBasePosition +
-              analogTime.size.onlyWidth.offset / 2 -
+              analogTimeSize.onlyWidth.offset / 2 -
               // The ball should only touch the clock and not fly into it.
-              ball.size.onlyHeight.offset / 2,
+              ballSize.onlyHeight.offset / 2,
           ballEndPosition = Offset(
         size.width * 1.2 / 4,
         0,
@@ -200,7 +198,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
           // Thus, the slide rect needs to be inflated.
           // Slide could also take the whole canvas area of the clock,
           // but it is not necessary.
-          .inflate(ball.size.longestSide / 2);
+          .inflate(ballSize.longestSide / 2);
 
       slide.layout(BoxConstraints.tight(slideRect.size), parentUsesSize: false);
 
@@ -209,7 +207,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
         ..end = ballEndPosition - slideRect.topLeft
         ..start = ballStartPosition - slideRect.topLeft
         ..destination = ballDestination - slideRect.topLeft
-        ..ballRadius = ball.size.longestSide / 2;
+        ..ballRadius = ballSize.longestSide / 2;
 
       final travelDistance = ballTravelTween.distance,
           // Negative as the ball rolls backwards along this path.
@@ -242,55 +240,48 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       }
 
       // Draw the ball about the point, not at the point.
-      ballData.offset -= ball.size.offset / 2;
+      ballData.offset -= ballSize.offset / 2;
 
-      final bounce = ball.size.onlyHeight.offset / 4 * (bounceAwayAnimation.value - bounceBackAnimation.value);
+      final bounce = ballSize.onlyHeight.offset / 4 * (bounceAwayAnimation.value - bounceBackAnimation.value);
 
       analogTimeData.offset = analogClockBasePosition + bounce;
     }();
-    provideRect(ball);
+    backgroundData.addRect(ClockComponent.ball, ballData.offset, ballSize);
 
-    provideRect(analogTime);
+    backgroundData.addRect(ClockComponent.analogTime, analogTimeData.offset, analogTimeSize);
 
     // Weather
-    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather];
-    weather.layout(
-      BoxConstraints.tight(Size.fromRadius(size.height / 4)),
-      parentUsesSize: true,
-    );
+    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather], weatherSize = Size.fromRadius(size.height / 4);
+    weather.layout(BoxConstraints.tight(weatherSize), parentUsesSize: false);
 
     // The anonymous function hides the clearanceFactor variable later on.
     () {
       final clearanceFactor = 1 / 31;
       weatherData.offset = Offset(
-        weather.size.width * clearanceFactor,
-        weather.size.height * clearanceFactor + size.height / 7,
+        weatherSize.width * clearanceFactor,
+        weatherSize.height * clearanceFactor + size.height / 7,
       );
     }();
-    provideRect(weather);
+    backgroundData.addRect(ClockComponent.weather, weatherData.offset, weatherSize);
 
     // Temperature
-    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature];
+    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature], temperatureSize = Size(size.width / 6, size.height / 1.2);
 
-    () {
-      final width = size.width / 6;
-      temperature.layout(
-        BoxConstraints(maxWidth: width, minHeight: width, maxHeight: size.height),
-        parentUsesSize: true,
-      );
+    temperature.layout(BoxConstraints.tight(temperatureSize), parentUsesSize: false);
 
-      temperatureData.offset = Offset(
-        size.width - temperature.size.width - size.width / 21,
-        size.height / 2 - temperature.size.height / 2,
-      );
-    }();
-    provideRect(temperature);
+    temperatureData.offset = Offset(
+      size.width - temperatureSize.width - size.width / 21,
+      size.height / 2 - temperatureSize.height / 2,
+    );
+    backgroundData.addRect(ClockComponent.temperature, temperatureData.offset, temperatureSize);
 
     // Location
     final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
 
     location.layout(
-      BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+      BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height),
+      // The text painter determines the size, hence, there is no way to determine it here
+      // (except creating the text painter here).
       // This is not critical as long as the location is not updated frequently, which it is not.
       parentUsesSize: true,
     );
@@ -299,7 +290,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Date
     final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
 
-    date.layout(BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height), parentUsesSize: false);
+    date.layout(BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height), parentUsesSize: false);
     dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
 
     // Digital clock
@@ -307,9 +298,9 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     // The position needs to be assigned before layout
     // as it is used in the layout function of digital time.
-    digitalTimeData.position = Offset(weatherData.offset.dx + weather.size.width / 2.45, size.height - weather.size.height / 3);
+    digitalTimeData.position = Offset(weatherData.offset.dx + weatherSize.width / 2.45, size.height - weatherSize.height / 3);
     digitalTime.layout(
-      BoxConstraints(maxWidth: weather.size.width, maxHeight: size.height),
+      BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height),
       // This is crucial because the layout of the
       // digital time changes all the time.
       parentUsesSize: false,

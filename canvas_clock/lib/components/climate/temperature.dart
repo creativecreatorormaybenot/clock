@@ -478,7 +478,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
 
   @override
   void performResize() {
-    size = Size(constraints.biggest.width, constraints.biggest.height / 1.2);
+    size = constraints.biggest;
   }
 
   @override

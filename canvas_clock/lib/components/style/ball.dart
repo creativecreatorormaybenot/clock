@@ -197,9 +197,9 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
 
   @override
   void performResize() {
-    _radius = constraints.biggest.height / 21;
+    size = constraints.biggest;
 
-    size = Size.fromRadius(_radius);
+    _radius = size.height / 2;
   }
 
   List<Color> get shaderColors => [_primaryColor, _secondaryColor];

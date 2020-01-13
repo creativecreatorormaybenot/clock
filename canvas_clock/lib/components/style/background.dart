@@ -59,9 +59,8 @@ class Background extends LeafRenderObjectWidget {
 class BackgroundParentData extends ClockChildrenParentData {
   Map<ClockComponent, Rect> _rects;
 
-  void addRect(RenderBox child) {
-    final childParentData = child.parentData as ClockChildrenParentData;
-    _rects[childParentData.childType] = childParentData.offset & child.size;
+  void addRect(ClockComponent component, Offset offset, Size size) {
+    _rects[component] = offset & size;
   }
 
   Rect rectOf(ClockComponent component) {
@@ -74,6 +73,8 @@ class BackgroundParentData extends ClockChildrenParentData {
   void clearRects() {
     _rects = {};
   }
+
+  Offset analogTimeShift;
 }
 
 class RenderBackground extends RenderCompositionChild<ClockComponent, BackgroundParentData> {

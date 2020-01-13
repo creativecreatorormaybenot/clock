@@ -1,13 +1,13 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:canvas_clock/clock.dart';
+import 'package:canvas_clock/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'package:canvas_clock/clock.dart';
-import 'package:canvas_clock/main.dart';
 
 const handBounceDuration = Duration(milliseconds: 274);
 
@@ -146,7 +146,11 @@ class AnalogTime extends LeafRenderObjectWidget {
   }
 }
 
-class RenderAnalogTime extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+class AnalogTimeParentData extends ClockChildrenParentData {
+  Offset shift;
+}
+
+class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
   RenderAnalogTime({
     double secondHandAngle,
     double minuteHandAngle,
