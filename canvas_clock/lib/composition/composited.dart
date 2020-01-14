@@ -201,7 +201,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     () {
       final padding = weatherData.offset.dy / 3.4 - location.size.height / 2;
       locationData.offset = Offset(
-        padding * 1.4,
+        padding * 1.3,
         padding,
       );
     }();

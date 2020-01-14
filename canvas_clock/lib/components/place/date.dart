@@ -147,7 +147,7 @@ class RenderDate extends RenderCompositionChild<ClockComponent, ClockChildrenPar
       text: TextSpan(
         text: _text,
         style: _textStyle.copyWith(
-          fontSize: width / 14,
+          fontSize: width / 13.8,
         ),
       ),
       textDirection: TextDirection.ltr,

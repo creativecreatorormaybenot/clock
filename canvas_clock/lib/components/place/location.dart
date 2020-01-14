@@ -94,7 +94,7 @@ class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildre
       text: TextSpan(
         text: _text,
         style: _textStyle.copyWith(
-          fontSize: width / 14,
+          fontSize: width / 12.3,
         ),
       ),
       textDirection: TextDirection.ltr,
