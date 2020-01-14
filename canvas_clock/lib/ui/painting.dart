@@ -76,4 +76,55 @@ extension ExtendedPath on Path {
   void halfCircleTo(double x, double y, [bool clockwise = true]) {
     arcToPoint(Offset(x, y), radius: const Radius.circular(1), clockwise: clockwise);
   }
+
+  /// Returns a trimmed version of this path.
+  ///
+  /// Adapted from https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart.
+  Path trimmed(double start, double end) {
+    final result = Path();
+
+    // Measure length of all the contours.
+    var metrics = computeMetrics();
+    var totalLength = 0.0;
+    for (final metric in metrics) {
+      totalLength += metric.length;
+    }
+
+    // Reset metrics from the start.
+    metrics = computeMetrics();
+    var trimStart = totalLength * start, trimStop = totalLength * end, offset = 0.0;
+
+    final metricsIterator = metrics.iterator;
+    metricsIterator.moveNext();
+    if (trimStart > 0.0) {
+      offset = _appendPathSegmentSequential(metricsIterator, result, offset, 0.0, trimStart);
+    }
+    if (trimStop < totalLength) {
+      offset = _appendPathSegmentSequential(metricsIterator, result, offset, trimStop, totalLength);
+    }
+
+    return result;
+  }
+}
+
+/// https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart#L5
+double _appendPathSegmentSequential(Iterator<PathMetric> metricsIterator, Path to, double offset, double start, double stop) {
+  var nextOffset = offset;
+
+  do {
+    final metric = metricsIterator.current;
+    nextOffset = offset + metric.length;
+    if (start < nextOffset) {
+      final extracted = metric.extractPath(start - offset, stop - offset);
+      if (extracted != null) {
+        to.addPath(extracted, Offset.zero);
+      }
+      if (stop < nextOffset) {
+        break;
+      }
+    }
+    offset = nextOffset;
+  } while (metricsIterator.moveNext());
+
+  return offset;
 }

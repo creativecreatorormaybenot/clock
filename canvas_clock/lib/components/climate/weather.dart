@@ -721,36 +721,36 @@ void _drawCloud(Canvas canvas, Color cloudColor, double rr, double tx, double ty
       w = h * 1.75,
       // The radius for the circles on the left
       // and on the right of the cloud.
-      cr = h / 3.8;
+      cr = h / 3.8, path = Path()
+    ..moveTo(0, h / 2)
+    ..lineTo(
+      -w / 2 + cr,
+      h / 2,
+    )
+    ..halfCircleTo(
+      -w / 2 + cr * 1.2,
+      h / 2 - cr * 1.8,
+    )
+    ..quadraticBezierTo(
+      -w / 3.6,
+      -h / 3.2,
+      -w / 16,
+      h / 2 - cr * 2.7,
+    )
+    ..quadraticBezierTo(
+      w / 4,
+      -h / 2.2,
+      w / 2 - cr * 1.1,
+      h / 2 - cr * 1.7,
+    )
+    ..halfCircleTo(
+      w / 2 - cr,
+      h / 2,
+    )
+    ..close();
 
   canvas.drawPath(
-      Path()
-        ..moveTo(0, h / 2)
-        ..lineTo(
-          -w / 2 + cr,
-          h / 2,
-        )
-        ..halfCircleTo(
-          -w / 2 + cr * 1.2,
-          h / 2 - cr * 1.8,
-        )
-        ..quadraticBezierTo(
-          -w / 3.6,
-          -h / 3.2,
-          -w / 16,
-          h / 2 - cr * 2.7,
-        )
-        ..quadraticBezierTo(
-          w / 4,
-          -h / 2.2,
-          w / 2 - cr * 1.1,
-          h / 2 - cr * 1.7,
-        )
-        ..halfCircleTo(
-          w / 2 - cr,
-          h / 2,
-        )
-        ..close(),
+      path,
       Paint()
         ..color = cloudColor
         ..style = PaintingStyle.fill);
