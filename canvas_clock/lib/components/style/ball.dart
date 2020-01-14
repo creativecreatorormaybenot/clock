@@ -21,7 +21,7 @@ class Ball extends LeafRenderObjectWidget {
 
   final BallTrips trips;
 
-  final Color primaryColor, secondaryColor, dotsIdleColor, dotsPrimedColor, dotsDisengagedColor;
+  final Color primaryColor, secondaryColor, dotsIdleColor, dotsPrimedColor, dotsDisengagedColor, shadowColor;
 
   const Ball({
     Key key,
@@ -34,6 +34,7 @@ class Ball extends LeafRenderObjectWidget {
     @required this.dotsIdleColor,
     @required this.dotsPrimedColor,
     @required this.dotsDisengagedColor,
+    @required this.shadowColor,
   })  : assert(travelAnimation != null),
         assert(arrivalAnimation != null),
         assert(departureAnimation != null),
@@ -43,6 +44,7 @@ class Ball extends LeafRenderObjectWidget {
         assert(dotsIdleColor != null),
         assert(dotsPrimedColor != null),
         assert(dotsDisengagedColor != null),
+        assert(shadowColor != null),
         super(key: key);
 
   @override
@@ -57,6 +59,7 @@ class Ball extends LeafRenderObjectWidget {
       dotsIdleColor: dotsIdleColor,
       dotsPrimedColor: dotsPrimedColor,
       dotsDisengagedColor: dotsDisengagedColor,
+      shadowColor: shadowColor,
     );
   }
 
@@ -67,7 +70,8 @@ class Ball extends LeafRenderObjectWidget {
       ..secondaryColor = secondaryColor
       ..dotsIdleColor = dotsIdleColor
       ..dotsPrimedColor = dotsPrimedColor
-      ..dotsIdleColor = dotsIdleColor;
+      ..dotsIdleColor = dotsIdleColor
+      ..shadowColor = shadowColor;
   }
 }
 
@@ -129,14 +133,16 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     Color dotsIdleColor,
     Color dotsPrimedColor,
     Color dotsDisengagedColor,
+    Color shadowColor,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
         _dotsIdleColor = dotsIdleColor,
         _dotsPrimedColor = dotsPrimedColor,
         _dotsDisengagedColor = dotsDisengagedColor,
+        _shadowColor = shadowColor,
         super(ClockComponent.ball);
 
-  Color _primaryColor, _secondaryColor, _dotsIdleColor, _dotsPrimedColor, _dotsDisengagedColor;
+  Color _primaryColor, _secondaryColor, _dotsIdleColor, _dotsPrimedColor, _dotsDisengagedColor, _shadowColor;
 
   set primaryColor(Color value) {
     assert(value != null);
@@ -190,6 +196,17 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     }
 
     _dotsDisengagedColor = value;
+    markNeedsPaint();
+  }
+
+  set shadowColor(Color value) {
+    assert(value != null);
+
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
     markNeedsPaint();
   }
 
@@ -313,20 +330,22 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // It is fine because the Canvas.rotate also takes any multiples
     // of the rotation value and accepts it.
     final progress = (distanceTraveled +
-            // After every trip there will probably be some additional
-            // distance that is not evenly divisible by the circumference,
-            // which would cause the rotation to visually reset if
-            // not accounted for.
-            (_totalDistance % ballLength) * trips.count)
-        // The ball needs to rotate once for every circumference
-        // on the track.
-        /
-        ballLength;
+                // After every trip there will probably be some additional
+                // distance that is not evenly divisible by the circumference,
+                // which would cause the rotation to visually reset if
+                // not accounted for.
+                (_totalDistance % ballLength) * trips.count)
+            // The ball needs to rotate once for every circumference
+            // on the track.
+            /
+            ballLength,
+        path = Path()..addOval(rect);
+
+    canvas.drawShadow(path, _shadowColor, _radius / 54, false);
 
     canvas.rotate(2 * pi * progress);
-
-    canvas.drawOval(
-      rect,
+    canvas.drawPath(
+      path,
       Paint()
         ..shader = kIsWeb
             // The kIsWeb section in here is irrelevant for the submission,

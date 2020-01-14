@@ -75,7 +75,10 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> wit
 
   AnimationController currentlyAnimating;
 
-  int get currentIndex => (_angleValue / pi / 2 * WeatherCondition.values.length).round();
+  int get currentIndex {
+    final n = WeatherCondition.values.length;
+    return (_angleValue / pi / 2 * n).round() % n;
+  }
 
   void animateIcon() {
     final n = iconLoopControllers[currentIndex];

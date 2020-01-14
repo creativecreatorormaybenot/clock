@@ -1,10 +1,6 @@
 ## TODO
 
-* Check with repaint rainbow again.
-
-* Draw shadow for the ball.
-
-  + Change paint order for this.
+* Fix weather dial rotation.
 
 * Add animations to every weather conditions.
 

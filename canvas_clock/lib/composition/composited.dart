@@ -45,8 +45,8 @@ const List<ClockComponent> paintOrder = [
   ClockComponent.weather,
   ClockComponent.analogTime,
   ClockComponent.digitalTime,
-  ClockComponent.slide,
   ClockComponent.ball,
+  ClockComponent.slide,
 ];
 
 class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {

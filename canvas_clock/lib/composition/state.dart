@@ -272,6 +272,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             dotsIdleColor: widget.palette[ClockColor.dotsIdleColor],
             dotsPrimedColor: widget.palette[ClockColor.dotsPrimedColor],
             dotsDisengagedColor: widget.palette[ClockColor.dotsDisengagedColor],
+            shadowColor: widget.palette[ClockColor.shadow],
           ),
           Location(
             text: model.location,
