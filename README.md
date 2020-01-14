@@ -1,16 +1,10 @@
 ## TODO
 
-* Add animations to every weather conditions.
+* Ideas for weather condition animations:
 
-  + Only animate the current weather condition.
+  + Cloudy: parallax movement of the different clouds.
 
-  + Have a looping animation, i.e.</a> every condition has a loop.
-
-  + Ideas for conditions:
-
-    - Sunny: rotate the sun rays about the circle.
-
-    - Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
+  + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
 
 * Find better start and end positions for the ball.
 
