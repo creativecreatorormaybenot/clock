@@ -2,9 +2,11 @@
 
 * Ideas for weather condition animations:
 
+  + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
+
   + Cloudy: parallax movement of the different clouds.
 
-  + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
+  + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
 
 * Find better start and end positions for the ball.
 
