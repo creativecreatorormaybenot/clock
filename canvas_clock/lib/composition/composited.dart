@@ -105,14 +105,13 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final analogTime = layoutChildren[ClockComponent.analogTime], analogTimeData = layoutParentData[ClockComponent.analogTime] as AnalogTimeParentData, analogTimeSize = Size.fromRadius(size.height / 2.9);
 
     // The ball destination depends on where the analog clock is positioned, which depends on the size of the analog component.
+    final analogClockBasePosition = Offset(
+      size.width / 2 - analogTimeSize.width / 2.72,
+      size.height / 2 - analogTimeSize.height / 2.7,
+    );
     () {
-      final analogClockBasePosition = Offset(
-        size.width / 2 - analogTimeSize.width / 2.36,
-        size.height / 2 - analogTimeSize.height / 2.7,
-      );
-
       final ballStartPosition = Offset(
-        size.width * 3 / 4,
+        analogClockBasePosition.dx + analogTimeSize.width * .912,
         // It should slowly come a bit more into view.
         // The ball shows h / 2 at the end position
         // as the positions mark the center point.
@@ -123,7 +122,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
               // The ball should only touch the clock and not fly into it.
               ballSize.onlyHeight.offset / 2,
           ballEndPosition = Offset(
-        size.width * 1.2 / 4,
+        analogClockBasePosition.dx + analogTimeSize.width / 81,
         0,
       );
 
@@ -169,14 +168,13 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather], weatherSize = Size.fromRadius(size.height / 4);
     weather.layout(BoxConstraints.tight(weatherSize), parentUsesSize: false);
 
-    // The anonymous function hides the clearanceFactor variable later on.
-    () {
-      final clearanceFactor = 1 / 31;
-      weatherData.offset = Offset(
-        weatherSize.width * clearanceFactor,
-        weatherSize.height * clearanceFactor + size.height / 7,
-      );
-    }();
+    // Horizontal padding for both weather and temperature.
+    final horizontalPadding = size.width / 62;
+
+    weatherData.offset = Offset(
+      horizontalPadding,
+      size.height / 2 - weatherSize.height / 2,
+    );
     backgroundData.addRect(ClockComponent.weather, weatherData.offset, weatherSize);
 
     // Temperature
@@ -185,7 +183,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     temperature.layout(BoxConstraints.tight(temperatureSize), parentUsesSize: false);
 
     temperatureData.offset = Offset(
-      size.width - temperatureSize.width - size.width / 21,
+      size.width - temperatureSize.width - horizontalPadding * 1.5,
       size.height / 2 - temperatureSize.height / 2,
     );
     backgroundData.addRect(ClockComponent.temperature, temperatureData.offset, temperatureSize);
@@ -200,7 +198,13 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       // This is not critical as long as the location is not updated frequently, which it is not.
       parentUsesSize: true,
     );
-    locationData.offset = Offset(weatherData.offset.dx, weatherData.offset.dy / 3 - location.size.height / 2);
+    () {
+      final padding = weatherData.offset.dy / 3.4 - location.size.height / 2;
+      locationData.offset = Offset(
+        padding * 1.4,
+        padding,
+      );
+    }();
 
     // Date
     final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
@@ -213,7 +217,10 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     // The position needs to be assigned before layout
     // as it is used in the layout function of digital time.
-    digitalTimeData.position = Offset(weatherData.offset.dx + weatherSize.width / 2.45, size.height - weatherSize.height / 3);
+    digitalTimeData.position = Offset(
+      weatherData.offset.dx + weatherSize.width / 2.45,
+      size.height - weatherSize.height / 4,
+    );
     digitalTime.layout(
       BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height),
       // This is crucial because the layout of the

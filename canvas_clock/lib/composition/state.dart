@@ -285,11 +285,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             ballTravelAnimation: ballTravelAnimation,
             ballArrivalAnimation: ballArrivalAnimation,
             ballDepartureAnimation: ballDepartureAnimation,
-            curveColor: Color.lerp(
-              widget.palette[ClockColor.ballPrimary],
-              widget.palette[ClockColor.ballSecondary],
-              1 / 2,
-            ),
+            primaryColor: widget.palette[ClockColor.slidePrimary],
+            secondaryColor: widget.palette[ClockColor.slideSecondary],
             shadowColor: widget.palette[ClockColor.shadow],
           ),
           UpdatedDate(palette: widget.palette),

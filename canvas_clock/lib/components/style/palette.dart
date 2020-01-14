@@ -1,8 +1,8 @@
 import 'dart:ui';
 
+import 'package:canvas_clock/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:canvas_clock/main.dart';
 
 enum ClockColor {
   /// This is also used for tick marks or lines on the
@@ -56,6 +56,10 @@ enum ClockColor {
   dotsIdleColor,
   dotsPrimedColor,
   dotsDisengagedColor,
+
+  /// These form a linear gradient.
+  slidePrimary,
+  slideSecondary,
 }
 
 class Palette extends StatefulWidget {
@@ -99,9 +103,10 @@ class Palette extends StatefulWidget {
     ClockColor.weatherBackgroundHighlight: Color(0xffffffff),
     ClockColor.analogTimeBackground: Color(0xffeaffd8),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
+    ClockColor.slidePrimary: Color(0xffefdecd),
+    ClockColor.slideSecondary: Color(0xff855e42),
   },
-      baseLight = {
-      },
+      baseLight = {},
       baseDark = {
     // Test values todo
     ClockColor.text: Color(0xff424242),
@@ -111,7 +116,7 @@ class Palette extends StatefulWidget {
       vibrantDark = {},
       subtleLight = {
     ClockColor.background: Color(0xff8b4513),
-        ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
+    ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
   },
       subtleDark = {};
 

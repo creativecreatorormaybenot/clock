@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -5,19 +7,20 @@ import 'package:flutter/widgets.dart';
 class Slide extends LeafRenderObjectWidget {
   final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
 
-  final Color curveColor, shadowColor;
+  final Color primaryColor, secondaryColor, shadowColor;
 
   Slide({
     Key key,
     @required this.ballTravelAnimation,
     @required this.ballArrivalAnimation,
     @required this.ballDepartureAnimation,
-    @required this.curveColor,
+    @required this.primaryColor,
+    @required this.secondaryColor,
     @required this.shadowColor,
   })  : assert(ballTravelAnimation != null),
         assert(ballArrivalAnimation != null),
         assert(ballDepartureAnimation != null),
-        assert(curveColor != null),
+        assert(primaryColor != null),
         assert(shadowColor != null),
         super(key: key);
 
@@ -27,7 +30,8 @@ class Slide extends LeafRenderObjectWidget {
       ballTravelAnimation: ballTravelAnimation,
       ballArrivalAnimation: ballArrivalAnimation,
       ballDepartureAnimation: ballDepartureAnimation,
-      curveColor: curveColor,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
       shadowColor: shadowColor,
     );
   }
@@ -35,7 +39,8 @@ class Slide extends LeafRenderObjectWidget {
   @override
   void updateRenderObject(BuildContext context, RenderSlide renderObject) {
     renderObject
-      ..curveColor = curveColor
+      ..primaryColor = primaryColor
+      ..secondaryColor = secondaryColor
       ..shadowColor = shadowColor;
   }
 }
@@ -54,22 +59,35 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     this.ballTravelAnimation,
     this.ballArrivalAnimation,
     this.ballDepartureAnimation,
-    Color curveColor,
+    Color primaryColor,
+    Color secondaryColor,
     Color shadowColor,
-  })  : _curveColor = curveColor,
+  })  : _primaryColor = primaryColor,
+        _secondaryColor = secondaryColor,
         _shadowColor = shadowColor,
         super(ClockComponent.slide);
 
-  Color _curveColor, _shadowColor;
+  Color _primaryColor, _secondaryColor, _shadowColor;
 
-  set curveColor(Color value) {
+  set primaryColor(Color value) {
     assert(value != null);
 
-    if (_curveColor == value) {
+    if (_primaryColor == value) {
       return;
     }
 
-    _curveColor = value;
+    _primaryColor = value;
+    markNeedsPaint();
+  }
+
+  set secondaryColor(Color value) {
+    assert(value != null);
+
+    if (_secondaryColor == value) {
+      return;
+    }
+
+    _secondaryColor = value;
     markNeedsPaint();
   }
 
@@ -128,16 +146,20 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     final startLeft = start.dx < end.dx;
 
     startLine = Line2d(start: start, end: destination)
-      ..padStart(1.6)
-      ..padEnd(.99);
+      ..padStartEnd(
+        1.6,
+        .99,
+      );
     endLine = Line2d(start: end, end: destination)
-      ..padEnd(.7)
-      ..padStart(1.5);
+      ..padStartEnd(
+        1.5,
+        .58,
+      );
     travelLine = Line2d(start: end, end: start);
 
     final ballRadius = compositionData.ballRadius, travelLength = travelLine.length, ballLengthFraction = ballRadius * 5 / travelLength;
 
-    strokeWidth = constraints.biggest.shortestSide / 99;
+    strokeWidth = constraints.biggest.shortestSide / 104;
 
     final shiftFactor = 1 + strokeWidth / 2 / ballRadius;
 
@@ -147,7 +169,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     startLine.shift(startLine.normal.offset * ballRadius * (startLeft ? shiftFactor : -shiftFactor));
     endLine.shift(endLine.normal.offset * ballRadius * (startLeft ? -shiftFactor : shiftFactor));
 
-    travelLine.pad(1.017);
+    travelLine.pad(1.02);
 
     travelLine
         // The line should touch the ball's bottom.
@@ -277,7 +299,16 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
       false,
     );
 
-    final paint = Paint()..color = _curveColor;
+    final rect = offset & size,
+        paint = Paint()
+          ..shader = ui.Gradient.linear(
+            rect.topRight,
+            rect.bottomCenter,
+            [
+              _secondaryColor,
+              _primaryColor,
+            ],
+          );
     canvas.drawPath(travelPath, paint);
     canvas.drawPath(startPath, paint);
     canvas.drawPath(endPath, paint);
