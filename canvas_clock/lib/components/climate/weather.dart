@@ -523,6 +523,31 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
 
   double get indentationFactor => compositionData.indentationFactor;
 
+  /// Returns the back and forth animation value.
+  ///
+  /// Some movements are simply not inherently looping.
+  /// I can only think of rotations, which loop at exactly
+  /// `2 * pi`. In some other cases, a continuous movement
+  /// can be achieved otherwise. However, sometimes ping-pong
+  /// looping is the best option.
+  /// Because of that, this getter will animate from
+  /// 0 to 1 for `0-0.5` of the actual animation and from
+  /// 1 to 0 for `0.5-1` of the actual animation value.
+  double get bafAv => 1 - (animation.value - 1 / 2).abs() * 2;
+
+  /// Returns the section of the radius that is available to
+  /// the icon, i.e. the available space vertically if the angle
+  /// is 0.
+  ///
+  /// "rr" is supposed to abbreviate "relative radius".
+  ///
+  /// In some cases it makes more sense to just use [radius] for
+  /// relative sizing, e.g. when declaring something like a
+  /// stroke width that has to be legible.
+  /// In other cases the sizing of a path depends on the actual
+  /// size the icon has available instead.
+  double get rr => radius * indentationFactor;
+
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
@@ -663,19 +688,17 @@ class RenderCloudy extends RenderWeatherIcon {
     _drawCloud(
       canvas,
       _cloudColor,
-      radius,
-      indentationFactor,
-      -radius * indentationFactor / 15,
-      radius * indentationFactor / 4,
+      rr,
+      -rr / 15,
+      rr / 4,
       1.24,
     );
     _drawCloud(
       canvas,
       _cloudColor,
-      radius,
-      indentationFactor,
-      radius * indentationFactor / 5,
-      -radius * indentationFactor / 5,
+      rr,
+      rr / 5,
+      -rr / 5,
       .75,
     );
 
@@ -683,9 +706,8 @@ class RenderCloudy extends RenderWeatherIcon {
     _drawCloud(
       canvas,
       _cloudColor,
-      radius,
-      indentationFactor,
-      0,
+      rr,
+      (bafAv - 1 / 2) * rr,
       0,
       1.9,
     );
@@ -693,22 +715,21 @@ class RenderCloudy extends RenderWeatherIcon {
     _drawCloud(
       canvas,
       _cloudColor,
-      radius,
-      indentationFactor,
-      -radius * indentationFactor / 4.5,
-      -radius * indentationFactor / 4,
+      rr,
+      -rr / 4.5,
+      -rr / 4,
       .6,
     );
   }
 }
 
-void _drawCloud(Canvas canvas, Color cloudColor, double radius, double indentationFactor, double tx, double ty, double s) {
+void _drawCloud(Canvas canvas, Color cloudColor, double rr, double tx, double ty, double s) {
   canvas.save();
 
   canvas.translate(tx, ty);
   canvas.scale(s);
 
-  final h = radius * indentationFactor / 4,
+  final h = rr / 4,
       w = h * 1.75,
       // The radius for the circles on the left
       // and on the right of the cloud.
@@ -805,7 +826,7 @@ class RenderFoggy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    final g = radius * indentationFactor / 14;
+    final g = rr / 14;
 
     // Once again, it is easier to adjust it like this afterwards.
     canvas.translate(g * .71, g * .31);
@@ -1247,13 +1268,11 @@ class RenderThunderstorm extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    final s = radius * indentationFactor;
-
     // Draw lightning
     canvas.save();
-    canvas.translate(-s / 18, s / -6.7);
+    canvas.translate(-rr / 18, rr / -6.7);
 
-    final l = s / 9.7,
+    final l = rr / 9.7,
         lightningPath = Path()
           ..moveTo(0, 0)
           ..lineTo(-l, 0)
@@ -1275,7 +1294,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
     // Draw raindrops
     canvas.save();
 
-    canvas.translate(0, s / 7);
+    canvas.translate(0, rr / 7);
     _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1);
 
     canvas.restore();
@@ -1287,10 +1306,9 @@ class RenderThunderstorm extends RenderWeatherIcon {
     _drawCloud(
       canvas,
       _cloudColor,
-      radius,
-      indentationFactor,
+      rr,
       0,
-      -radius * indentationFactor / 4,
+      -rr / 4,
       1.7,
     );
 
@@ -1374,13 +1392,13 @@ class RenderWindy extends RenderWeatherIcon {
     canvas.save();
 
     // Primary wind symbol
-    _drawWind(canvas, _primaryColor, -radius * indentationFactor / 7, radius * indentationFactor / 36, .83, 2, 1.8, 1);
+    _drawWind(canvas, _primaryColor, -rr / 7, rr / 36, .83, 2, 1.8, 1);
 
     // Upper wind symbol
-    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -2.7, radius * indentationFactor / -4.4, .69, 2, 1.8, 1);
+    _drawWind(canvas, _secondaryColor, rr / -2.7, rr / -4.4, .69, 2, 1.8, 1);
 
     // Lower wind symbol
-    _drawWind(canvas, _secondaryColor, radius * indentationFactor / -3.5, radius * indentationFactor / 3.8, .61, 1, 1, 1);
+    _drawWind(canvas, _secondaryColor, rr / -3.5, rr / 3.8, .61, 1, 1, 1);
 
     canvas.restore();
   }
@@ -1390,7 +1408,7 @@ class RenderWindy extends RenderWeatherIcon {
     canvas.translate(tx, ty);
     canvas.scale(s);
 
-    final mf = radius * indentationFactor / 5, hd = mf / 4;
+    final mf = rr / 5, hd = mf / 4;
 
     // Draw wind symbol consisting of four paths
     final paint = Paint()
