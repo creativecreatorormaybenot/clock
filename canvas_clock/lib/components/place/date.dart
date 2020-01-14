@@ -51,7 +51,8 @@ class _UpdatedDateState extends State<UpdatedDate> {
         text: '${time.month}/${time.day}/${time.year}',
         textStyle: TextStyle(
           color: widget.palette[ClockColor.text],
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.normal,
+          fontStyle: FontStyle.normal,
         ),
       );
 }
