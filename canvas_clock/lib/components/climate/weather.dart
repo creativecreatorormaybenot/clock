@@ -374,8 +374,6 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
   void paint(PaintingContext context, Offset offset) {
     super.paint(context, offset);
 
-    print('RenderWeather.paint ${DateTime.now()}'); // Ensure that this is not called when angle changes.
-
     final canvas = context.canvas;
 
     canvas.save();

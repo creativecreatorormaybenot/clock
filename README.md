@@ -1,7 +1,5 @@
 ## TODO
 
-* Fix weather dial rotation.
-
 * Add animations to every weather conditions.
 
   + Only animate the current weather condition.
