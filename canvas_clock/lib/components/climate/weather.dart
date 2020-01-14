@@ -62,7 +62,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> wit
         conditions.length,
         (_) => AnimationController(
               vsync: this,
-              duration: const Duration(seconds: 3),
+              duration: const Duration(seconds: 4),
             ));
   }
 
@@ -523,18 +523,6 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
 
   double get indentationFactor => compositionData.indentationFactor;
 
-  /// Returns the back and forth animation value.
-  ///
-  /// Some movements are simply not inherently looping.
-  /// I can only think of rotations, which loop at exactly
-  /// `2 * pi`. In some other cases, a continuous movement
-  /// can be achieved otherwise. However, sometimes ping-pong
-  /// looping is the best option.
-  /// Because of that, this getter will animate from
-  /// 0 to 1 for `0-0.5` of the actual animation and from
-  /// 1 to 0 for `0.5-1` of the actual animation value.
-  double get bafAv => 1 - (animation.value - 1 / 2).abs() * 2;
-
   /// Returns the section of the radius that is available to
   /// the icon, i.e. the available space vertically if the angle
   /// is 0.
@@ -707,7 +695,7 @@ class RenderCloudy extends RenderWeatherIcon {
       canvas,
       _cloudColor,
       rr,
-      (bafAv - 1 / 2) * rr,
+      0,
       0,
       1.9,
     );
