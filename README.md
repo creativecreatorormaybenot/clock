@@ -40,7 +40,7 @@
 
   + Choose one as the default scheme for the submission.
 
-<br>
+<hr>
 
 * Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
 
