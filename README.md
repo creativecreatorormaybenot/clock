@@ -1,5 +1,16 @@
 ## TODO
 
+* Composition no repaint boundary because no paints are passed up to it (children that could mark it dirty due to animating are repaint boundaries).
+
+
+* Create spin-up animation for when the widget is created or updated?
+
+  + Weather comoponent and thermometer come in from left and right, slide and ball from top, and clock scales up.
+
+  + The whole composition is transformed from x rotation `-pi / 2` to `0` and maybe skewed.
+
+  + This could show that the goo actually reacts to the components (even more than the ball push already does).
+
 * Ideas for weather condition animations:
 
   + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
@@ -9,10 +20,6 @@
   + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
 
 * Find better start and end positions for the ball.
-
-* Create spin-up animation for when the widget is created or updated? 
-
-  + This could show that the goo actually reacts to the components (even more than the ball push already does).
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
