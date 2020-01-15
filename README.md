@@ -8,8 +8,6 @@
 
   + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
 
-* Find better start and end positions for the ball.
-
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
   + Ensure that sufficient contrast is present for accessibility reasons.
