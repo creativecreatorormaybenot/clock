@@ -271,7 +271,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // I imagine it to be like a movie logo reveal:
       // a bit of THX, slowing easing in to finally
       // smash to stop.
-      curve: Curves.easeInCubic,
+      curve: Curves.easeInC,
     );
   }
 

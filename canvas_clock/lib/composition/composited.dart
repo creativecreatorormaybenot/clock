@@ -301,33 +301,24 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     paintOrder.forEach(paintChild);
   }
 
-  void _clippedPaint(PaintingContext context, Offset offset) {
-    // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
-    context.pushClipRect(
-      needsCompositing,
-      offset,
-      Offset.zero & size,
-      _paintChildren,
-    );
-  }
-
   /// Transforms the canvas for the spin up animation.
   void _transformedPaint(PaintingContext context, Offset offset) {
     context.pushTransform(
       needsCompositing,
       offset,
       Matrix4.identity()
+        // Perspective from the bottom center.
+        ..translate(size.width / 2, size.height)
+        ..multiply(Matrix4.identity()..setEntry(3, 2, 1.7e-3))
+        ..translate(-size.width / 2, -size.height)
         // Move to the bottom center (the center part
         // does not really matter because the rotation
         // is about the whole axis) and rotate about the
         // X-axis to create a flip up effect.
         ..translate(size.width / 2, size.height)
-        // Plus or minus does not matter in the rotation value
-        // because it will appear to be the same as there is
-        // no indicator of depth, but minus is accurate.
         ..multiply(Matrix4.rotationX(-pi / 2 * (1 - spinUpAnimation.value)))
         ..translate(-size.width / 2, -size.height),
-      _clippedPaint,
+      _paintChildren,
     );
   }
 
@@ -339,10 +330,14 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   @override
   // ignore: must_call_super
   void paint(PaintingContext context, Offset offset) {
-    // Clipping after transforming, so that the clip
-    // will also cut off everything that goes beyond the
-    // actual clock face in the given area, e.g. the top
-    // of the slide.
-    _transformedPaint(context, offset);
+    // Clip to the given size to not exceed to 5:3 area imposed by the challenge.
+    // Clipping before transforming to show parts like the ball and slide
+    // sticking out on top, which is a nice detail to notice :)
+    context.pushClipRect(
+      needsCompositing,
+      offset,
+      Offset.zero & size,
+      _transformedPaint,
+    );
   }
 }

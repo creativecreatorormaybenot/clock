@@ -4,10 +4,6 @@
 
   + Weather comoponent and thermometer come in from left and right, slide and ball from top, and clock scales up.
 
-  + The whole composition is transformed from x rotation `-pi / 2` to `0` and maybe skewed.
-
-    - Rotate about the bottom of the canvas, i.e.</a> have a flip up animation.
-
   + This could show that the goo actually reacts to the components (even more than the ball push already does).
 
 * Ideas for weather condition animations:
