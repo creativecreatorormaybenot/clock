@@ -302,6 +302,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   }
 
   /// Transforms the canvas for the spin up animation.
+  ///
+  /// Works pretty well apart form some [Canvas.drawShadow] artifacts.
+  /// I was not able to create a minimum reproducible example for this,
+  /// but am hoping to be able to show this bug using the submission.
+  /// The shadow issue does not appear in Flutter web, but the rotation
+  /// is not rendered properly in web anyway.
   void _transformedPaint(PaintingContext context, Offset offset) {
     context.pushTransform(
       needsCompositing,

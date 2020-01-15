@@ -54,9 +54,11 @@
 
 * Make repository public.
 
-  + Make clock available on web via GitHub pages.
+* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
 
-    - Watch "Designing for the Web with Flutter" from Flutter Interact for this.
+* Make clock available on web via GitHub pages.
+
+  + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 
 * Write article about the creation process of the submission on Flutter Community.
 
