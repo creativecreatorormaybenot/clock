@@ -1,7 +1,5 @@
 ## TODO
 
-* Composition no repaint boundary because no paints are passed up to it (children that could mark it dirty due to animating are repaint boundaries).
-
 * Create spin-up animation for when the widget is created or updated?
 
   + Weather comoponent and thermometer come in from left and right, slide and ball from top, and clock scales up.

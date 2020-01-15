@@ -56,6 +56,14 @@ class ClockChildrenParentData extends CompositionChildrenParentData<ClockCompone
 class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
   RenderCompositedClock() : super(ClockComponent.values);
 
+  /// Declares that [RenderCompositedClock] is not a repaint
+  /// boundary.
+  ///
+  /// Every child that is animated and marks itself
+  /// as needing to repaint is a repaint boundary
+  /// and will therefore not repaint this composition.
+  /// Every other [markNeedsPaint] in children happens
+  /// in the same context as a repaint in this render object.
   @override
   bool get isRepaintBoundary => false;
 
