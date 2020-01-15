@@ -31,7 +31,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value),
+        time = DateTime.now();
 
     return AnalogTime(
       bounceAnimation: bounceAnimation,
@@ -53,7 +54,8 @@ class AnimatedAnalogTime extends AnimatedWidget {
       ballEvery: ballEvery,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
-      backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
+      backgroundHighlightColor:
+          palette[ClockColor.analogTimeBackgroundHighlight],
       hourHandColor: palette[ClockColor.hourHand],
       minuteHandColor: palette[ClockColor.minuteHand],
       secondHandColor: palette[ClockColor.secondHand],
@@ -80,7 +82,14 @@ class AnalogTime extends LeafRenderObjectWidget {
   /// icon drawn at `θ = 0` and one at `θ = π`.
   final int ballEvery;
 
-  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor;
+  final Color textColor,
+      backgroundColor,
+      backgroundHighlightColor,
+      hourHandColor,
+      minuteHandColor,
+      secondHandColor,
+      shadowColor,
+      borderColor;
 
   const AnalogTime({
     Key key,
@@ -158,7 +167,8 @@ class AnalogTimeParentData extends ClockChildrenParentData {
   Offset bounce;
 }
 
-class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
+class RenderAnalogTime
+    extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
   final Animation<double> bounceAnimation;
 
   RenderAnalogTime({
@@ -255,7 +265,14 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
     markNeedsPaint();
   }
 
-  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor;
+  Color _textColor,
+      _backgroundColor,
+      _backgroundHighlightColor,
+      _hourHandColor,
+      _minuteHandColor,
+      _secondHandColor,
+      _shadowColor,
+      _borderColor;
 
   set textColor(Color value) {
     assert(value != null);
@@ -388,7 +405,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
     super.describeSemanticsConfiguration(config);
 
     config
-      ..label = 'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
+      ..label =
+          'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr;
   }
@@ -399,7 +417,11 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
 
     canvas.save();
     // Translate the canvas to the center of the square.
-    canvas.translate(offset.dx + _radius, offset.dy + _radius + compositionData.bounce.dy * bounceAnimation.value);
+    canvas.translate(
+        offset.dx + _radius,
+        offset.dy +
+            _radius +
+            compositionData.bounce.dy * bounceAnimation.value);
 
     _drawBackground(canvas);
 
@@ -567,7 +589,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
   }
 
   void _drawBackground(Canvas canvas) {
-    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
+    final fullCircleRect =
+            Rect.fromCircle(center: Offset.zero, radius: _radius),
         shader = ui.Gradient.radial(
       fullCircleRect.center,
       _radius,

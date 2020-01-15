@@ -30,13 +30,17 @@ class Line1d {
 
   const Line1d({this.start, this.end});
 
-  factory Line1d.fromSE({double start, double extent}) => Line1d(start: start, end: start + extent);
+  factory Line1d.fromSE({double start, double extent}) =>
+      Line1d(start: start, end: start + extent);
 
-  factory Line1d.fromEE({double end, double extent}) => Line1d(start: end - extent, end: end);
+  factory Line1d.fromEE({double end, double extent}) =>
+      Line1d(start: end - extent, end: end);
 
-  factory Line1d.fromSEI({double start, double end, double indent}) => Line1d(start: start + indent, end: end - indent);
+  factory Line1d.fromSEI({double start, double end, double indent}) =>
+      Line1d(start: start + indent, end: end - indent);
 
-  factory Line1d.fromCenter({double center, double extent}) => Line1d(start: center - extent / 2, end: center + extent / 2);
+  factory Line1d.fromCenter({double center, double extent}) =>
+      Line1d(start: center - extent / 2, end: center + extent / 2);
 
   double get extent => end - start;
 
@@ -61,14 +65,16 @@ class Line1d {
 
 extension ExtendedRect on Rect {
   Rect include(Offset offset) {
-    return expandToInclude(Rect.fromCenter(center: offset, width: 0, height: 0));
+    return expandToInclude(
+        Rect.fromCenter(center: offset, width: 0, height: 0));
   }
 }
 
 class Line2d {
   Line2d({this.start, this.end});
 
-  factory Line2d.from(Line2d other) => Line2d(start: other.start, end: other.end);
+  factory Line2d.from(Line2d other) =>
+      Line2d(start: other.start, end: other.end);
 
   Offset start, end;
 
@@ -116,7 +122,10 @@ class Line2d {
   Path pathWithWidth(double width) {
     final normalOffset = normal.offset;
 
-    final s1 = start - normalOffset * width / 2, s2 = start + normalOffset * width / 2, e1 = end - normalOffset * width / 2, e2 = end + normalOffset * width / 2;
+    final s1 = start - normalOffset * width / 2,
+        s2 = start + normalOffset * width / 2,
+        e1 = end - normalOffset * width / 2,
+        e2 = end + normalOffset * width / 2;
 
     return Path()..addPolygon([s1, s2, e2, e1], false);
   }

@@ -11,7 +11,12 @@ double waveProgress(DateTime time) => 1 / waveDuration.inSeconds * time.second;
 class Background extends LeafRenderObjectWidget {
   final Animation<double> animation, analogTimeBounceAnimation;
 
-  final Color ballColor, groundColor, gooColor, analogTimeComponentColor, weatherComponentColor, temperatureComponentColor;
+  final Color ballColor,
+      groundColor,
+      gooColor,
+      analogTimeComponentColor,
+      weatherComponentColor,
+      temperatureComponentColor;
 
   const Background({
     Key key,
@@ -23,8 +28,7 @@ class Background extends LeafRenderObjectWidget {
     @required this.analogTimeComponentColor,
     @required this.weatherComponentColor,
     @required this.temperatureComponentColor,
-  })  :
-        assert(animation != null),
+  })  : assert(animation != null),
         assert(analogTimeBounceAnimation != null),
         assert(ballColor != null),
         assert(groundColor != null),
@@ -69,7 +73,8 @@ class BackgroundParentData extends ClockChildrenParentData {
 
   Rect rectOf(ClockComponent component) {
     final rect = _rects[component];
-    assert(rect != null, 'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
+    assert(rect != null,
+        'No $Rect was provided for $component. If the rect of this child should be accessible from $childType, this needs to be changed in $RenderCompositedClock.');
     return rect;
   }
 
@@ -81,7 +86,8 @@ class BackgroundParentData extends ClockChildrenParentData {
   Offset analogTimeBounce;
 }
 
-class RenderBackground extends RenderCompositionChild<ClockComponent, BackgroundParentData> {
+class RenderBackground
+    extends RenderCompositionChild<ClockComponent, BackgroundParentData> {
   final Animation<double> animation, analogTimeBounceAnimation;
 
   RenderBackground({
@@ -101,7 +107,12 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
         _temperatureComponentColor = temperatureComponentColor,
         super(ClockComponent.background);
 
-  Color _ballColor, _groundColor, _gooColor, _analogTimeComponentColor, _weatherComponentColor, _temperatureComponentColor;
+  Color _ballColor,
+      _groundColor,
+      _gooColor,
+      _analogTimeComponentColor,
+      _weatherComponentColor,
+      _temperatureComponentColor;
 
   set ballColor(Color value) {
     assert(value != null);
@@ -209,16 +220,21 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
       compositionData.rectOf(ClockComponent.weather),
       compositionData.rectOf(ClockComponent.temperature),
       // The glow of the clock should be rendered after the other two components.
-      compositionData.rectOf(ClockComponent.analogTime)
+      compositionData
+          .rectOf(ClockComponent.analogTime)
           // The background animates depending on the analog time's position.
-          .shift(compositionData.analogTimeBounce * analogTimeBounceAnimation.value),
+          .shift(compositionData.analogTimeBounce *
+              analogTimeBounceAnimation.value),
     ],
         componentColors = [
       _weatherComponentColor,
       _temperatureComponentColor,
       _analogTimeComponentColor,
     ],
-        componentsInGoo = components.where((rect) => rect.overlaps(gooArea)).map((rect) => gooArea.intersect(rect)).toList();
+        componentsInGoo = components
+            .where((rect) => rect.overlaps(gooArea))
+            .map((rect) => gooArea.intersect(rect))
+            .toList();
 
     final canvas = context.canvas;
 
@@ -276,8 +292,12 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
           rect.bottomRight.dy,
           rect.centerRight.dx,
           rect.centerRight.dy,
-          i == rects.length - 1 ? size.width : (rect.right + rects[i + 1].left) / 2,
-          i == rects.length - 1 ? gooArea.top : (rect.center.dy + rects[i + 1].center.dy) / 2,
+          i == rects.length - 1
+              ? size.width
+              : (rect.right + rects[i + 1].left) / 2,
+          i == rects.length - 1
+              ? gooArea.top
+              : (rect.center.dy + rects[i + 1].center.dy) / 2,
         );
     }
 
@@ -297,7 +317,11 @@ class RenderBackground extends RenderCompositionChild<ClockComponent, Background
 
     // Draw a kind of glow about the given components
     for (var i = 0; i < components.length; i++) {
-      final component = components[i], rect = Rect.fromCenter(center: component.center, width: component.width * 7 / 4, height: component.height * 7 / 4);
+      final component = components[i],
+          rect = Rect.fromCenter(
+              center: component.center,
+              width: component.width * 7 / 4,
+              height: component.height * 7 / 4);
 
       final color = componentColors[i],
           paint = Paint()

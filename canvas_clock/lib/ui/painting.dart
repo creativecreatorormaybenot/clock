@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
-  static const petalColor = Color(0xffbab33c), petals = 14, petalWeightDivisor = 2.0;
+  static const petalColor = Color(0xffbab33c),
+      petals = 14,
+      petalWeightDivisor = 2.0;
 
   /// Paints a petals design based on a full [radius], that is not the radius of the petals.
   ///
@@ -74,7 +76,8 @@ extension ExtendedPath on Path {
   /// syntax that resembles [lineTo] and others more
   /// than [arcToPoint] does.
   void halfCircleTo(double x, double y, [bool clockwise = true]) {
-    arcToPoint(Offset(x, y), radius: const Radius.circular(1), clockwise: clockwise);
+    arcToPoint(Offset(x, y),
+        radius: const Radius.circular(1), clockwise: clockwise);
   }
 
   /// Returns a trimmed version of this path.
@@ -92,15 +95,19 @@ extension ExtendedPath on Path {
 
     // Reset metrics from the start.
     metrics = computeMetrics();
-    var trimStart = totalLength * start, trimStop = totalLength * end, offset = 0.0;
+    var trimStart = totalLength * start,
+        trimStop = totalLength * end,
+        offset = 0.0;
 
     final metricsIterator = metrics.iterator;
     metricsIterator.moveNext();
     if (trimStart > 0.0) {
-      offset = _appendPathSegmentSequential(metricsIterator, result, offset, 0.0, trimStart);
+      offset = _appendPathSegmentSequential(
+          metricsIterator, result, offset, 0.0, trimStart);
     }
     if (trimStop < totalLength) {
-      offset = _appendPathSegmentSequential(metricsIterator, result, offset, trimStop, totalLength);
+      offset = _appendPathSegmentSequential(
+          metricsIterator, result, offset, trimStop, totalLength);
     }
 
     return result;
@@ -108,7 +115,8 @@ extension ExtendedPath on Path {
 }
 
 /// https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart#L5
-double _appendPathSegmentSequential(Iterator<PathMetric> metricsIterator, Path to, double offset, double start, double stop) {
+double _appendPathSegmentSequential(Iterator<PathMetric> metricsIterator,
+    Path to, double offset, double start, double stop) {
   var nextOffset = offset;
 
   do {

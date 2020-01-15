@@ -30,7 +30,8 @@ class Location extends LeafRenderObjectWidget {
   }
 }
 
-class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+class RenderLocation
+    extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderLocation({
     String text,
     TextStyle textStyle,

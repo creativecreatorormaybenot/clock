@@ -36,7 +36,8 @@ class ColorPaletteTween extends Tween<Map<ClockColor, Color>> {
   @override
   Map<ClockColor, Color> lerp(double t) {
     return <ClockColor, Color>{
-      for (final entry in end.entries) entry.key: Color.lerp(begin[entry.key], end[entry.key], t),
+      for (final entry in end.entries)
+        entry.key: Color.lerp(begin[entry.key], end[entry.key], t),
     };
   }
 }
@@ -46,7 +47,12 @@ class _AnimatedClockState extends AnimatedWidgetBaseState<AnimatedClock> {
 
   @override
   void forEachTween(visitor) {
-    _paletteTween = visitor(_paletteTween, widget.palette, (value) => ColorPaletteTween(begin: value as Map<ClockColor, Color>)) as ColorPaletteTween;
+    _paletteTween = visitor(
+            _paletteTween,
+            widget.palette,
+            (value) =>
+                ColorPaletteTween(begin: value as Map<ClockColor, Color>))
+        as ColorPaletteTween;
     assert(_paletteTween != null);
   }
 

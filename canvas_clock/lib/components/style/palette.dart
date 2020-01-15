@@ -63,7 +63,8 @@ enum ClockColor {
 }
 
 class Palette extends StatefulWidget {
-  static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
+  static _PaletteState of(BuildContext context) =>
+      context.findAncestorStateOfType<_PaletteState>();
 
   static const Map<ClockColor, Color> base = {
     ClockColor.text: Color(0xcd000000),
@@ -122,7 +123,8 @@ class Palette extends StatefulWidget {
   },
       subtleDark = {};
 
-  final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
+  final Widget Function(BuildContext context, Map<ClockColor, Color> palette)
+      builder;
 
   const Palette({
     @required this.builder,

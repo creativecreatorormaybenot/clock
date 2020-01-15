@@ -73,7 +73,8 @@ class DigitalTime extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderDigitalTime renderObject) {
+  void updateRenderObject(
+      BuildContext context, RenderDigitalTime renderObject) {
     renderObject
       ..textColor = textColor
       ..minuteProgress = minuteProgress
@@ -94,7 +95,8 @@ class DigitalTimeParentData extends ClockChildrenParentData {
   Offset position;
 }
 
-class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
+class RenderDigitalTime
+    extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
   RenderDigitalTime({
     double minuteProgress,
     int hour,
@@ -262,7 +264,8 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
     // Describes the center position of the element.
     yMovementSequence = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: size.height + h, end: size.height + h - inDistance).chain(
+        tween: Tween(begin: size.height + h, end: size.height + h - inDistance)
+            .chain(
           CurveTween(
             curve: const Cubic(.32, .62, .06, .95),
           ),
@@ -305,12 +308,14 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
       canvas.drawLine(
           Offset(_timePainter.width + width * linePaddingFactor, movementY),
-          Offset(_timePainter.width + width * (1 - linePaddingFactor), movementY),
+          Offset(
+              _timePainter.width + width * (1 - linePaddingFactor), movementY),
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {
-      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
+      _amPmPainter.paint(canvas,
+          Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
     }
 
     canvas.restore();

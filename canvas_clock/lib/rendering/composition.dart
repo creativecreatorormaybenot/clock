@@ -3,7 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// [C] is intended to be an enum that indicates which child this parent data belongs to.
-class CompositionChildrenParentData<C> extends ContainerBoxParentData<RenderBox> {
+class CompositionChildrenParentData<C>
+    extends ContainerBoxParentData<RenderBox> {
   C childType;
 
   /// Used to mark children that do not set up their [RenderObject.parentData] themselves.
@@ -14,8 +15,11 @@ class CompositionChildrenParentData<C> extends ContainerBoxParentData<RenderBox>
 /// [RenderObject] for [MultiChildRenderObjectWidget]s that are supposed to layout a specific set of children and all of these only exactly once.
 ///
 /// [C] is intended to be an enum.
-abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, P extends MultiChildRenderObjectWidget> extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, D>, RenderBoxContainerDefaultsMixin<RenderBox, D> {
+abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>,
+        P extends MultiChildRenderObjectWidget> extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, D>,
+        RenderBoxContainerDefaultsMixin<RenderBox, D> {
   /// All the enum entries for [C] should be passed as [children]. This can be achieved by using `enum.values`.
   final List<C> children;
 
@@ -38,7 +42,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as D, type = childParentData.childType;
+      final childParentData = child.parentData as D,
+          type = childParentData.childType;
 
       assert(
           childParentData.valid,
@@ -56,7 +61,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
       child = childParentData.nextSibling;
     }
 
-    final missingComponents = children.where((child) => !layoutChildren.containsKey(child));
+    final missingComponents =
+        children.where((child) => !layoutChildren.containsKey(child));
 
     assert(
         missingComponents.isEmpty,
@@ -80,7 +86,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as D, component = childParentData.childType;
+      final childParentData = child.parentData as D,
+          component = childParentData.childType;
 
       children[component] = child;
       parentData[component] = childParentData;
@@ -88,7 +95,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
       child = childParentData.nextSibling;
     }
 
-    paintChild = (C child) => context.paintChild(children[child], parentData[child].offset + offset);
+    paintChild = (C child) =>
+        context.paintChild(children[child], parentData[child].offset + offset);
   }
 
   static const bool debugPaintMessageEnabled = false;
@@ -100,8 +108,12 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
       if (debugPaintMessageEnabled && debugPaintSizeEnabled) {
         final painter = TextPainter(
             text: const TextSpan(
-                text: 'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
-                style: TextStyle(fontSize: 42, color: Color(0xffff3456), backgroundColor: Color(0xffffffff))),
+                text:
+                    'Please send me a sign :/ This is leading me nowhere and I do not mean this challenge - creativecreatorormaybenot.',
+                style: TextStyle(
+                    fontSize: 42,
+                    color: Color(0xffff3456),
+                    backgroundColor: Color(0xffffffff))),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         painter.layout(maxWidth: size.width);
@@ -114,7 +126,8 @@ abstract class RenderComposition<C, D extends CompositionChildrenParentData<C>, 
 
 /// Takes care of validating [RenderObject]s passed to [RenderComposition] and assigning an enum value of type [C].
 /// It also provides easy access to the [CompositionChildrenParentData] of this [RenderObject] via [compositionData].
-abstract class RenderCompositionChild<C, D extends CompositionChildrenParentData<C>> extends RenderBox {
+abstract class RenderCompositionChild<C,
+    D extends CompositionChildrenParentData<C>> extends RenderBox {
   final C childType;
 
   RenderCompositionChild(

@@ -6,6 +6,8 @@
 
   + The whole composition is transformed from x rotation `-pi / 2` to `0` and maybe skewed.
 
+    - Rotate about the bottom of the canvas, i.e.</a> have a flip over animation.
+
   + This could show that the goo actually reacts to the components (even more than the ball push already does).
 
 * Ideas for weather condition animations:
