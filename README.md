@@ -1,11 +1,5 @@
 ## TODO
 
-* Create spin-up animation for when the widget is created or updated.
-
-  + Weather comoponent and thermometer come in from left and right, slide and ball from top, and clock scales up.
-
-  + This could show that the goo actually reacts to the components (even more than the ball push already does).
-
 * Ideas for weather condition animations:
 
   + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
