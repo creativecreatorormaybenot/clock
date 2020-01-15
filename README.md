@@ -14,10 +14,6 @@
 
 * Effects/filter ideas:
 
-  + Push some subtle animated transforms (in `CompositedClock` ?) that introduce some nice perspective changes.
-
-    - Potentially rotate whole components because it better shows what the individual parts are :)
-
   + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
 
   + Take inspiration from https://github.com/JustinFincher/FlutterClock.
