@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 
-const spinUpDuration = Duration(seconds: 3);
+const spinUpDuration = Duration(milliseconds: 1435);
 
 class Clock extends StatefulWidget {
   final ClockModel model;
@@ -267,11 +267,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Animation<double> get spinUpAnimation {
     return CurvedAnimation(
       parent: spinUpController,
-      // When the clock face flips over to reveal itself,
+      // When the clock face flips up to reveal itself,
       // I imagine it to be like a movie logo reveal:
       // a bit of THX, slowing easing in to finally
       // smash to stop.
-      curve: Curves.easeIn,
+      curve: Curves.easeInCubic,
     );
   }
 
