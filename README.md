@@ -1,11 +1,5 @@
 ## TODO
 
-* Create clock customizers.
-
-  + One with the helper customizer. Ideally, it disables the safe area from there (reset the helper in that case).
-
-  + One that takes the helper model and does an automatic flow (list of timers and callbacks).
-
 * Ideas for weather condition animations:
 
   + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
@@ -13,6 +7,8 @@
   + Cloudy: parallax movement of the different clouds.
 
   + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
+
+* Create an automated customization flow.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
 
