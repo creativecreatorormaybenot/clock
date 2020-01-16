@@ -1,7 +1,6 @@
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_clock_helper/customizer.dart';
 
 /// Hello and welcome to my Flutter Clock submission :)
 ///
@@ -49,21 +48,21 @@ const ballEvery = 60;
 /// included in the flow generation.
 ///
 /// Changing this requires a hot restart to take into effect.
-const automateCustomizationFlow = false;
+const automateCustomizationFlow = true;
 
 void main() {
   runApp(
     Customizer(
-        automatic: automateCustomizationFlow,
-        builder: (context, model) => Palette(
-          builder: (context, palette) {
-            return AnimatedClock(
-              model: model,
-              palette: palette,
-            );
-          },
-        ),
+      automatic: automateCustomizationFlow,
+      builder: (context, model) => Palette(
+        builder: (context, palette) {
+          return AnimatedClock(
+            model: model,
+            palette: palette,
+          );
+        },
       ),
+    ),
   );
   // This makes the app run in full screen mode.
   SystemChrome.setEnabledSystemUIOverlays([]);

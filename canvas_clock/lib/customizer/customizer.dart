@@ -1,5 +1,5 @@
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_clock_helper/customizer.dart';
 import 'package:flutter_clock_helper/model.dart';
 
 export 'automatic.dart';
@@ -22,8 +22,10 @@ class Customizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (automatic) return Container();
+    if (automatic) {
+      return AutomatedCustomizer(builder: builder);
+    }
 
-    return ClockCustomizer((model) => builder(context, model));
+    return ManualCustomizer(builder: builder);
   }
 }
