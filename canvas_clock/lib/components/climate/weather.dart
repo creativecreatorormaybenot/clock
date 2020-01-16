@@ -9,6 +9,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 
+const iconLoopDuration = Duration(seconds: 4);
+
 class AnimatedWeather extends ImplicitlyAnimatedWidget {
   final ClockModel model;
 
@@ -62,7 +64,7 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> wit
         conditions.length,
         (_) => AnimationController(
               vsync: this,
-              duration: const Duration(seconds: 4),
+              duration: const Duration(seconds: 3),
             ));
   }
 
@@ -954,7 +956,7 @@ class RenderRainy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    _drawRain(canvas, _raindropColor, radius, 0, _raindrops, 1.42);
+    _drawRain(canvas, _raindropColor, radius, 0, _raindrops, 1.42, animationSeed: 23, animationValue: animation.value);
   }
 }
 
@@ -983,29 +985,29 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
       continue;
     }
 
-    final timeShift = animationRandom.nextDouble(),
+    final timeShift = animationRandom.nextDouble() * 4,
         trimTween = TweenSequence([
       TweenSequenceItem(
         tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
-        weight: 3 + timeShift,
+        weight: timeShift,
       ),
       TweenSequenceItem(
         tween: Tween<Tuple<double>>(
           begin: const Tuple<double>(0, 1),
           end: const Tuple<double>(1, 1),
         ).chain(CurveTween(curve: Curves.easeOut)),
-        weight: 1,
+        weight: 2,
       ),
       TweenSequenceItem(
         tween: Tween<Tuple<double>>(
           begin: const Tuple<double>(0, 0),
           end: const Tuple<double>(0, 1),
         ).chain(CurveTween(curve: Curves.decelerate)),
-        weight: 1,
+        weight: 2,
       ),
       TweenSequenceItem(
         tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
-        weight: 2 - timeShift,
+        weight: 4 - timeShift,
       ),
     ]),
         tuple = trimTween.transform(animationValue);
@@ -1336,6 +1338,56 @@ class RenderThunderstorm extends RenderWeatherIcon {
     markNeedsPaint();
   }
 
+  TweenSequence<double> lightningSequence;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    lightningSequence = TweenSequence([
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1),
+        weight: 21,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1,
+          end: .9,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: .9,
+          end: 1,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1),
+        weight: 2,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1,
+          end: .84,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: .84,
+          end: .1,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1),
+        weight: 5,
+      ),
+    ]);
+  }
+
   @override
   void drawCondition(Canvas canvas) {
     // Draw lightning
@@ -1356,7 +1408,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
     canvas.drawPath(
         lightningPath,
         Paint()
-          ..color = _lightningColor
+          ..color = _lightningColor.withOpacity(min(1, lightningSequence.transform(animation.value)))
           ..style = PaintingStyle.fill);
 
     canvas.restore();
@@ -1365,7 +1417,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
     canvas.save();
 
     canvas.translate(0, rr / 7);
-    _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1, animationSeed: 0, animationValue: animation.value);
+    _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1, animationSeed: 2, animationValue: animation.value);
 
     canvas.restore();
 
