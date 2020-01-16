@@ -62,6 +62,13 @@ enum ClockColor {
   slideSecondary,
 }
 
+/// A controller for the palette for all colors used in the clock face.
+///
+/// The actual palette values are stored as `Map<ClockColor, Color>`
+/// ([Map], [ClockColor], & [Color]) and this [StatefulWidget] controls
+/// which palette is currently shown.
+///
+/// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark].
 class Palette extends StatefulWidget {
   static _PaletteState of(BuildContext context) =>
       context.findAncestorStateOfType<_PaletteState>();

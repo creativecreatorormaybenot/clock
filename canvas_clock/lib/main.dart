@@ -36,22 +36,33 @@ const bool forceVibrantPalette = null;
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
-///
-/// Adjusting this value only works partially with a hot reload because
-/// the animation controllers are not set up again, which means that
-/// you really need a hot restart if you want to change this value.
 const ballEvery = 60;
+
+/// Enables or disables a preset automated customization flow
+/// (must not be `null`).
+///
+/// If this is enabled, the clock will run through various [ClockModel]
+/// settings automatically. There are timers that predefine when
+/// what setting will be adjusted. For variation, there is some randomness
+/// included in the flow generation.
+const automateCustomizationFlow = true;
 
 void main() {
   runApp(
-    ClockCustomizer(
-      (model) => Palette(
-        builder: (context, palette) {
-          return AnimatedClock(
-            model: model,
-            palette: palette,
-          );
-        },
+    // Using a Builder here in order to rebuild the Customizer whenever
+    // hot reload is used, which enables you to change
+    // automateCustomizationFlow on the fly.
+    Builder(
+      builder: (context) => Customizer(
+        automatic: automateCustomizationFlow,
+        builder: (context, model) => Palette(
+          builder: (context, palette) {
+            return AnimatedClock(
+              model: model,
+              palette: palette,
+            );
+          },
+        ),
       ),
     ),
   );
