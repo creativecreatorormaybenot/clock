@@ -4,8 +4,7 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
-  static const petalColor = Color(0xffbab33c),
-      petals = 14,
+  static const petals = 14,
       petalWeightDivisor = 2.0;
 
   /// Paints a petals design based on a full [radius], that is not the radius of the petals.
@@ -13,13 +12,13 @@ extension ExtendedCanvas on Canvas {
   /// Regarding the naming scheme: I have decided to name everything that is on [Canvas]
   /// (following existing methods) or takes a canvas - preferably as its first - parameter
   /// `drawX` and anything that might take a [PaintingContext] `paintX`.
-  void drawPetals(double radius) {
-    final petalShader = const RadialGradient(
+  void drawPetals(double radius, Color color, Color highlightColor) {
+    final petalShader = RadialGradient(
       colors: [
-        Color(0xffffffff),
-        petalColor,
+        highlightColor,
+        color,
       ],
-      stops: [
+      stops: const [
         0,
         .3,
       ],

@@ -31,8 +31,7 @@ class AnimatedAnalogTime extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bounce = const HandBounceCurve().transform(animation.value),
-        time = DateTime.now();
+    final bounce = const HandBounceCurve().transform(animation.value), time = DateTime.now();
 
     return AnalogTime(
       bounceAnimation: bounceAnimation,
@@ -54,13 +53,14 @@ class AnimatedAnalogTime extends AnimatedWidget {
       ballEvery: ballEvery,
       textColor: palette[ClockColor.text],
       backgroundColor: palette[ClockColor.analogTimeBackground],
-      backgroundHighlightColor:
-          palette[ClockColor.analogTimeBackgroundHighlight],
+      backgroundHighlightColor: palette[ClockColor.analogTimeBackgroundHighlight],
       hourHandColor: palette[ClockColor.hourHand],
       minuteHandColor: palette[ClockColor.minuteHand],
       secondHandColor: palette[ClockColor.secondHand],
       shadowColor: palette[ClockColor.shadow],
       borderColor: palette[ClockColor.border],
+      petalsColor: palette[ClockColor.petals],
+      petalsHighlightColor: palette[ClockColor.petalsHighlight],
     );
   }
 }
@@ -82,14 +82,7 @@ class AnalogTime extends LeafRenderObjectWidget {
   /// icon drawn at `θ = 0` and one at `θ = π`.
   final int ballEvery;
 
-  final Color textColor,
-      backgroundColor,
-      backgroundHighlightColor,
-      hourHandColor,
-      minuteHandColor,
-      secondHandColor,
-      shadowColor,
-      borderColor;
+  final Color textColor, backgroundColor, backgroundHighlightColor, hourHandColor, minuteHandColor, secondHandColor, shadowColor, borderColor, petalsColor, petalsHighlightColor;
 
   const AnalogTime({
     Key key,
@@ -107,6 +100,8 @@ class AnalogTime extends LeafRenderObjectWidget {
     @required this.secondHandColor,
     @required this.shadowColor,
     @required this.borderColor,
+    @required this.petalsColor,
+    @required this.petalsHighlightColor,
   })  : assert(bounceAnimation != null),
         assert(secondHandAngle != null),
         assert(minuteHandAngle != null),
@@ -121,6 +116,8 @@ class AnalogTime extends LeafRenderObjectWidget {
         assert(secondHandColor != null),
         assert(shadowColor != null),
         assert(borderColor != null),
+        assert(petalsColor != null),
+        assert(petalsHighlightColor != null),
         assert(60 % ballEvery == 0),
         super(key: key);
 
@@ -141,6 +138,8 @@ class AnalogTime extends LeafRenderObjectWidget {
       secondHandColor: secondHandColor,
       shadowColor: shadowColor,
       borderColor: borderColor,
+      petalsColor: petalsColor,
+      petalsHighlightColor: petalsHighlightColor,
     );
   }
 
@@ -159,7 +158,9 @@ class AnalogTime extends LeafRenderObjectWidget {
       ..minuteHandColor = minuteHandColor
       ..secondHandColor = secondHandColor
       ..shadowColor = shadowColor
-      ..borderColor = borderColor;
+      ..borderColor = borderColor
+      ..petalsColor = petalsColor
+      ..petalsHighlightColor = petalsHighlightColor;
   }
 }
 
@@ -167,8 +168,7 @@ class AnalogTimeParentData extends ClockChildrenParentData {
   Offset bounce;
 }
 
-class RenderAnalogTime
-    extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
+class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTimeParentData> {
   final Animation<double> bounceAnimation;
 
   RenderAnalogTime({
@@ -186,6 +186,8 @@ class RenderAnalogTime
     Color secondHandColor,
     Color shadowColor,
     Color borderColor,
+    Color petalsColor,
+    Color petalsHighlightColor,
   })  : _secondHandAngle = secondHandAngle,
         _minuteHandAngle = minuteHandAngle,
         _hourHandAngle = hourHandAngle,
@@ -199,6 +201,8 @@ class RenderAnalogTime
         _secondHandColor = secondHandColor,
         _shadowColor = shadowColor,
         _borderColor = borderColor,
+        _petalsColor = petalsColor,
+        _petalsHighlightColor = petalsHighlightColor,
         super(ClockComponent.analogTime);
 
   double _secondHandAngle, _minuteHandAngle, _hourHandAngle;
@@ -265,14 +269,7 @@ class RenderAnalogTime
     markNeedsPaint();
   }
 
-  Color _textColor,
-      _backgroundColor,
-      _backgroundHighlightColor,
-      _hourHandColor,
-      _minuteHandColor,
-      _secondHandColor,
-      _shadowColor,
-      _borderColor;
+  Color _textColor, _backgroundColor, _backgroundHighlightColor, _hourHandColor, _minuteHandColor, _secondHandColor, _shadowColor, _borderColor, _petalsColor, _petalsHighlightColor;
 
   set textColor(Color value) {
     assert(value != null);
@@ -362,6 +359,28 @@ class RenderAnalogTime
     markNeedsPaint();
   }
 
+  set petalsColor(Color value) {
+    assert(value != null);
+
+    if (_petalsColor == value) {
+      return;
+    }
+
+    _petalsColor = value;
+    markNeedsPaint();
+  }
+
+  set petalsHighlightColor(Color value) {
+    assert(value != null);
+
+    if (_petalsHighlightColor == value) {
+      return;
+    }
+
+    _petalsHighlightColor = value;
+    markNeedsPaint();
+  }
+
   @override
   bool get isRepaintBoundary => true;
 
@@ -405,8 +424,7 @@ class RenderAnalogTime
     super.describeSemanticsConfiguration(config);
 
     config
-      ..label =
-          'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
+      ..label = 'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr;
   }
@@ -417,11 +435,7 @@ class RenderAnalogTime
 
     canvas.save();
     // Translate the canvas to the center of the square.
-    canvas.translate(
-        offset.dx + _radius,
-        offset.dy +
-            _radius +
-            compositionData.bounce.dy * bounceAnimation.value);
+    canvas.translate(offset.dx + _radius, offset.dy + _radius + compositionData.bounce.dy * bounceAnimation.value);
 
     _drawBackground(canvas);
 
@@ -476,8 +490,7 @@ class RenderAnalogTime
               height: height,
             ),
             Paint()
-              ..color = _textColor
-              ..blendMode = BlendMode.darken);
+              ..color = _textColor);
       }
 
       // Draw 24 hour minute tick marks further inwards.
@@ -491,8 +504,7 @@ class RenderAnalogTime
               -h,
             ),
             Paint()
-              ..color = _textColor
-              ..blendMode = BlendMode.darken);
+              ..color = _textColor);
       }
 
       // This will go back to 0 at the end of loop,
@@ -510,8 +522,7 @@ class RenderAnalogTime
             height: height,
           ),
           Paint()
-            ..color = _textColor
-            ..blendMode = BlendMode.darken);
+            ..color = _textColor);
 
       final painter = TextPainter(
         text: TextSpan(
@@ -546,8 +557,7 @@ class RenderAnalogTime
                 -h,
               ),
               Paint()
-                ..color = _textColor
-                ..blendMode = BlendMode.darken);
+                ..color = _textColor);
 
           final painter = TextPainter(
             text: TextSpan(
@@ -575,7 +585,7 @@ class RenderAnalogTime
       canvas.rotate(-pi * 2 / largeDivisions);
     }
 
-    canvas.drawPetals(_radius);
+    canvas.drawPetals(_radius, _petalsColor, _petalsHighlightColor);
 
     // This is the order of the shadow elevations as well, i.e.
     // hour hand is located highest and the minute hand lowest.
@@ -589,8 +599,7 @@ class RenderAnalogTime
   }
 
   void _drawBackground(Canvas canvas) {
-    final fullCircleRect =
-            Rect.fromCircle(center: Offset.zero, radius: _radius),
+    final fullCircleRect = Rect.fromCircle(center: Offset.zero, radius: _radius),
         shader = ui.Gradient.radial(
       fullCircleRect.center,
       _radius,

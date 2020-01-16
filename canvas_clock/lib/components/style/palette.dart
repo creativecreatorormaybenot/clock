@@ -60,6 +60,10 @@ enum ClockColor {
   /// These form a linear gradient.
   slidePrimary,
   slideSecondary,
+
+  /// Colors used for [ExtendedCanvas.drawPetals].
+  petals,
+  petalsHighlight,
 }
 
 /// A controller for the palette for all colors used in the clock face.
@@ -112,6 +116,8 @@ class Palette extends StatefulWidget {
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
     ClockColor.slidePrimary: Color(0xffefdecd),
     ClockColor.slideSecondary: Color(0xff855e42),
+    ClockColor.petalsHighlight: Color(0xffffffff),
+    ClockColor.petals: Color(0xffbab33c),
   },
       baseLight = {},
       baseDark = {
@@ -120,6 +126,11 @@ class Palette extends StatefulWidget {
     ClockColor.goo: Color(0xff301934),
     ClockColor.thermometerBackgroundSecondary: Color(0xff654321),
     ClockColor.thermometerBackgroundPrimary: Color(0xff3b5055),
+    ClockColor.analogTimeBackground: Color(0xff980036),
+    ClockColor.analogTimeBackgroundHighlight: Color(0xffca1f7b),
+    ClockColor.petals: Color(0xff483d8b),
+    ClockColor.petalsHighlight: Color(0xff9f79ee),
+    ClockColor.border: Color(0xffffffff),
   },
       vibrantLight = {},
       vibrantDark = {},
