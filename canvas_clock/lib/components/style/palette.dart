@@ -70,8 +70,7 @@ enum ClockColor {
 ///
 /// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark].
 class Palette extends StatefulWidget {
-  static _PaletteState of(BuildContext context) =>
-      context.findAncestorStateOfType<_PaletteState>();
+  static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
 
   static const Map<ClockColor, Color> base = {
     ClockColor.text: Color(0xcd000000),
@@ -116,9 +115,11 @@ class Palette extends StatefulWidget {
   },
       baseLight = {},
       baseDark = {
-    // Test values todo
-    ClockColor.text: Color(0xff424242),
+    ClockColor.text: Color(0xb3ffffff),
     ClockColor.background: Color(0xff121212),
+    ClockColor.goo: Color(0xff301934),
+    ClockColor.thermometerBackgroundSecondary: Color(0xff654321),
+    ClockColor.thermometerBackgroundPrimary: Color(0xff3b5055),
   },
       vibrantLight = {},
       vibrantDark = {},
@@ -130,8 +131,7 @@ class Palette extends StatefulWidget {
   },
       subtleDark = {};
 
-  final Widget Function(BuildContext context, Map<ClockColor, Color> palette)
-      builder;
+  final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
 
   const Palette({
     @required this.builder,

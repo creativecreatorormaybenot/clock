@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,10 +13,10 @@ const initialData = CustomizationData(
   high: 42,
   low: -5,
   condition: WeatherCondition.snowy,
-  // todo make this work (currently background is still light when starting up); afterwards change to light
   theme: ThemeMode.dark,
   timeFormat: TimeFormat.standard,
-);
+),
+    changeWeatherConditionEvery = Duration(microseconds: 60 / 7 * 1e6 ~/ 1);
 
 class AutomatedCustomizer extends StatefulWidget {
   final ClockModelBuilder builder;
@@ -42,22 +45,48 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
     update();
   }
 
+  Timer conditionTimer;
+
   @override
   void initState() {
     super.initState();
 
     model = ClockModel();
-
     applyData(initialData);
-
     model.addListener(update);
+
+    conditionTimer = Timer.periodic(changeWeatherConditionEvery, changeCondition);
+    remainingConditions = [];
   }
 
   @override
   void dispose() {
     model.dispose();
 
+    conditionTimer.cancel();
+
     super.dispose();
+  }
+
+  List<WeatherCondition> remainingConditions;
+
+  void changeCondition(Timer timer) {
+    if (remainingConditions.isEmpty) {
+      remainingConditions.addAll(WeatherCondition.values);
+    }
+
+    List<WeatherCondition> selection;
+
+    if (remainingConditions.contains(model.weatherCondition)) {
+      selection = remainingConditions.where((condition) => condition != model.weatherCondition).toList();
+    } else {
+      selection = remainingConditions;
+    }
+
+    final nextCondition = selection[Random().nextInt(selection.length)];
+    remainingConditions.remove(nextCondition);
+
+    model.weatherCondition = nextCondition;
   }
 
   void update() {
@@ -81,17 +110,21 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       themeMode: theme,
       home: Builder(
-        builder: (context) => Container(
-          color: Theme.of(context).canvasColor,
-          child: Center(
-            child: AspectRatio(
-              aspectRatio: 5 / 3,
-              child: widget.builder(context, model),
+        builder: (context) {
+          return Container(
+            color: Theme.of(context).canvasColor,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 5 / 3,
+                child: widget.builder(context, model),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

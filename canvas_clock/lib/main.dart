@@ -26,10 +26,12 @@ import 'package:flutter/widgets.dart';
 /// person. What I am trying to say is that I tried to explain myself).
 /// If you are interested in how this clock works generally, you can
 /// take a look at the [`README.md` file]
-/// (https://github.com/creativecreatorormaybenot/clock/blob/master/README.md)
-/// , which also contains a link to an article I wrote explaining
+/// (https://github.com/creativecreatorormaybenot/clock/blob/master/README.md),
+/// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
+///
+/// [forceVibrantPalette] is ignored
 const bool forceVibrantPalette = null;
 
 /// The ball will fall down on every [ballEvery]th second, i.e.
