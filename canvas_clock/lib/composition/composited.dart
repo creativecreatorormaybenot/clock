@@ -216,7 +216,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     final horizontalPadding = size.width / 62;
 
     weatherData.offset = Offset(
-      horizontalPadding - weatherSize.width * (1 - spinUpAnimation.value) * 1.5,
+      horizontalPadding - (horizontalPadding + weatherSize.width) * (1 - spinUpAnimation.value),
       size.height / 2 - weatherSize.height / 2,
     );
     backgroundData.addRect(ClockComponent.weather, weatherData.offset, weatherSize);
@@ -227,7 +227,7 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     temperature.layout(BoxConstraints.tight(temperatureSize), parentUsesSize: false);
 
     temperatureData.offset = Offset(
-      size.width - temperatureSize.width - horizontalPadding * 1.5 + temperatureSize.width * 1.5 * (1 - spinUpAnimation.value),
+      size.width - temperatureSize.width - horizontalPadding * 3 / 2 + (temperatureSize.width + horizontalPadding * 3 / 2) * (1 - spinUpAnimation.value),
       size.height / 2 - temperatureSize.height / 2,
     );
     backgroundData.addRect(ClockComponent.temperature, temperatureData.offset, temperatureSize);
