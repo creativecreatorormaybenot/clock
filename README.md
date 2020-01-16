@@ -1,5 +1,11 @@
 ## TODO
 
+* Create clock customizers.
+
+  + One with the helper customizer. Ideally, it disables the safe area from there (reset the helper in that case).
+
+  + One that takes the helper model and does an automatic flow (list of timers and callbacks).
+
 * Ideas for weather condition animations:
 
   + Thunderstorm: make the raindrops animate as can be seen [here](https://cdn.dribbble.com/users/2120934/screenshots/6193517/17_tstorm.gif?vid=1).
