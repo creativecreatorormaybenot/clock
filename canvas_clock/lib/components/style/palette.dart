@@ -72,10 +72,7 @@ enum ClockColor {
 /// ([Map], [ClockColor], & [Color]) and this [StatefulWidget] controls
 /// which palette is currently shown.
 ///
-/// Predefined palettes are vibrant and subtle palettes for both dark
-/// and light mode. The [base] palette is overridden by the [baseDark]
-/// or [baseLight] palette and then by [subtleLight] or [subtleDark] if
-/// subtle colors should be used.
+/// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark].
 class Palette extends StatefulWidget {
   static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
 
@@ -141,13 +138,20 @@ class Palette extends StatefulWidget {
     ClockColor.slidePrimary: Color(0xff8a9a5b),
     ClockColor.slideSecondary: Color(0xff343a22),
   },
+      vibrantLight = {},
+      vibrantDark = {},
       subtleLight = {
     // Test values todo
     ClockColor.background: Color(0xff8b4513),
     ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
     ClockColor.goo: Color(0xff73bad9),
   },
-      subtleDark = {};
+      subtleDark = {
+    ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
+    ClockColor.thermometerBackgroundSecondary: Color(0xff010101),
+    ClockColor.weatherBackground: Color(0xff343434),
+    ClockColor.weatherBackgroundHighlight: Color(0xff454545),
+  };
 
   final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
 
@@ -185,13 +189,17 @@ class _PaletteState extends State<Palette> {
     if (Theme.of(context).brightness == Brightness.light) {
       palette.addAll(Palette.baseLight);
 
-      if (forceVibrantPalette ?? _vibrant != true) {
+      if (forceVibrantPalette ?? _vibrant) {
+        palette.addAll(Palette.vibrantLight);
+      } else {
         palette.addAll(Palette.subtleLight);
       }
     } else {
       palette.addAll(Palette.baseDark);
 
       if (forceVibrantPalette ?? _vibrant) {
+        palette.addAll(Palette.vibrantDark);
+      } else {
         palette.addAll(Palette.subtleDark);
       }
     }
