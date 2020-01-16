@@ -1,18 +1,17 @@
 import 'dart:math';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
-  static const petals = 14,
-      petalWeightDivisor = 2.0;
+  static const petals = 14, petalWeightDivisor = 2.0;
 
-  /// Paints a petals design based on a full [radius], that is not the radius of the petals.
+  /// Draws a petals design based on a full [radius], that is not the radius of the petals.
   ///
   /// Regarding the naming scheme: I have decided to name everything that is on [Canvas]
   /// (following existing methods) or takes a canvas - preferably as its first - parameter
   /// `drawX` and anything that might take a [PaintingContext] `paintX`.
-  void drawPetals(double radius, Color color, Color highlightColor) {
+  void drawPetals(Color color, Color highlightColor, double radius) {
     final petalShader = RadialGradient(
       colors: [
         highlightColor,
@@ -32,13 +31,13 @@ extension ExtendedCanvas on Canvas {
       save();
 
       rotate(2 * pi / petals * i);
-      _drawPetals(paint, radius / 4.2);
+      _drawPetal(paint, radius / 4.2);
 
       restore();
     }
   }
 
-  void _drawPetals(Paint paint, double radius) {
+  void _drawPetal(Paint paint, double radius) {
     final path = Path()
       ..moveTo(0, 0)
       // Could use conicTo instead and pass a weight there, but
@@ -59,6 +58,29 @@ extension ExtendedCanvas on Canvas {
 
     drawPath(path, paint);
   }
+
+  /// Draws a lid for hands on a dial or clock, i.e. a circular piece with a shadow.
+  void drawLid(Color color, Color highlightColor, Color shadowColor, double radius, double shadowElevation) {
+    final rect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: radius,
+    ),
+        shader = ui.Gradient.radial(
+      Offset.zero,
+      rect.shortestSide / 2,
+      [
+        highlightColor,
+        color,
+      ],
+    ),
+        paint = Paint()
+          ..shader = shader
+          ..style = PaintingStyle.fill,
+        path = Path()..addOval(rect);
+
+    drawShadow(path, shadowColor, shadowElevation, false);
+    drawPath(path, paint);
+  }
 }
 
 extension ExtendedPath on Path {
@@ -75,8 +97,7 @@ extension ExtendedPath on Path {
   /// syntax that resembles [lineTo] and others more
   /// than [arcToPoint] does.
   void halfCircleTo(double x, double y, [bool clockwise = true]) {
-    arcToPoint(Offset(x, y),
-        radius: const Radius.circular(1), clockwise: clockwise);
+    arcToPoint(Offset(x, y), radius: const Radius.circular(1), clockwise: clockwise);
   }
 
   /// Returns a trimmed version of this path.
@@ -94,19 +115,15 @@ extension ExtendedPath on Path {
 
     // Reset metrics from the start.
     metrics = computeMetrics();
-    var trimStart = totalLength * start,
-        trimStop = totalLength * end,
-        offset = 0.0;
+    var trimStart = totalLength * start, trimStop = totalLength * end, offset = 0.0;
 
     final metricsIterator = metrics.iterator;
     metricsIterator.moveNext();
     if (trimStart > 0.0) {
-      offset = _appendPathSegmentSequential(
-          metricsIterator, result, offset, 0.0, trimStart);
+      offset = _appendPathSegmentSequential(metricsIterator, result, offset, 0.0, trimStart);
     }
     if (trimStop < totalLength) {
-      offset = _appendPathSegmentSequential(
-          metricsIterator, result, offset, trimStop, totalLength);
+      offset = _appendPathSegmentSequential(metricsIterator, result, offset, trimStop, totalLength);
     }
 
     return result;
@@ -114,8 +131,7 @@ extension ExtendedPath on Path {
 }
 
 /// https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart#L5
-double _appendPathSegmentSequential(Iterator<PathMetric> metricsIterator,
-    Path to, double offset, double start, double stop) {
+double _appendPathSegmentSequential(Iterator<ui.PathMetric> metricsIterator, Path to, double offset, double start, double stop) {
   var nextOffset = offset;
 
   do {

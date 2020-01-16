@@ -489,8 +489,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
               width: _radius / 195,
               height: height,
             ),
-            Paint()
-              ..color = _textColor);
+            Paint()..color = _textColor);
       }
 
       // Draw 24 hour minute tick marks further inwards.
@@ -503,8 +502,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
               w,
               -h,
             ),
-            Paint()
-              ..color = _textColor);
+            Paint()..color = _textColor);
       }
 
       // This will go back to 0 at the end of loop,
@@ -521,8 +519,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
             width: _radius / 68,
             height: height,
           ),
-          Paint()
-            ..color = _textColor);
+          Paint()..color = _textColor);
 
       final painter = TextPainter(
         text: TextSpan(
@@ -556,8 +553,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
                 w,
                 -h,
               ),
-              Paint()
-                ..color = _textColor);
+              Paint()..color = _textColor);
 
           final painter = TextPainter(
             text: TextSpan(
@@ -585,7 +581,7 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
       canvas.rotate(-pi * 2 / largeDivisions);
     }
 
-    canvas.drawPetals(_radius, _petalsColor, _petalsHighlightColor);
+    canvas.drawPetals(_petalsColor, _petalsHighlightColor, _radius);
 
     // This is the order of the shadow elevations as well, i.e.
     // hour hand is located highest and the minute hand lowest.
@@ -593,7 +589,13 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
     _drawSecondHand(canvas);
     _drawHourHand(canvas);
 
-    _drawLid(canvas);
+    canvas.drawLid(
+      _backgroundColor,
+      _backgroundHighlightColor,
+      _shadowColor,
+      _radius / 27,
+      _radius / 49,
+    );
 
     canvas.restore();
   }
@@ -622,30 +624,6 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
           // See thermometer border (`temperature.dart`)
           // for an explanation as to why this is.
           ..strokeWidth = _radius / 612);
-  }
-
-  void _drawLid(Canvas canvas) {
-    final rect = Rect.fromCircle(
-      center: Offset.zero,
-      radius: _radius / 27,
-    ),
-        shader = ui.Gradient.radial(
-      Offset.zero,
-      rect.shortestSide / 2,
-      [
-        // It probably makes sense to have the lid made
-        // of the same material as the clock body.
-        _backgroundHighlightColor,
-        _backgroundColor,
-      ],
-    ),
-        paint = Paint()
-          ..shader = shader
-          ..style = PaintingStyle.fill,
-        path = Path()..addOval(rect);
-
-    canvas.drawShadow(path, _shadowColor, _radius / 49, false);
-    canvas.drawPath(path, paint);
   }
 
   void _drawHourHand(Canvas canvas) {

@@ -262,6 +262,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
 
     _angle = value;
+    markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
 
@@ -347,10 +348,10 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
   /// Declares that the weather background is not a
   /// repaint boundary.
   ///
-  /// This render object only calls[markNeedsPaint]
-  /// when the parent UI changes (color palette change).
+  /// This is useful because [markNeedsPaint] is called when the
+  /// angle changes, i.e. when the dial rotates.
   @override
-  bool get isRepaintBoundary => false;
+  bool get isRepaintBoundary => true;
 
   @override
   void setupParentData(RenderObject child) {
@@ -416,17 +417,24 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     // Translate the canvas to the center of the square.
     canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
 
-    // Save the initial rotation in order to always draw the arrow pointing straight up.
     canvas.save();
+    // Rotate the petals and background to make it appear as if the arrow
+    // was the only stationary part.
+    canvas.rotate(_angle);
 
     _drawBackground(canvas);
+    canvas.drawPetals(_petalsColor, _petalsHighlightColor, _radius);
 
-    // Restore initial rotation.
     canvas.restore();
 
-    canvas.drawPetals(_radius, _petalsColor, _petalsHighlightColor);
-
     _drawArrow(canvas);
+    canvas.drawLid(
+      _backgroundColor,
+      Color.lerp(_backgroundColor, _backgroundHighlightColor, 1 / 3),
+      _shadowColor,
+      _radius / 21,
+      _radius / 31,
+    );
 
     canvas.restore();
 
