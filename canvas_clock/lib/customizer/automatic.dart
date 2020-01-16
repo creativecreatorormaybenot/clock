@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 
-const start = CustomizationData(
+const initialData = CustomizationData(
   unit: TemperatureUnit.celsius,
-  location: "creativecreatorormaybenot's place",
+  location: "creativemaybeno's place",
   temperature: 21.5,
   high: 42,
   low: -5,
   condition: WeatherCondition.snowy,
+  // todo make this work (currently background is still light when starting up); afterwards change to light
   theme: ThemeMode.dark,
   timeFormat: TimeFormat.standard,
 );
@@ -20,8 +21,7 @@ class AutomatedCustomizer extends StatefulWidget {
   const AutomatedCustomizer({
     Key key,
     @required this.builder,
-  })
-      : assert(builder != null),
+  })  : assert(builder != null),
         super(key: key);
 
   @override
@@ -47,6 +47,9 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
     super.initState();
 
     model = ClockModel();
+
+    applyData(initialData);
+
     model.addListener(update);
   }
 
@@ -64,12 +67,14 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
   void applyData(CustomizationData data) {
     theme = data.theme;
 
-    model..location = data.location
-    ..is24HourFormat = data.timeFormat == TimeFormat.standard
-    ..temperature = data.temperature
-    ..high = data.high
-    ..low = data.low
-    ;
+    model
+      ..location = data.location
+      ..is24HourFormat = data.timeFormat == TimeFormat.standard
+      ..temperature = data.temperature
+      ..high = data.high
+      ..low = data.low
+      ..weatherCondition = data.condition
+      ..unit = data.unit;
   }
 
   @override
@@ -78,60 +83,54 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
       debugShowCheckedModeBanner: false,
       themeMode: theme,
       home: Builder(
-        builder: (context) =>
-            Container(
-              color: Theme
-                  .of(context)
-                  .canvasColor,
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: 5 / 3,
-                  child: widget.builder(context, model),
-                ),
-              ),
+        builder: (context) => Container(
+          color: Theme.of(context).canvasColor,
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 5 / 3,
+              child: widget.builder(context, model),
             ),
+          ),
+        ),
       ),
     );
   }
 }
 
 class CustomizationData {
-  final ThemeMode theme;
+  final WeatherCondition condition;
+
+  final double high, low, temperature;
 
   final String location;
 
-  final TemperatureUnit unit;
-
-  final double temperature, high, low;
-
-  final WeatherCondition condition;
+  final ThemeMode theme;
 
   final TimeFormat timeFormat;
 
+  final TemperatureUnit unit;
+
   const CustomizationData({
-    @required this.theme,
-    @required this.location,
-    @required this.unit,
-    @required this.temperature,
-    @required this.high,
-    @required this.low,
-    @required this.condition,
-    @required this.timeFormat,
-  })
-      : assert(theme != null),
-        assert(location != null),
-        assert(unit != null),
-        assert(temperature != null),
-        assert(high != null),
-        assert(low != null),
-        assert(condition != null),
-        assert(timeFormat != null);
+    this.condition,
+    this.high,
+    this.location,
+    this.low,
+    this.temperature,
+    this.theme,
+    this.timeFormat,
+    this.unit,
+  });
 
   CustomizationData copyWith(CustomizationData other) {
     return CustomizationData(
-        theme: other.theme ?? theme,
-        location: other.location ?? location,
-
+      condition: other.condition ?? condition,
+      high: other.high ?? high,
+      location: other.location ?? location,
+      low: other.low ?? low,
+      temperature: other.temperature ?? temperature,
+      theme: other.theme ?? theme,
+      timeFormat: other.timeFormat ?? timeFormat,
+      unit: other.unit ?? unit,
     );
   }
 }
