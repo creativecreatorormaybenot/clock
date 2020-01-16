@@ -6,6 +6,10 @@
 
   + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
 
+  + Snowy: only the flakes that are not on the ground fall down.
+
+  + Windy: trim path of first the primary and then the smaller ones.
+
 * Create an automated customization flow.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
