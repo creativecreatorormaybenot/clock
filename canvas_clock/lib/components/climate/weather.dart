@@ -958,22 +958,59 @@ class RenderRainy extends RenderWeatherIcon {
   }
 }
 
-void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed, int raindrops, double scale) {
+void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed, int raindrops, double scale, {double animationValue, int animationSeed}) {
   canvas.save();
   canvas.scale(scale);
 
   final random = Random(randomSeed),
+      animationRandom = animationSeed == null ? null : Random(animationSeed),
       raindropPaint = Paint()
         ..color = raindropColor
+        ..style = PaintingStyle.stroke
         ..strokeWidth = radius / 142;
 
   for (var i = 0; i < raindrops; i++) {
     final horizontalShift = random.nextDouble() - 1 / 2,
         verticalShift = random.nextDouble() - 1 / 2,
         heightShift = random.nextDouble(),
-        start = Offset(horizontalShift * radius / 4, radius / -25 + verticalShift * radius / 5);
+        start = Offset(horizontalShift * radius / 4, radius / -25 + verticalShift * radius / 5),
+        path = Path()
+          ..moveTo(start.dx, start.dy)
+          ..lineTo(start.dx, start.dy + radius / 17 * (1 / 2 + heightShift));
 
-    canvas.drawLine(start, start + Offset(0, radius / 17 * (1 / 2 + heightShift)), raindropPaint);
+    if (animationValue == null) {
+      canvas.drawPath(path, raindropPaint);
+      continue;
+    }
+
+    final timeShift = animationRandom.nextDouble(),
+        trimTween = TweenSequence([
+      TweenSequenceItem(
+        tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
+        weight: 3 + timeShift,
+      ),
+      TweenSequenceItem(
+        tween: Tween<Tuple<double>>(
+          begin: const Tuple<double>(0, 1),
+          end: const Tuple<double>(1, 1),
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<Tuple<double>>(
+          begin: const Tuple<double>(0, 0),
+          end: const Tuple<double>(0, 1),
+        ).chain(CurveTween(curve: Curves.decelerate)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
+        weight: 2 - timeShift,
+      ),
+    ]),
+        tuple = trimTween.transform(animationValue);
+
+    canvas.drawPath(path.trimmed(tuple.first, tuple.second), raindropPaint);
   }
 
   canvas.restore();
@@ -1328,7 +1365,7 @@ class RenderThunderstorm extends RenderWeatherIcon {
     canvas.save();
 
     canvas.translate(0, rr / 7);
-    _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1);
+    _drawRain(canvas, _raindropColor, radius, 454, _raindrops, 1, animationSeed: 0, animationValue: animation.value);
 
     canvas.restore();
 

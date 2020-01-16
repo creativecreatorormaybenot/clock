@@ -34,3 +34,20 @@ class AngleTween extends Tween<double> {
 extension OffsetTween on Tween<Offset> {
   double get distance => (end - begin).distance;
 }
+
+/// Tuple holding two values.
+///
+/// This can be used for [Tween]s, e.g. when
+/// trying to animate a start and end value
+/// simultaneously.
+class Tuple<T extends num> {
+  final T first, second;
+
+  const Tuple(this.first, this.second);
+
+  Tuple<T> operator +(Tuple<T> other) => Tuple(first + other.first, second + other.second);
+
+  Tuple<T> operator -(Tuple<T> other) => Tuple(first - other.first, second - other.second);
+
+  Tuple<T> operator *(Tuple<T> other) => Tuple(first * other.first, second * other.second);
+}

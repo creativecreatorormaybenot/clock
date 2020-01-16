@@ -102,40 +102,40 @@ extension ExtendedPath on Path {
 
   /// Returns a trimmed version of this path.
   ///
-  /// Adapted from https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart.
-  Path trimmed(double start, double end) {
+  /// Adapted from https://github.com/2d-inc/Flare-Flutter/blob/eb4a7d77a9fe453f5907eb1c720a39ac9fe80a0c/flare_flutter/lib/trim_path.dart
+  Path trimmed(double start, double end, [bool complement = false]) {
     final result = Path();
 
-    // Measure length of all the contours.
-    var metrics = computeMetrics();
-    var totalLength = 0.0;
+    var metrics = computeMetrics(), totalLength = 0.0;
     for (final metric in metrics) {
       totalLength += metric.length;
     }
 
-    // Reset metrics from the start.
     metrics = computeMetrics();
     var trimStart = totalLength * start, trimStop = totalLength * end, offset = 0.0;
 
-    final metricsIterator = metrics.iterator;
-    metricsIterator.moveNext();
-    if (trimStart > 0.0) {
-      offset = _appendPathSegmentSequential(metricsIterator, result, offset, 0.0, trimStart);
-    }
-    if (trimStop < totalLength) {
-      offset = _appendPathSegmentSequential(metricsIterator, result, offset, trimStop, totalLength);
+    if (complement) {
+      if (trimStart > 0.0) {
+        offset = _appendPathSegment(metrics, this, result, offset, 0.0, trimStart);
+      }
+      if (trimStop < totalLength) {
+        offset = _appendPathSegment(metrics, this, result, offset, trimStop, totalLength);
+      }
+    } else {
+      if (trimStart < trimStop) {
+        offset = _appendPathSegment(metrics, this, result, offset, trimStart, trimStop);
+      }
     }
 
     return result;
   }
 }
 
-/// https://github.com/2d-inc/Flare-Flutter/blob/865e090c93a0d0ac92dac2b236054bef4b091d71/flare_flutter/lib/trim_path.dart#L5
-double _appendPathSegmentSequential(Iterator<ui.PathMetric> metricsIterator, Path to, double offset, double start, double stop) {
+/// https://github.com/2d-inc/Flare-Flutter/blob/eb4a7d77a9fe453f5907eb1c720a39ac9fe80a0c/flare_flutter/lib/trim_path.dart#L3
+double _appendPathSegment(ui.PathMetrics metrics, Path from, Path to, double offset, double start, double stop) {
   var nextOffset = offset;
 
-  do {
-    final metric = metricsIterator.current;
+  for (final metric in metrics) {
     nextOffset = offset + metric.length;
     if (start < nextOffset) {
       final extracted = metric.extractPath(start - offset, stop - offset);
@@ -147,7 +147,7 @@ double _appendPathSegmentSequential(Iterator<ui.PathMetric> metricsIterator, Pat
       }
     }
     offset = nextOffset;
-  } while (metricsIterator.moveNext());
+  }
 
   return offset;
 }
