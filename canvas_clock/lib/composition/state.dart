@@ -65,7 +65,17 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       duration: waveDuration,
     )..forward(from: waveProgress(time));
 
-    setUpTravel();
+    ballTrips = BallTrips();
+    ballTravelController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: ballEvery) - departureDuration - arrivalDuration,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          ballTravelController.reset();
+
+          ballArrivalController.forward(from: 0);
+        }
+      });
     ballArrivalController = AnimationController(
       vsync: this,
       duration: arrivalDuration,
@@ -133,37 +143,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   void didUpdateWidget(Clock oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.model != widget.model) {
-      oldWidget.model.removeListener(modelChanged);
-      widget.model.addListener(modelChanged);
-    }
+    if (oldWidget.model == widget.model) return;
 
-    if (ballTravelController.duration != travelDuration) {
-      setState(setUpTravel);
-    }
-  }
-
-  Duration get travelDuration => const Duration(seconds: ballEvery) - departureDuration - arrivalDuration;
-
-  /// Sets up the ball travel variables.
-  ///
-  /// The [ballEvery] seconds constant can be changed and should reflect
-  /// changes when using hot reload - this is the only reason why this
-  /// is also called in [didUpdateWidget].
-  void setUpTravel() {
-    ballTrips = BallTrips();
-
-    ballTravelController?.dispose();
-    ballTravelController = AnimationController(
-      vsync: this,
-      duration: travelDuration,
-    )..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        ballTravelController.reset();
-
-        ballArrivalController.forward(from: 0);
-      }
-    });
+    oldWidget.model.removeListener(modelChanged);
+    widget.model.addListener(modelChanged);
   }
 
   void modelChanged() {

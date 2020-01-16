@@ -7,7 +7,7 @@ export 'manual.dart';
 
 typedef ClockModelBuilder = Widget Function(BuildContext context, ClockModel model);
 
-class Customizer extends StatefulWidget {
+class Customizer extends StatelessWidget {
   final ClockModelBuilder builder;
 
   final bool automatic;
@@ -21,14 +21,9 @@ class Customizer extends StatefulWidget {
         super(key: key);
 
   @override
-  _CustomizerState createState() => _CustomizerState();
-}
-
-class _CustomizerState extends State<Customizer> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.automatic) return Container();
+    if (automatic) return Container();
 
-    return ClockCustomizer((model) => widget.builder(context, model));
+    return ClockCustomizer((model) => builder(context, model));
   }
 }

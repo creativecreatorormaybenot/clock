@@ -36,6 +36,8 @@ const bool forceVibrantPalette = null;
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
+///
+/// Changing this requires a full restart to update the animation controllers.
 const ballEvery = 60;
 
 /// Enables or disables a preset automated customization flow
@@ -45,15 +47,13 @@ const ballEvery = 60;
 /// settings automatically. There are timers that predefine when
 /// what setting will be adjusted. For variation, there is some randomness
 /// included in the flow generation.
-const automateCustomizationFlow = true;
+///
+/// Changing this requires a hot restart to take into effect.
+const automateCustomizationFlow = false;
 
 void main() {
   runApp(
-    // Using a Builder here in order to rebuild the Customizer whenever
-    // hot reload is used, which enables you to change
-    // automateCustomizationFlow on the fly.
-    Builder(
-      builder: (context) => Customizer(
+    Customizer(
         automatic: automateCustomizationFlow,
         builder: (context, model) => Palette(
           builder: (context, palette) {
@@ -64,7 +64,6 @@ void main() {
           },
         ),
       ),
-    ),
   );
   // This makes the app run in full screen mode.
   SystemChrome.setEnabledSystemUIOverlays([]);
