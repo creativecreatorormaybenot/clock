@@ -104,6 +104,10 @@ class _ClockCustomizerState extends State<ClockCustomizer> {
 
   Widget _configDrawer(BuildContext context) {
     return SafeArea(
+      left: false,
+      top: false,
+      right: false,
+      bottom: false,
       child: Drawer(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -197,6 +201,10 @@ class _ClockCustomizerState extends State<ClockCustomizer> {
         resizeToAvoidBottomPadding: false,
         endDrawer: _configDrawer(context),
         body: SafeArea(
+          left: false,
+          top: false,
+          right: false,
+          bottom: false,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
