@@ -1,9 +1,5 @@
 ## TODO
 
-* Use shadows in the text styles.
-
-* Fix that slide jumps around.
-
 * Ideas for weather condition animations:
 
   + Windy: trim path of first the primary and then the smaller ones.
@@ -36,6 +32,8 @@
 
 * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
 
+* Use `master` branch when recording the videos.
+
 * Submit submission :)
 
 * Add GIF to README.
@@ -47,6 +45,8 @@
 * Make clock available on web via GitHub pages.
 
   + Deploy transpiled web version to `gh-pages` branch.
+
+    - Use `master` branch.
 
   + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 

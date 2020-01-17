@@ -1042,25 +1042,25 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
     final timeShift = animationRandom.nextDouble() * 4,
         trimTween = TweenSequence([
       TweenSequenceItem(
-        tween: ConstantTween<Tuple<double>>(const Tuple<double>(0, 1)),
+        tween: ConstantTween<DoubleTuple>(const DoubleTuple(0, 1)),
         weight: timeShift,
       ),
       TweenSequenceItem(
-        tween: Tween<Tuple<double>>(
-          begin: const Tuple<double>(0, 1),
-          end: const Tuple<double>(1, 1),
+        tween: Tween<DoubleTuple>(
+          begin: const DoubleTuple(0, 1),
+          end: const DoubleTuple(1, 1),
         ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 2,
       ),
       TweenSequenceItem(
-        tween: Tween<Tuple<double>>(
-          begin: const Tuple<double>(0, 0),
-          end: const Tuple<double>(0, 1),
+        tween: Tween<DoubleTuple>(
+          begin: const DoubleTuple(0, 0),
+          end: const DoubleTuple(0, 1),
         ).chain(CurveTween(curve: Curves.decelerate)),
         weight: 2,
       ),
       TweenSequenceItem(
-        tween: ConstantTween<Tuple<double>>(const Tuple<double>(0, 1)),
+        tween: ConstantTween<DoubleTuple>(const DoubleTuple(0, 1)),
         weight: 4 - timeShift,
       ),
     ]),
@@ -1181,33 +1181,33 @@ class RenderSnowy extends RenderWeatherIcon {
 
       // Holds a sequence for the opacity and vertical position
       // of each snowflake.
-      final flakeSequence = TweenSequence<Tuple<double>>([
+      final flakeSequence = TweenSequence<DoubleTuple>([
         TweenSequenceItem(
-          tween: ConstantTween(Tuple<double>(position.dy, 1)),
+          tween: ConstantTween(DoubleTuple(position.dy, 1)),
           weight: 1,
         ),
         TweenSequenceItem(
-          tween: Tween<Tuple<double>>(
-            begin: Tuple<double>(position.dy, 1),
-            end: Tuple<double>(end, 1),
+          tween: Tween<DoubleTuple>(
+            begin: DoubleTuple(position.dy, 1),
+            end: DoubleTuple(end, 1),
           ).chain(CurveTween(curve: Curves.easeInOut)),
           weight: 7,
         ),
         TweenSequenceItem(
-          tween: Tween<Tuple<double>>(
-            begin: Tuple<double>(end, 1),
-            end: Tuple<double>(end, 0),
+          tween: Tween(
+            begin: DoubleTuple(end, 1),
+            end: DoubleTuple(end, 0),
           ),
           weight: 1,
         ),
         TweenSequenceItem(
-          tween: ConstantTween(const Tuple<double>(0, 0)),
+          tween: ConstantTween(const DoubleTuple(0, 0)),
           weight: 1,
         ),
         TweenSequenceItem(
-          tween: Tween<Tuple<double>>(
-            begin: Tuple<double>(position.dy, 0),
-            end: Tuple<double>(position.dy, 1),
+          tween: Tween(
+            begin: DoubleTuple(position.dy, 0),
+            end: DoubleTuple(position.dy, 1),
           ),
           weight: 3,
         ),

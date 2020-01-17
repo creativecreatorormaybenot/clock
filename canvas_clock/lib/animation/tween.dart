@@ -40,14 +40,23 @@ extension OffsetTween on Tween<Offset> {
 /// This can be used for [Tween]s, e.g. when
 /// trying to animate a start and end value
 /// simultaneously.
-class Tuple<T extends num> {
-  final T first, second;
+///
+/// I used a generic type extending [num] previously,
+/// but when going back to `stable`, I saw some
+/// very strange type errors that I was not able
+/// to resolve.
+/// I think it was really some logger issue that
+/// was showing these errors over and over again
+/// because they did not make any sense and were
+/// not even matching the class name at some point.
+class DoubleTuple {
+  final double first, second;
 
-  const Tuple(this.first, this.second);
+  const DoubleTuple(this.first, this.second);
 
-  Tuple<T> operator +(Tuple<T> other) => Tuple(first + other.first, second + other.second);
+  DoubleTuple operator +(DoubleTuple other) => DoubleTuple(first + other.first, second + other.second);
 
-  Tuple<T> operator -(Tuple<T> other) => Tuple(first - other.first, second - other.second);
+  DoubleTuple operator -(DoubleTuple other) => DoubleTuple(first - other.first, second - other.second);
 
-  Tuple<T> operator *(num other) => Tuple(first * other, second * other);
+  DoubleTuple operator *(double other) => DoubleTuple(first * other, second * other);
 }

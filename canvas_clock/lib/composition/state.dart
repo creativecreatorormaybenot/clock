@@ -305,6 +305,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             color: widget.palette[ClockColor.text],
             fontWeight: FontWeight.bold,
           ),
+          shadowColor: widget.palette[ClockColor.shadow],
         ),
         Slide(
           ballTravelAnimation: ballTravelAnimation,

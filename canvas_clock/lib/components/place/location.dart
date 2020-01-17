@@ -1,6 +1,6 @@
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:canvas_clock/clock.dart';
 
 class Location extends LeafRenderObjectWidget {
   final String text;
@@ -8,10 +8,13 @@ class Location extends LeafRenderObjectWidget {
   /// The [TextStyle.fontSize] of this is ignored as the text is scaled based on the available width.
   final TextStyle textStyle;
 
+  final Color shadowColor;
+
   Location({
     Key key,
     @required this.text,
     @required this.textStyle,
+    @required this.shadowColor,
   }) : super(key: key);
 
   @override
@@ -19,6 +22,7 @@ class Location extends LeafRenderObjectWidget {
     return RenderLocation(
       text: text,
       textStyle: textStyle,
+      shadowColor: shadowColor,
     );
   }
 
@@ -26,17 +30,19 @@ class Location extends LeafRenderObjectWidget {
   void updateRenderObject(BuildContext context, RenderLocation renderObject) {
     renderObject
       ..text = text
-      ..textStyle = textStyle;
+      ..textStyle = textStyle
+      ..shadowColor = shadowColor;
   }
 }
 
-class RenderLocation
-    extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderLocation({
     String text,
     TextStyle textStyle,
+    Color shadowColor,
   })  : _text = text,
         _textStyle = textStyle,
+        _shadowColor = shadowColor,
         super(ClockComponent.location);
 
   String _text;
@@ -68,6 +74,21 @@ class RenderLocation
     markNeedsLayout();
   }
 
+  Color _shadowColor;
+
+  set shadowColor(Color value) {
+    assert(value != null);
+
+    if (_shadowColor == value) {
+      return;
+    }
+
+    _shadowColor = value;
+    // This is not optimal, I know,
+    // but it is w/e now.
+    markNeedsLayout();
+  }
+
   TextPainter _textPainter;
 
   @override
@@ -96,6 +117,12 @@ class RenderLocation
         text: _text,
         style: _textStyle.copyWith(
           fontSize: width / 12.3,
+          shadows: [
+            Shadow(
+              color: _shadowColor,
+              blurRadius: width / 19,
+            ),
+          ],
         ),
       ),
       textDirection: TextDirection.ltr,
