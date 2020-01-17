@@ -66,6 +66,12 @@ void main() {
       ),
     ),
   );
+
   // This makes the app run in full screen mode.
+  // Because I am using this, I removed the SafeArea
+  // widgets in the customizer from the clock helper.
+  // It seems that the Android setup created with
+  // flutter create . in the stable channel at this
+  // time does not support full screen with SafeArea.
   SystemChrome.setEnabledSystemUIOverlays([]);
 }
