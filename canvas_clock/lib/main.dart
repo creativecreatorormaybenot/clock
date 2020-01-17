@@ -50,7 +50,7 @@ const ballEvery = 60;
 /// included in the flow generation.
 ///
 /// Changing this requires a hot restart to take into effect.
-const automateCustomizationFlow = true;
+const automateCustomizationFlow = false;
 
 void main() {
   runApp(

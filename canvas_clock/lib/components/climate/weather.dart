@@ -723,7 +723,7 @@ class RenderCloudy extends RenderWeatherIcon {
     _drawAnimatedCloud(
       canvas,
       -rr / 16,
-      -rr / 14,
+      -rr / 13.6,
       rr / 4,
       1.24,
       1 - animation.value,
@@ -733,7 +733,7 @@ class RenderCloudy extends RenderWeatherIcon {
     _drawAnimatedCloud(
       canvas,
       rr / 6,
-      rr / 5.4,
+      rr / 5.2,
       -rr / 5,
       .75,
       (animation.value + 3 / 4) % 1,
@@ -742,15 +742,15 @@ class RenderCloudy extends RenderWeatherIcon {
     // Big cloud
     _drawAnimatedCloud(
       canvas,
-      -rr / 197,
-      rr / 197,
+      -rr / 167,
+      rr / 167,
       0,
       1.9,
       (animation.value + 1 / 4) % 1,
     );
 
     // Back cloud
-    _drawAnimatedCloud(canvas, -rr / 4.5, -rr / 5, -rr / 4, .6);
+    _drawAnimatedCloud(canvas, -rr / 4.5, -rr / 5.3, -rr / 4, .6);
   }
 
   void _drawAnimatedCloud(Canvas canvas, double stx, double etx, double ty, double s, [double animationValue]) {
@@ -880,6 +880,34 @@ class RenderFoggy extends RenderWeatherIcon {
     markNeedsPaint();
   }
 
+  TweenSequence sequence;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    sequence = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0, end: 1 / 2).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(tween: ConstantTween<double>(1 / 2), weight: 1),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1 / 2, end: 0).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0, end: -1 / 2).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(tween: ConstantTween<double>(-1 / 2), weight: 1),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: -1 / 2, end: 0).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 1,
+      ),
+    ]);
+  }
+
   @override
   void drawCondition(Canvas canvas) {
     final g = rr / 14;
@@ -893,11 +921,16 @@ class RenderFoggy extends RenderWeatherIcon {
       ..strokeWidth = g * .93
       ..strokeCap = StrokeCap.round;
 
-    canvas
-      ..drawLine(Offset(-g * 5, -3 * g), Offset(-g, -3 * g), paint)
-      ..drawLine(Offset(-g * 3, -g), Offset(g * 4, -g), paint)
-      ..drawLine(Offset(g * -6, g), Offset(g * 2, g), paint)
-      ..drawLine(Offset(g * -5, g * 3), Offset(g * 4, g * 3), paint);
+    _drawLine(canvas, paint, Offset(-g * 4.5, -3 * g), Offset(0, -3 * g), g * .6, 0);
+    _drawLine(canvas, paint, Offset(-g * 3, -g), Offset(g * 4, -g), g / 2, -1 / 5);
+    _drawLine(canvas, paint, Offset(g * -6, g), Offset(g * 2, g), g / 3, 1 / 3);
+    _drawLine(canvas, paint, Offset(g * -5, g * 3), Offset(g * 4, g * 3), g / 4, 7 / 4);
+  }
+
+  void _drawLine(Canvas canvas, Paint paint, Offset start, Offset end, double tx, double shift) {
+    final addend = Offset(tx * sequence.transform((animation.value + shift) % 1), 0);
+
+    canvas.drawLine(start + addend, end + addend, paint);
   }
 }
 
