@@ -2,9 +2,9 @@
 
 * Ideas for weather condition animations:
 
-  + Snowy: only the flakes that are not on the ground fall down.
-
   + Windy: trim path of first the primary and then the smaller ones.
+
+* Create all eight themes.
 
 * Create an automated customization flow.
 
@@ -21,10 +21,6 @@
   + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
 
 * Reconsider ball.
-
-* Finish all eight themes and ensure that dark mode, light mode, subtle, and vibrant look proper.
-
-  + Choose one as the default scheme for the submission.
 
 <hr>
 
