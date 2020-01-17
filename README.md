@@ -1,5 +1,9 @@
 ## TODO
 
+* Use shadows in the text styles.
+
+* Find out a way to disable `SafeArea` from `ManualCustomizer` and then restore default clock helper.
+
 * Ideas for weather condition animations:
 
   + Windy: trim path of first the primary and then the smaller ones.
@@ -14,11 +18,9 @@
 
 * Effects/filter ideas:
 
-  + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
-
-  + Take inspiration from https://github.com/JustinFincher/FlutterClock.
-
   + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
+
+  + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
 
 * Reconsider ball.
 
