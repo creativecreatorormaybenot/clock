@@ -1088,8 +1088,8 @@ class Snowy extends LeafRenderObjectWidget {
     Key key,
     @required this.animation,
     @required this.angle,
-    this.snowflakes = 61,
-    this.snow = 23,
+    this.snowflakes = 92,
+    this.snow = 28,
     @required this.snowflakeColor,
   })  : assert(snowflakeColor != null),
         assert(animation != null),
@@ -1167,21 +1167,65 @@ class RenderSnowy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    final random = Random(815174);
+    final random = Random(815174), animationRandom = Random(119);
 
     // Draw snowflakes
     final paint = Paint()..color = _snowflakeColor;
     for (var i = 0; i < _snowflakes; i++) {
-      final verticalShift = random.nextDouble() - 1 / 2, horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 49 * (1 + diameterShift / 2);
+      final verticalShift = random.nextDouble() - 1 / 2,
+          horizontalShift = random.nextDouble() - 1 / 2,
+          diameterShift = random.nextDouble(),
+          diameter = radius / 49 * (1 + diameterShift / 2),
+          position = Offset(radius / 3 * horizontalShift, -radius / 23 + radius / 4 * verticalShift),
+          end = radius / 5.8;
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3 * horizontalShift, -radius / 23 + radius / 4 * verticalShift), radius: diameter / 2), paint);
+      // Holds a sequence for the opacity and vertical position
+      // of each snowflake.
+      final flakeSequence = TweenSequence<Tuple<double>>([
+        TweenSequenceItem(
+          tween: ConstantTween(Tuple<double>(position.dy, 1)),
+          weight: 1,
+        ),
+        TweenSequenceItem(
+          tween: Tween<Tuple<double>>(
+            begin: Tuple(position.dy, 1),
+            end: Tuple(end, 1),
+          ).chain(CurveTween(curve: Curves.easeInOut)),
+          weight: 7,
+        ),
+        TweenSequenceItem(
+          tween: Tween<Tuple<double>>(
+            begin: Tuple(end, 1),
+            end: Tuple(end, 0),
+          ),
+          weight: 1,
+        ),
+        TweenSequenceItem(
+          tween: ConstantTween(const Tuple<double>(0, 0)),
+          weight: 1,
+        ),
+        TweenSequenceItem(
+          tween: Tween<Tuple<double>>(
+            begin: Tuple(position.dy, 0),
+            end: Tuple(position.dy, 1),
+          ),
+          weight: 3,
+        ),
+      ]);
+
+      final tuple = flakeSequence.transform((animation.value + animationRandom.nextDouble()) % 1),
+          animatedPaint = Paint()..color = paint.color.withOpacity(paint.color.opacity * tuple.second),
+          animatedPosition = Offset(position.dx, tuple.first),
+          circle = Rect.fromCircle(center: animatedPosition, radius: diameter / 2);
+
+      canvas.drawOval(circle, animatedPaint);
     }
 
     // Draw some laying on the ground
     for (var i = 0; i < _snow; i++) {
       final verticalShift = random.nextDouble(), horizontalShift = random.nextDouble() - 1 / 2, diameterShift = random.nextDouble(), diameter = radius / 33 * (1 + diameterShift / 2);
 
-      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.5 * horizontalShift, radius / 6.2 + radius / 42 * verticalShift), radius: diameter / 2), paint);
+      canvas.drawOval(Rect.fromCircle(center: Offset(radius / 3.2 * horizontalShift, radius / 6.2 + radius / 42 * verticalShift), radius: diameter / 2), paint);
     }
   }
 }
