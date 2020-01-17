@@ -22,6 +22,8 @@
 
   + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
 
+* Reconsider ball.
+
 * Finish all eight themes and ensure that dark mode, light mode, subtle, and vibrant look proper.
 
   + Choose one as the default scheme for the submission.
@@ -81,8 +83,6 @@
   + Potentially post it on https://dev.to/.
 
   + Share on FlutterDev: Twitter, Reddit, and Discord.
-
-* Share with P.
 
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
