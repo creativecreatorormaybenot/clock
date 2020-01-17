@@ -12,11 +12,11 @@ const initialData = CustomizationData(
   temperature: 21.5,
   high: 42,
   low: -5,
-  condition: WeatherCondition.thunderstorm,
+  condition: WeatherCondition.snowy,
   theme: ThemeMode.dark,
   timeFormat: TimeFormat.standard,
 ),
-    changeWeatherConditionEvery = Duration(microseconds: 60 / 7 * 1e6 ~/ 1);
+    changeWeatherConditionEvery = Duration(microseconds: 120 / 7 * 1e6 ~/ 1);
 
 class AutomatedCustomizer extends StatefulWidget {
   final ClockModelBuilder builder;
