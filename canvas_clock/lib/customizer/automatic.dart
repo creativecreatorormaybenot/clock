@@ -12,7 +12,7 @@ const initialData = CustomizationData(
   temperature: 21.5,
   high: 42,
   low: -5,
-  condition: WeatherCondition.snowy,
+  condition: WeatherCondition.thunderstorm,
   theme: ThemeMode.dark,
   timeFormat: TimeFormat.standard,
 ),

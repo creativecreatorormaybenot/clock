@@ -8,8 +8,6 @@
 
   + Windy: trim path of first the primary and then the smaller ones.
 
-  + Can use trim path effect [like this](https://cdn.dribbble.com/users/2120934/screenshots/6193458/13_snow.gif?vid=1).
-
 * Create an automated customization flow.
 
 * Use these colors for a color palette: https://www.dwitter.net/d/5455
@@ -91,7 +89,7 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 This is a playful clock display and uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
 
-![Quick screen capture showing the final result of the submission]()
+![Quick screen capture showing the final result of the submission](screen_capture.gif)
 
 The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
 
