@@ -1,9 +1,5 @@
 ## TODO
 
-* Ideas for weather condition animations:
-
-  + Windy: trim path of first the primary and then the smaller ones.
-
 * Update when the travel slide moves out and in 'n stuff.
 
 * Create all four color palettes.

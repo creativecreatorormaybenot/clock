@@ -119,8 +119,8 @@ class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildre
           fontSize: width / 12.3,
           shadows: [
             Shadow(
-              color: _shadowColor,
-              blurRadius: width / 19,
+              color: _shadowColor.withOpacity(.6),
+              blurRadius: width / 13,
             ),
           ],
         ),
