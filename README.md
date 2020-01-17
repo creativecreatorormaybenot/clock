@@ -4,7 +4,7 @@
 
   + Windy: trim path of first the primary and then the smaller ones.
 
-* Create all eight themes.
+* Create all four color palettes.
 
 * Create an automated customization flow.
 
@@ -26,25 +26,29 @@
 
 * Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
 
-* Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
+* Check rules and FAQ: https://flutter.dev/clock
+
+* TODOs.
 
 * Remove unnecessary depencies and other stuff. For example, `pedantic` or `uses-material-design` if there are no icons in the final design.
 
+* Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
+
 * Submit submission :)
-
-  + https://flutter.dev/clock - Check rules and FAQ before that.
-
-  + Remove TODOs.
 
 * Add GIF to README.
 
-* Make repository public.
+* Publish repository.
 
 * Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
 
 * Make clock available on web via GitHub pages.
 
+  + Deploy transpiled web version to `gh-pages` branch.
+
   + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
+
+<hr>
 
 * Write article about the creation process of the submission on Flutter Community.
 
@@ -78,7 +82,7 @@
 
   + Share on FlutterDev: Twitter, Reddit, and Discord.
 
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/flutter-community/) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
 This is a playful clock display and uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
