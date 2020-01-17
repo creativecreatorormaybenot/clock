@@ -4,6 +4,8 @@
 
   + Windy: trim path of first the primary and then the smaller ones.
 
+* Update when the travel slide moves out and in 'n stuff.
+
 * Create all four color palettes.
 
 * Create an automated customization flow.

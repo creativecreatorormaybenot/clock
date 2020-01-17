@@ -1607,23 +1607,55 @@ class RenderWindy extends RenderWeatherIcon {
     markNeedsPaint();
   }
 
+  TweenSequence<DoubleTuple> pathSequence;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+
+    pathSequence = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(
+          begin: const DoubleTuple(0, 1),
+          end: const DoubleTuple(1, 1),
+        ).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween(const DoubleTuple(1, 1)),
+        weight: 2,
+      ),
+      TweenSequenceItem(
+        tween: Tween(
+          begin: const DoubleTuple(0, 0),
+          end: const DoubleTuple(0, 1),
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween(const DoubleTuple(0, 1)),
+        weight: 4,
+      ),
+    ]);
+  }
+
   @override
   void drawCondition(Canvas canvas) {
     canvas.save();
 
     // Primary wind symbol
-    _drawWind(canvas, _primaryColor, -rr / 7, rr / 36, .83, 2, 1.8, 1);
+    _drawWind(canvas, _primaryColor, -rr / 7, rr / 36, .83, 2, 1.8, 1, 0);
 
     // Upper wind symbol
-    _drawWind(canvas, _secondaryColor, rr / -2.7, rr / -4.4, .69, 2, 1.8, 1);
+    _drawWind(canvas, _secondaryColor, rr / -2.7, rr / -4.4, .69, 2, 1.8, 1, -1 / 8);
 
     // Lower wind symbol
-    _drawWind(canvas, _secondaryColor, rr / -3.5, rr / 3.8, .61, 1, 1, 1);
+    _drawWind(canvas, _secondaryColor, rr / -3.5, rr / 3.8, .61, 1, 1, 1, -1 / 16);
 
     canvas.restore();
   }
 
-  void _drawWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3) {
+  void _drawWind(Canvas canvas, Color c, double tx, double ty, double s, double l1, double l2, double l3, double animationShift) {
     canvas.save();
     canvas.translate(tx, ty);
     canvas.scale(s);
@@ -1707,8 +1739,10 @@ class RenderWindy extends RenderWeatherIcon {
         ),
     ];
 
+    final tuple = pathSequence.transform((animation.value + animationShift) % 1);
+
     for (final path in paths) {
-      canvas.drawPath(path, paint);
+      canvas.drawPath(path.trimmed(tuple.first, tuple.second), paint);
     }
 
     canvas.restore();
