@@ -1042,7 +1042,7 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
     final timeShift = animationRandom.nextDouble() * 4,
         trimTween = TweenSequence([
       TweenSequenceItem(
-        tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
+        tween: ConstantTween<Tuple<double>>(const Tuple<double>(0, 1)),
         weight: timeShift,
       ),
       TweenSequenceItem(
@@ -1060,7 +1060,7 @@ void _drawRain(Canvas canvas, Color raindropColor, double radius, int randomSeed
         weight: 2,
       ),
       TweenSequenceItem(
-        tween: ConstantTween<Tuple<double>>(const Tuple(0, 1)),
+        tween: ConstantTween<Tuple<double>>(const Tuple<double>(0, 1)),
         weight: 4 - timeShift,
       ),
     ]),
@@ -1188,15 +1188,15 @@ class RenderSnowy extends RenderWeatherIcon {
         ),
         TweenSequenceItem(
           tween: Tween<Tuple<double>>(
-            begin: Tuple(position.dy, 1),
-            end: Tuple(end, 1),
+            begin: Tuple<double>(position.dy, 1),
+            end: Tuple<double>(end, 1),
           ).chain(CurveTween(curve: Curves.easeInOut)),
           weight: 7,
         ),
         TweenSequenceItem(
           tween: Tween<Tuple<double>>(
-            begin: Tuple(end, 1),
-            end: Tuple(end, 0),
+            begin: Tuple<double>(end, 1),
+            end: Tuple<double>(end, 0),
           ),
           weight: 1,
         ),
@@ -1206,8 +1206,8 @@ class RenderSnowy extends RenderWeatherIcon {
         ),
         TweenSequenceItem(
           tween: Tween<Tuple<double>>(
-            begin: Tuple(position.dy, 0),
-            end: Tuple(position.dy, 1),
+            begin: Tuple<double>(position.dy, 0),
+            end: Tuple<double>(position.dy, 1),
           ),
           weight: 3,
         ),

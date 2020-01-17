@@ -49,5 +49,5 @@ class Tuple<T extends num> {
 
   Tuple<T> operator -(Tuple<T> other) => Tuple(first - other.first, second - other.second);
 
-  Tuple<T> operator *(double other) => Tuple(first * other, second * other);
+  Tuple<T> operator *(num other) => Tuple(first * other, second * other);
 }
