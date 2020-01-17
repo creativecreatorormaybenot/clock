@@ -252,68 +252,70 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) => CompositedClock(
-        spinUpAnimation: spinUpAnimation,
-        children: <Widget>[
-          AnimatedAnalogTime(
-            animation: analogBounceAnimation,
-            bounceAnimation: bounceAnimation,
-            model: model,
-            palette: widget.palette,
+  Widget build(BuildContext context) {
+    return CompositedClock(
+      spinUpAnimation: spinUpAnimation,
+      children: <Widget>[
+        AnimatedAnalogTime(
+          animation: analogBounceAnimation,
+          bounceAnimation: bounceAnimation,
+          model: model,
+          palette: widget.palette,
+        ),
+        AnimatedDigitalTime(
+          animation: minuteAnimation,
+          model: model,
+          palette: widget.palette,
+        ),
+        AnimatedTemperature(model: model, palette: widget.palette),
+        AnimatedWeather(model: model, palette: widget.palette),
+        Background(
+          animation: backgroundWaveAnimation,
+          analogTimeBounceAnimation: bounceAnimation,
+          ballColor: Color.lerp(
+            widget.palette[ClockColor.ballPrimary],
+            widget.palette[ClockColor.ballSecondary],
+            1 / 2,
           ),
-          AnimatedDigitalTime(
-            animation: minuteAnimation,
-            model: model,
-            palette: widget.palette,
+          groundColor: widget.palette[ClockColor.background],
+          gooColor: widget.palette[ClockColor.goo],
+          analogTimeComponentColor: widget.palette[ClockColor.analogTimeBackground],
+          temperatureComponentColor: Color.lerp(
+            widget.palette[ClockColor.thermometerBackgroundPrimary],
+            widget.palette[ClockColor.thermometerBackgroundSecondary],
+            1 / 2,
           ),
-          AnimatedTemperature(model: model, palette: widget.palette),
-          AnimatedWeather(model: model, palette: widget.palette),
-          Background(
-            animation: backgroundWaveAnimation,
-            analogTimeBounceAnimation: bounceAnimation,
-            ballColor: Color.lerp(
-              widget.palette[ClockColor.ballPrimary],
-              widget.palette[ClockColor.ballSecondary],
-              1 / 2,
-            ),
-            groundColor: widget.palette[ClockColor.background],
-            gooColor: widget.palette[ClockColor.goo],
-            analogTimeComponentColor: widget.palette[ClockColor.analogTimeBackground],
-            temperatureComponentColor: Color.lerp(
-              widget.palette[ClockColor.thermometerBackgroundPrimary],
-              widget.palette[ClockColor.thermometerBackgroundSecondary],
-              1 / 2,
-            ),
-            weatherComponentColor: widget.palette[ClockColor.weatherBackground],
+          weatherComponentColor: widget.palette[ClockColor.weatherBackground],
+        ),
+        Ball(
+          travelAnimation: ballTravelAnimation,
+          arrivalAnimation: ballArrivalAnimation,
+          departureAnimation: ballDepartureAnimation,
+          trips: ballTrips,
+          primaryColor: widget.palette[ClockColor.ballPrimary],
+          secondaryColor: widget.palette[ClockColor.ballSecondary],
+          dotsIdleColor: widget.palette[ClockColor.dotsIdleColor],
+          dotsPrimedColor: widget.palette[ClockColor.dotsPrimedColor],
+          dotsDisengagedColor: widget.palette[ClockColor.dotsDisengagedColor],
+          shadowColor: widget.palette[ClockColor.shadow],
+        ),
+        Location(
+          text: model.location,
+          textStyle: TextStyle(
+            color: widget.palette[ClockColor.text],
+            fontWeight: FontWeight.bold,
           ),
-          Ball(
-            travelAnimation: ballTravelAnimation,
-            arrivalAnimation: ballArrivalAnimation,
-            departureAnimation: ballDepartureAnimation,
-            trips: ballTrips,
-            primaryColor: widget.palette[ClockColor.ballPrimary],
-            secondaryColor: widget.palette[ClockColor.ballSecondary],
-            dotsIdleColor: widget.palette[ClockColor.dotsIdleColor],
-            dotsPrimedColor: widget.palette[ClockColor.dotsPrimedColor],
-            dotsDisengagedColor: widget.palette[ClockColor.dotsDisengagedColor],
-            shadowColor: widget.palette[ClockColor.shadow],
-          ),
-          Location(
-            text: model.location,
-            textStyle: TextStyle(
-              color: widget.palette[ClockColor.text],
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Slide(
-            ballTravelAnimation: ballTravelAnimation,
-            ballArrivalAnimation: ballArrivalAnimation,
-            ballDepartureAnimation: ballDepartureAnimation,
-            primaryColor: widget.palette[ClockColor.slidePrimary],
-            secondaryColor: widget.palette[ClockColor.slideSecondary],
-            shadowColor: widget.palette[ClockColor.shadow],
-          ),
-          UpdatedDate(palette: widget.palette),
-        ],
-      );
+        ),
+        Slide(
+          ballTravelAnimation: ballTravelAnimation,
+          ballArrivalAnimation: ballArrivalAnimation,
+          ballDepartureAnimation: ballDepartureAnimation,
+          primaryColor: widget.palette[ClockColor.slidePrimary],
+          secondaryColor: widget.palette[ClockColor.slideSecondary],
+          shadowColor: widget.palette[ClockColor.shadow],
+        ),
+        UpdatedDate(palette: widget.palette),
+      ],
+    );
+  }
 }

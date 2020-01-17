@@ -2,6 +2,8 @@
 
 * Use shadows in the text styles.
 
+* Fix that slide jumps around.
+
 * Find out a way to disable `SafeArea` from `ManualCustomizer` and then restore default clock helper.
 
 * Ideas for weather condition animations:
