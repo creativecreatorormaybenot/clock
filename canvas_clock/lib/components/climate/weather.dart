@@ -719,40 +719,61 @@ class RenderCloudy extends RenderWeatherIcon {
 
   @override
   void drawCondition(Canvas canvas) {
-    _drawCloud(
+    // Foreground cloud
+    _drawAnimatedCloud(
       canvas,
-      _cloudColor,
-      rr,
-      -rr / 15,
+      -rr / 16,
+      -rr / 14,
       rr / 4,
       1.24,
+      1 - animation.value,
     );
-    _drawCloud(
+
+    // Right cloud
+    _drawAnimatedCloud(
       canvas,
-      _cloudColor,
-      rr,
-      rr / 5,
+      rr / 6,
+      rr / 5.4,
       -rr / 5,
       .75,
+      (animation.value + 3 / 4) % 1,
     );
 
     // Big cloud
-    _drawCloud(
+    _drawAnimatedCloud(
       canvas,
-      _cloudColor,
-      rr,
-      0,
+      -rr / 197,
+      rr / 197,
       0,
       1.9,
+      (animation.value + 1 / 4) % 1,
     );
+
+    // Back cloud
+    _drawAnimatedCloud(canvas, -rr / 4.5, -rr / 5, -rr / 4, .6);
+  }
+
+  void _drawAnimatedCloud(Canvas canvas, double stx, double etx, double ty, double s, [double animationValue]) {
+    final sequence = TweenSequence<double>([
+      TweenSequenceItem(tween: ConstantTween<double>(stx), weight: 1),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: stx, end: etx).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 4,
+      ),
+      TweenSequenceItem(tween: ConstantTween<double>(etx), weight: 1),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: etx, end: stx).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 4,
+      ),
+    ]);
 
     _drawCloud(
       canvas,
       _cloudColor,
       rr,
-      -rr / 4.5,
-      -rr / 4,
-      .6,
+      sequence.transform(animationValue ?? animation.value),
+      ty,
+      s,
     );
   }
 }

@@ -2,13 +2,13 @@
 
 * Ideas for weather condition animations:
 
-  + Cloudy: parallax movement of the different clouds.
-
   + Foggy: ping pong movement of all the bars that is easy on the eyes (needs a curve).
 
   + Snowy: only the flakes that are not on the ground fall down.
 
   + Windy: trim path of first the primary and then the smaller ones.
+
+  + Can use trim path effect [like this](https://cdn.dribbble.com/users/2120934/screenshots/6193458/13_snow.gif?vid=1).
 
 * Create an automated customization flow.
 
