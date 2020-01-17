@@ -4,8 +4,6 @@
 
 * Fix that slide jumps around.
 
-* Find out a way to disable `SafeArea` from `ManualCustomizer` and then restore default clock helper.
-
 * Ideas for weather condition animations:
 
   + Windy: trim path of first the primary and then the smaller ones.
