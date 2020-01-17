@@ -30,8 +30,6 @@ import 'package:flutter/widgets.dart';
 /// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
-///
-/// [forceVibrantPalette] is ignored
 const bool forceVibrantPalette = null;
 
 /// The ball will fall down on every [ballEvery]th second, i.e.
