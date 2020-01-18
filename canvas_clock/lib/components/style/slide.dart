@@ -198,7 +198,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
           begin: 1,
           end: 1 - ballLengthFraction,
         ).chain(CurveTween(curve: const AccelerationCurve())),
-        weight: ballRadius / 3,
+        weight: ballRadius / 5,
       ),
     ]);
     arrivalSequence = TweenSequence([

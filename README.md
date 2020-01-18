@@ -1,14 +1,12 @@
 ## TODO
 
-* Update when the travel slide moves out and in 'n stuff.
-
 * Create all four color palettes.
 
-* Create an automated customization flow.
-
-* Use these colors for a color palette: https://www.dwitter.net/d/5455
+  + Use these colors for a color palette: https://www.dwitter.net/d/5455
 
   + Ensure that sufficient contrast is present for accessibility reasons.
+
+* Create an automated customization flow.
 
 * Effects/filter ideas:
 
@@ -17,6 +15,8 @@
   + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
 
 * Reconsider ball.
+
+  + https://api.flutter.dev/flutter/physics/physics-library.html
 
 <hr>
 
