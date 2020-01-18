@@ -159,7 +159,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
 
     final ballRadius = compositionData.ballRadius, travelLength = travelLine.length, ballLengthFraction = ballRadius * 5 / travelLength;
 
-    strokeWidth = constraints.biggest.shortestSide / 104;
+    strokeWidth = constraints.biggest.shortestSide / 52;
 
     final shiftFactor = 1 + strokeWidth / 2 / ballRadius;
 

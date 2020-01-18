@@ -23,11 +23,11 @@ enum ClockColor {
   bradHighlight,
   thermometerTube,
   thermometerMount,
-  thermometerTemperature,
-  thermometerTemperatureMax,
-  thermometerTemperatureMin,
-  thermometerBracket,
-  thermometerBracketHighlight,
+  temperature,
+  temperatureMax,
+  temperatureMin,
+  bracket,
+  bracketHighlight,
   weatherArrow,
   weatherBackground,
   weatherBackgroundHighlight,
@@ -72,27 +72,20 @@ enum ClockColor {
 /// ([Map], [ClockColor], & [Color]) and this [StatefulWidget] controls
 /// which palette is currently shown.
 ///
-/// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark].
+/// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark],
+/// which override values in [light]/[dark] respectively, which override values in [base].
 class Palette extends StatefulWidget {
   static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
 
   static const Map<ClockColor, Color> base = {
-    ClockColor.text: Color(0xcd000000),
-    ClockColor.ballPrimary: Color(0xffd3d3ff),
-    ClockColor.ballSecondary: Color(0xff9a9aff),
-    ClockColor.thermometerTube: Color(0xffffe3d1),
-    ClockColor.thermometerMount: Color(0xffa38d1c),
-    ClockColor.thermometerBackgroundPrimary: Color(0xffcc9933),
-    ClockColor.thermometerBackgroundSecondary: Color(0xffc9bd6c),
-    ClockColor.border: Color(0xff000000),
-    ClockColor.brad: Color(0xff898984),
-    ClockColor.bradHighlight: Color(0xff43464b),
-    ClockColor.thermometerTemperature: Color(0xde6ab7ff),
-    ClockColor.thermometerTemperatureMax: Color(0x9cff3a4b),
-    ClockColor.thermometerTemperatureMin: Color(0xae2a42ff),
-    ClockColor.thermometerBracket: Color(0xff87898c),
-    ClockColor.thermometerBracketHighlight: Color(0xffe0e1e2),
-    ClockColor.weatherArrow: Color(0xffffddbb),
+    // Temperature colors are supposed to match
+    // the colors that a temperature makes us think of.
+    ClockColor.temperature: Color(0xde6ab7ff),
+    ClockColor.temperatureMax: Color(0x9cff3a4b),
+    ClockColor.temperatureMin: Color(0xae2a42ff),
+
+    // Weather icons resemble real life colors
+    // and are not adjusted because of this
     ClockColor.cloud: Color(0xcbc1beba),
     ClockColor.fog: Color(0xc5cdc8be),
     ClockColor.raindrop: Color(0xdda1c6cc),
@@ -101,27 +94,64 @@ class Palette extends StatefulWidget {
     ClockColor.lightning: Color(0xfffdd023),
     ClockColor.windPrimary: Color(0xff96c4e8),
     ClockColor.windSecondary: Color(0xff008abf),
-    ClockColor.background: Color(0xffffe312),
-    ClockColor.goo: Color(0xffff4683),
-    ClockColor.hourHand: Color(0xff3a1009),
-    ClockColor.minuteHand: Color(0xff000000),
-    ClockColor.secondHand: Color(0xff09103a),
     ClockColor.shadow: Color(0xff000000),
+
+    // Dots on the ball
     ClockColor.dotsIdleColor: Color(0xa0e5e4e2),
     ClockColor.dotsPrimedColor: Color(0xc3e00201),
     ClockColor.dotsDisengagedColor: Color(0xa04682b4),
-    ClockColor.weatherBackground: Color(0xff7c4a5e),
-    ClockColor.weatherBackgroundHighlight: Color(0xffffffff),
+  },
+      light = {
+    ClockColor.text: Color(0xcd000000),
+    ClockColor.border: Color(0xff000000),
+    ClockColor.brad: Color(0xff898984),
+    ClockColor.bradHighlight: Color(0xff43464b),
+    ClockColor.bracket: Color(0xff87898c),
+    ClockColor.bracketHighlight: Color(0xffe0e1e2),
+    ClockColor.petalsHighlight: Color(0xffffffff),
+    ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
+  },
+      vibrantLight = {
+    // Background
+    ClockColor.background: Color(0xfffff700),
+    ClockColor.goo: Color(0xffff4683),
+
+    // Component backgrounds
+    ClockColor.analogTimeBackground: Color(0xffe2ca5c),
+    ClockColor.weatherBackground: Color(0xffaa8630),
+    ClockColor.weatherBackgroundHighlight: Color(0xfffbf6ce),
+    ClockColor.thermometerBackgroundPrimary: Color(0xffaa8630),
+    ClockColor.thermometerBackgroundSecondary: Color(0xfff8f1a3),
+    ClockColor.slidePrimary: Color(0xff94704e),
+    ClockColor.slideSecondary: Color(0xff392818),
+
+    // Smaller elements
+    ClockColor.petals: Color(0xffbab33c),
+    ClockColor.ballPrimary: Color(0xffc9855e),
+    ClockColor.ballSecondary: Color(0xff2b2100),
+
+    // Thermometer
+    ClockColor.thermometerTube: Color(0xffffe3d1),
+    ClockColor.thermometerMount: Color(0xffa38d1c),
+
+    // Analog clock
+    ClockColor.hourHand: Color(0xff3a1009),
+    ClockColor.minuteHand: Color(0xff000000),
+    ClockColor.secondHand: Color(0xff09103a),
+
+    // Weather dial
+    ClockColor.weatherArrow: Color(0xffffddbb),
+  },
+      subtleLight = {
     ClockColor.analogTimeBackground: Color(0xffeaffd8),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
-    ClockColor.slidePrimary: Color(0xffefdecd),
-    ClockColor.slideSecondary: Color(0xff855e42),
-    ClockColor.petalsHighlight: Color(0xffffffff),
-    ClockColor.petals: Color(0xffbab33c),
+    ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
+    ClockColor.goo: Color(0xff73bad9),
   },
-      baseLight = {},
-      baseDark = {
+      dark = {
     ClockColor.text: Color(0xb3ffffff),
+  },
+      vibrantDark = {
     ClockColor.background: Color(0xff121212),
     ClockColor.goo: Color(0xff000000),
     ClockColor.thermometerBackgroundSecondary: Color(0xff654321),
@@ -137,14 +167,6 @@ class Palette extends StatefulWidget {
     ClockColor.ballSecondary: Color(0xff009e60),
     ClockColor.slidePrimary: Color(0xff8a9a5b),
     ClockColor.slideSecondary: Color(0xff343a22),
-  },
-      vibrantLight = {},
-      vibrantDark = {},
-      subtleLight = {
-    // Test values todo
-    ClockColor.background: Color(0xff8b4513),
-    ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
-    ClockColor.goo: Color(0xff73bad9),
   },
       subtleDark = {
     ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
@@ -187,7 +209,7 @@ class _PaletteState extends State<Palette> {
     final palette = Map.of(Palette.base);
 
     if (Theme.of(context).brightness == Brightness.light) {
-      palette.addAll(Palette.baseLight);
+      palette.addAll(Palette.light);
 
       if (forceVibrantPalette ?? _vibrant) {
         palette.addAll(Palette.vibrantLight);
@@ -195,7 +217,7 @@ class _PaletteState extends State<Palette> {
         palette.addAll(Palette.subtleLight);
       }
     } else {
-      palette.addAll(Palette.baseDark);
+      palette.addAll(Palette.dark);
 
       if (forceVibrantPalette ?? _vibrant) {
         palette.addAll(Palette.vibrantDark);
