@@ -89,7 +89,11 @@ class _AnimatedWeatherState extends AnimatedWidgetBaseState<AnimatedWeather> wit
 
     if (n == currentlyAnimating) return;
 
-    currentlyAnimating?.stop();
+    // Reverse to zero in order to make sure
+    // that the icon does not look terrible
+    // in the paused state.
+    // The alternative would be stop.
+    currentlyAnimating?.reverse();
 
     currentlyAnimating = n;
     currentlyAnimating.repeat();
