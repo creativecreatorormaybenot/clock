@@ -25,8 +25,7 @@ import 'package:flutter/widgets.dart';
 /// (I mean, I have no way to try whether it is easy or not for another
 /// person. What I am trying to say is that I tried to explain myself).
 /// If you are interested in how this clock works generally, you can
-/// take a look at the [`README.md` file]
-/// (https://github.com/creativecreatorormaybenot/clock/blob/master/README.md),
+/// take a look at the [`README.md` file](https://github.com/creativecreatorormaybenot/clock/blob/master/README.md),
 /// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
