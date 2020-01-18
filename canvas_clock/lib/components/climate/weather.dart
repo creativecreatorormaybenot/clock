@@ -439,7 +439,7 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
     }
   }
 
-  static const indentationFactor = .54;
+  static const indentationFactor = .555;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -484,32 +484,31 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
   }
 
   void _drawArrow(Canvas canvas) {
-    final h = _radius * (indentationFactor - 1),
-        s = _radius / 16,
+    final h = _radius * (indentationFactor - 1) * .957,
+        s = _radius / 18,
         w = _radius / 42,
         path = Path()
           // Remember that this is the center of the circle.
-          ..moveTo(0, h + s)
-          ..lineTo(-s, h + s)
+          ..moveTo(-w / 2, h + s * 1.6)
+          ..lineTo(-s, h + s * 2)
           ..lineTo(0, h)
-          ..lineTo(s, h + s)
-          ..lineTo(0, h + s)
-          ..close()
-          ..moveTo(-w / 2, 0)
-          ..lineTo(-w / 2, h + s)
-          ..lineTo(w / 2, h + s)
+          ..lineTo(s, h + s * 2)
+          ..lineTo(w / 2, h + s * 1.6)
           ..lineTo(w / 2, 0)
-          // Round cap
+          // Round cap - does not matter when
+          // the lid covers it.
           ..halfCircleTo(
             -w / 2,
             0,
           )
+          ..lineTo(-w / 2, 0)
+          ..lineTo(-w / 2, h + s)
           ..close(),
         paint = Paint()
           ..color = _arrowColor
           ..style = PaintingStyle.fill;
 
-    canvas.drawShadow(path, _shadowColor, _radius / 54, false);
+    canvas.drawShadow(path, _shadowColor, _radius / 37, false);
     canvas.drawPath(path, paint);
   }
 
@@ -699,7 +698,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
   }
 
   void _drawBackground(Canvas canvas) {
-    final circleRadius = rr / 2.1,
+    final circleRadius = rr / 2.14,
         circle = Rect.fromCircle(
       center: Offset(0, -rr / 2),
       radius: circleRadius,
@@ -723,7 +722,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
           ..strokeWidth = rr / 242
           ..color = _borderColor;
 
-    canvas.drawShadow(path, _shadowColor, rr / 32, false);
+    canvas.drawShadow(path, _shadowColor, rr / 36, false);
     canvas.drawPath(path, paint);
     canvas.drawPath(path, borderPaint);
   }

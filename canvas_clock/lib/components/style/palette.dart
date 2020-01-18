@@ -140,7 +140,7 @@ class Palette extends StatefulWidget {
     ClockColor.secondHand: Color(0xff09103a),
 
     // Weather dial
-    ClockColor.weatherArrow: Color(0xffffddbb),
+    ClockColor.weatherArrow: Color(0xff3D0C02),
   },
       subtleLight = {
     ClockColor.analogTimeBackground: Color(0xffeaffd8),
