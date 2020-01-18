@@ -44,6 +44,8 @@
 
   + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
 
+  + Update link further down.
+
 * Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
 
 * Submit submission :)
@@ -84,6 +86,8 @@
 
   + Add link to it to README.
 
+    - Update the link further down.
+
   + Potentially post it on https://dev.to/.
 
   + Share on FlutterDev: Twitter, Reddit, and Discord.
@@ -99,9 +103,10 @@ The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](http
 
 ## Notes
 
-* I was inspired by the design of an old analog barometer and hygrometer kind of device initially and took many design ideas away from that. Later on, many other inspirations came my way :)
+I was inspired by the design of an old analog barometer and hygrometer kind of device initially and took many design ideas away from that. Later on, many other inspirations came my way :)
 
-* You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)
+You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)  
+Additionally, I wrote a whole article about the technical implementation of my submission.</a> [Read it here](https://medium.com/@creativecreatorormaybenot).
 
 ### Web version
 
