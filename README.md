@@ -76,6 +76,10 @@
 
   + Mention that usually accessibility and with that semantics are taken care of by prebuilt widgets, but for this clock face it was necessary to do it manually, i.e.</a> override [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) .
 
+    - Show the semantics view.
+
+  + Show every (major) component by itself.
+
   + Add link to it to README.
 
   + Potentially post it on https://dev.to/.
