@@ -1,5 +1,7 @@
 ## TODO
 
+* Match minute hand detail part end length to the inner 24 hour ring.
+
 * Create all four color palettes.
 
   + Use these colors for a color palette: https://www.dwitter.net/d/5455

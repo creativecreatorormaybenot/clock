@@ -48,6 +48,11 @@ enum ClockColor {
   secondHand,
   shadow,
 
+  /// The digital time is on a different part of the background,
+  /// i.e. on the goo and therefore might need a different text
+  /// color.
+  digitalTimeText,
+
   /// The two dots that are drawn onto the ball
   /// in order to always show rotation turned
   /// into more than that and also have a signaling
@@ -113,8 +118,8 @@ class Palette extends StatefulWidget {
   },
       vibrantLight = {
     // Background
-    ClockColor.background: Color(0xfffff700),
-    ClockColor.goo: Color(0xffff4683),
+    ClockColor.background: Color(0xffae8c5f),
+    ClockColor.goo: Color(0xff35271c),
 
     // Component backgrounds
     ClockColor.analogTimeBackground: Color(0xffe2ca5c),
@@ -129,6 +134,7 @@ class Palette extends StatefulWidget {
     ClockColor.petals: Color(0xffbab33c),
     ClockColor.ballPrimary: Color(0xffc9855e),
     ClockColor.ballSecondary: Color(0xff2b2100),
+    ClockColor.digitalTimeText: Color(0xfff3f0c7),
 
     // Thermometer
     ClockColor.thermometerTube: Color(0xffffe3d1),
@@ -143,10 +149,36 @@ class Palette extends StatefulWidget {
     ClockColor.weatherArrow: Color(0xff3D0C02),
   },
       subtleLight = {
-    ClockColor.analogTimeBackground: Color(0xffeaffd8),
-    ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
-    ClockColor.thermometerBackgroundSecondary: Colors.greenAccent,
-    ClockColor.goo: Color(0xff73bad9),
+        // Background
+        ClockColor.background: Color(0x00),
+        ClockColor.goo: Color(0x00),
+
+        // Component backgrounds
+        ClockColor.analogTimeBackground: Color(0x00),
+        ClockColor.weatherBackground: Color(0x00),
+        ClockColor.weatherBackgroundHighlight: Color(0x00),
+        ClockColor.thermometerBackgroundPrimary: Color(0x00),
+        ClockColor.thermometerBackgroundSecondary: Color(0x00),
+        ClockColor.slidePrimary: Color(0x00),
+        ClockColor.slideSecondary: Color(0x00),
+
+        // Smaller elements
+        ClockColor.petals: Color(0x00),
+        ClockColor.ballPrimary: Color(0x00),
+        ClockColor.ballSecondary: Color(0x00),
+        ClockColor.digitalTimeText: Color(0x00),
+
+        // Thermometer
+        ClockColor.thermometerTube: Color(0x00),
+        ClockColor.thermometerMount: Color(0x00),
+
+        // Analog clock
+        ClockColor.hourHand: Color(0x00),
+        ClockColor.minuteHand: Color(0x00),
+        ClockColor.secondHand: Color(0x00),
+
+        // Weather dial
+        ClockColor.weatherArrow: Color(0x00),
   },
       dark = {
     ClockColor.text: Color(0xb3ffffff),
@@ -185,6 +217,30 @@ class Palette extends StatefulWidget {
   _PaletteState createState() => _PaletteState();
 }
 
+Map<ClockColor, Color> resolvePalette(Brightness brightness, bool vibrant) {
+  final palette = Map.of(Palette.base);
+
+  if (brightness == Brightness.light) {
+    palette.addAll(Palette.light);
+
+    if (forceVibrantPalette ?? vibrant) {
+      palette.addAll(Palette.vibrantLight);
+    } else {
+      palette.addAll(Palette.subtleLight);
+    }
+  } else {
+    palette.addAll(Palette.dark);
+
+    if (forceVibrantPalette ?? vibrant) {
+      palette.addAll(Palette.vibrantDark);
+    } else {
+      palette.addAll(Palette.subtleDark);
+    }
+  }
+
+  return palette;
+}
+
 class _PaletteState extends State<Palette> {
   bool _vibrant;
 
@@ -205,29 +261,7 @@ class _PaletteState extends State<Palette> {
 
   bool get vibrant => _vibrant;
 
-  Map<ClockColor, Color> resolve(BuildContext context) {
-    final palette = Map.of(Palette.base);
-
-    if (Theme.of(context).brightness == Brightness.light) {
-      palette.addAll(Palette.light);
-
-      if (forceVibrantPalette ?? _vibrant) {
-        palette.addAll(Palette.vibrantLight);
-      } else {
-        palette.addAll(Palette.subtleLight);
-      }
-    } else {
-      palette.addAll(Palette.dark);
-
-      if (forceVibrantPalette ?? _vibrant) {
-        palette.addAll(Palette.vibrantDark);
-      } else {
-        palette.addAll(Palette.subtleDark);
-      }
-    }
-
-    return palette;
-  }
+  Map<ClockColor, Color> resolve(BuildContext context) => resolvePalette(Theme.of(context).brightness, _vibrant);
 
   @override
   Widget build(BuildContext context) {

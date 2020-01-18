@@ -1,4 +1,5 @@
 import 'package:canvas_clock/clock.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -28,7 +29,7 @@ class AnimatedDigitalTime extends AnimatedWidget {
       minute: time.minute,
       minuteProgress: animation.value,
       use24HourFormat: model.is24HourFormat,
-      textColor: palette[ClockColor.text],
+      textColor: palette[ClockColor.digitalTimeText],
     );
   }
 }
@@ -73,8 +74,7 @@ class DigitalTime extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderDigitalTime renderObject) {
+  void updateRenderObject(BuildContext context, RenderDigitalTime renderObject) {
     renderObject
       ..textColor = textColor
       ..minuteProgress = minuteProgress
@@ -95,8 +95,7 @@ class DigitalTimeParentData extends ClockChildrenParentData {
   Offset position;
 }
 
-class RenderDigitalTime
-    extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
+class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
   RenderDigitalTime({
     double minuteProgress,
     int hour,
@@ -264,8 +263,7 @@ class RenderDigitalTime
     // Describes the center position of the element.
     yMovementSequence = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: size.height + h, end: size.height + h - inDistance)
-            .chain(
+        tween: Tween(begin: size.height + h, end: size.height + h - inDistance).chain(
           CurveTween(
             curve: const Cubic(.32, .62, .06, .95),
           ),
@@ -308,14 +306,12 @@ class RenderDigitalTime
 
       canvas.drawLine(
           Offset(_timePainter.width + width * linePaddingFactor, movementY),
-          Offset(
-              _timePainter.width + width * (1 - linePaddingFactor), movementY),
+          Offset(_timePainter.width + width * (1 - linePaddingFactor), movementY),
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {
-      _amPmPainter.paint(canvas,
-          Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
+      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
     }
 
     canvas.restore();
