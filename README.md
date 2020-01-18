@@ -132,3 +132,7 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
 * For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
 
+## Gallery
+
+See the clock display in action and some other captures of it below.
+
