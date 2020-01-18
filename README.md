@@ -32,13 +32,9 @@
 
 * Use `master` branch when recording the videos.
 
-* Submit submission :)
-
 * Add GIF to README.
 
 * Publish repository.
-
-* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
 
 * Make clock available on web via GitHub pages.
 
@@ -47,6 +43,12 @@
     - Use `master` branch.
 
   + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
+
+* Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
+
+* Submit submission :)
+
+* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
 
 <hr>
 
