@@ -1,8 +1,6 @@
 ## TODO
 
-* Create all four color palettes.
-
-  + Use these colors for a color palette: https://www.dwitter.net/d/5455
+* Create dark color palettes.
 
 * Create an automated customization flow.
 
