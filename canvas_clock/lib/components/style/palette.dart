@@ -138,7 +138,7 @@ class Palette extends StatefulWidget {
 
     // Thermometer
     ClockColor.thermometerTube: Color(0xffffe3d1),
-    ClockColor.thermometerMount: Color(0xffa38d1c),
+    ClockColor.thermometerMount: Color(0xff836d2e),
 
     // Analog clock
     ClockColor.hourHand: Color(0xff3a1009),
@@ -149,36 +149,36 @@ class Palette extends StatefulWidget {
     ClockColor.weatherArrow: Color(0xff3D0C02),
   },
       subtleLight = {
-        // Background
-        ClockColor.background: Color(0x00),
-        ClockColor.goo: Color(0x00),
+    // Background
+    ClockColor.background: Color(0xffb2beb5),
+    ClockColor.goo: Color(0xff828e84),
 
-        // Component backgrounds
-        ClockColor.analogTimeBackground: Color(0x00),
-        ClockColor.weatherBackground: Color(0x00),
-        ClockColor.weatherBackgroundHighlight: Color(0x00),
-        ClockColor.thermometerBackgroundPrimary: Color(0x00),
-        ClockColor.thermometerBackgroundSecondary: Color(0x00),
-        ClockColor.slidePrimary: Color(0x00),
-        ClockColor.slideSecondary: Color(0x00),
+    // Component backgrounds
+    ClockColor.analogTimeBackground: Color(0xffdcddd8),
+    ClockColor.weatherBackground: Color(0xffdcddd8),
+    ClockColor.weatherBackgroundHighlight: Color(0xfffafafa),
+    ClockColor.thermometerBackgroundPrimary: Color(0xffffffff),
+    ClockColor.thermometerBackgroundSecondary: Color(0xffc6c8c5),
+    ClockColor.slideSecondary: Color(0xffcdcbce),
+    ClockColor.slidePrimary: Color(0xff9d9e98),
 
-        // Smaller elements
-        ClockColor.petals: Color(0x00),
-        ClockColor.ballPrimary: Color(0x00),
-        ClockColor.ballSecondary: Color(0x00),
-        ClockColor.digitalTimeText: Color(0x00),
+    // Smaller elements
+    ClockColor.ballPrimary: Color(0xff828e84),
+    ClockColor.ballSecondary: Color(0xff2a3731),
+    ClockColor.petals: Color(0xdd000000),
+    ClockColor.digitalTimeText: Color(0xcd000000),
 
-        // Thermometer
-        ClockColor.thermometerTube: Color(0x00),
-        ClockColor.thermometerMount: Color(0x00),
+    // Thermometer
+    ClockColor.thermometerMount: Color(0xff919c9f),
+    ClockColor.thermometerTube: Color(0xffededed),
 
-        // Analog clock
-        ClockColor.hourHand: Color(0x00),
-        ClockColor.minuteHand: Color(0x00),
-        ClockColor.secondHand: Color(0x00),
+    // Analog clock
+    ClockColor.hourHand: Color(0xff232323),
+    ClockColor.minuteHand: Color(0xff1a1a1a),
+    ClockColor.secondHand: Color(0xff000000),
 
-        // Weather dial
-        ClockColor.weatherArrow: Color(0x00),
+    // Weather dial
+    ClockColor.weatherArrow: Color(0xff121314),
   },
       dark = {
     ClockColor.text: Color(0xb3ffffff),

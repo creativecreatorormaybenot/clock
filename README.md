@@ -1,10 +1,10 @@
 ## TODO
 
+* Adjust mount color in vibrant light.
+
 * Create all four color palettes.
 
   + Use these colors for a color palette: https://www.dwitter.net/d/5455
-
-  + Ensure that sufficient contrast is present for accessibility reasons.
 
 * Create an automated customization flow.
 
