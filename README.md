@@ -22,8 +22,6 @@
 
 <hr>
 
-* Check [**7.** "JUDGING"](https://docs.google.com/document/d/1ybyQCK8Sy7vrD9wuc6pbgwVkyrVZ7Rd_41r5NXGqlt8/edit?usp=sharing).
-
 * Check rules and FAQ: https://flutter.dev/clock
 
 * TODOs.
