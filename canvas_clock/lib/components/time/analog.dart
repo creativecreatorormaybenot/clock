@@ -719,7 +719,8 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
         // the height where it starts and ends.
         dw = _radius / 35.52,
         sh = -_radius / 2.85,
-        eh = -_radius / 1.42,
+        // This matches the 24 hour ring.
+        eh = -_radius * .711,
         // These are Opposite End start, height,
         // indent, and width.
         oes = _radius / 9,

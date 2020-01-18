@@ -120,7 +120,10 @@ class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildre
           shadows: [
             Shadow(
               color: _shadowColor.withOpacity(.53),
-              blurRadius: width / 12,
+              // I wanted to use a bigger blur radius,
+              // but it looks boxy in Flutter web, i.e.
+              // the shadow is clipped there.
+              blurRadius: width / 107,
             ),
           ],
         ),

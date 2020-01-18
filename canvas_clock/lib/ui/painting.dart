@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 extension ExtendedCanvas on Canvas {
@@ -103,7 +104,11 @@ extension ExtendedPath on Path {
   /// Returns a trimmed version of this path.
   ///
   /// Adapted from https://github.com/2d-inc/Flare-Flutter/blob/eb4a7d77a9fe453f5907eb1c720a39ac9fe80a0c/flare_flutter/lib/trim_path.dart
+  ///
+  /// Unsupported in Flutter web, see https://github.com/flutter/flutter/issues/48386.
   Path trimmed(double start, double end, [bool complement = false]) {
+    if (kIsWeb) return Path.from(this);
+
     final result = Path();
 
     var metrics = computeMetrics(), totalLength = 0.0;

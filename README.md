@@ -1,7 +1,5 @@
 ## TODO
 
-* Match minute hand detail part end length to the inner 24 hour ring.
-
 * Create all four color palettes.
 
   + Use these colors for a color palette: https://www.dwitter.net/d/5455
@@ -105,9 +103,13 @@ The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](http
 
 * You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)
 
-### Hand bouncing
+### Web version
 
-* For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
+* You can view the clock face running on Flutter web [here](https://creativecreatorormaybenot.github.io/clock).
+
+* **Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.
+
+* Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web.
 
 ### Implementation
 
@@ -120,4 +122,8 @@ The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](http
 * No assets were used. The bullet point would be a bit short without this second sentence.
 
 * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did) nor the rendering layer.<br>This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them (they make the app reactive) :)
+
+### Hand bouncing
+
+* For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
 
