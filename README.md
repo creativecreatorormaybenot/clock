@@ -92,6 +92,8 @@
 
   + Share on FlutterDev: Twitter, Reddit, and Discord.
 
+    - Tweet be like "Can you create a #FlutterClock face with animations without using Flare/Rive? I have done exactly that.."
+
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s entry to the [Flutter clock challenge](https://flutter.dev/clock).
