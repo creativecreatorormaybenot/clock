@@ -38,7 +38,7 @@ const PaletteMode paletteMode = PaletteMode.subtle;
 /// exactly then.
 ///
 /// Changing this requires a full restart to update the animation controllers.
-const ballEvery = 6;
+const ballEvery = 60;
 
 /// Enables or disables a preset automated customization flow.
 ///

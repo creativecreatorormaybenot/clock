@@ -157,7 +157,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
       );
     travelLine = Line2d(start: end, end: start);
 
-    final ballRadius = compositionData.ballRadius, travelLength = travelLine.length, ballLengthFraction = ballRadius * 5 / travelLength;
+    final ballRadius = compositionData.ballRadius, travelLength = travelLine.length, ballLengthFraction = ballRadius * 5 / travelLength, departureBallLengthFraction = ballLengthFraction * 1.12;
 
     strokeWidth = constraints.biggest.shortestSide / 52;
 
@@ -178,7 +178,7 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     leftTravelSequence = TweenSequence([
       TweenSequenceItem(
         tween: Tween<double>(
-          begin: 1 - ballLengthFraction,
+          begin: 1 - departureBallLengthFraction,
           end: 1,
         ).chain(CurveTween(curve: Curves.fastLinearToSlowEaseIn)),
         weight: ballRadius / 28,
@@ -198,13 +198,13 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
           begin: 1,
           end: 1 - ballLengthFraction,
         ).chain(CurveTween(curve: const AccelerationCurve())),
-        weight: ballRadius / 5,
+        weight: ballRadius / 4,
       ),
     ]);
     arrivalSequence = TweenSequence([
       TweenSequenceItem(
         tween: ConstantTween<double>(1 - ballLengthFraction),
-        weight: ballRadius * 20,
+        weight: ballRadius * 15,
       ),
       TweenSequenceItem(
         tween: Tween<double>(
@@ -218,13 +218,13 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 1,
-          end: 1 - ballLengthFraction,
+          end: 1 - departureBallLengthFraction,
         ).chain(CurveTween(curve: Curves.decelerate)),
         weight: endLine.length,
       ),
       TweenSequenceItem(
-        tween: ConstantTween<double>(1 - ballLengthFraction),
-        weight: ballRadius * 8,
+        tween: ConstantTween<double>(1 - departureBallLengthFraction),
+        weight: ballRadius * 15,
       ),
     ]);
 
