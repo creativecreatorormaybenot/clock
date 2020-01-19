@@ -212,8 +212,8 @@ class Palette extends StatefulWidget {
     ClockColor.goo: Color(0xff000000),
 
     // Component backgrounds
-    ClockColor.analogTimeBackground: Color(0xff535353),
-    ClockColor.analogTimeBackgroundHighlight: Color(0xff949494),
+    ClockColor.analogTimeBackground: Color(0xff333333),
+    ClockColor.analogTimeBackgroundHighlight: Color(0xff646464),
     ClockColor.weatherBackground: Color(0xff343434),
     ClockColor.weatherBackgroundHighlight: Color(0xff454545),
     ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
@@ -234,9 +234,9 @@ class Palette extends StatefulWidget {
     ClockColor.temperatureMin: Color(0xae071fdd),
 
     // Analog clock
-    ClockColor.hourHand: Color(0xffd1d1d1),
-    ClockColor.minuteHand: Color(0xffffffff),
-    ClockColor.secondHand: Color(0xffbfbfbf),
+    ClockColor.hourHand: Color(0xffc1c1c1),
+    ClockColor.minuteHand: Color(0xffefefef),
+    ClockColor.secondHand: Color(0xffafafaf),
 
     // Weather dial
     ClockColor.weatherArrow: Color(0xff979797),
