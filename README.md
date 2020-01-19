@@ -82,7 +82,7 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
 ## Gallery
 
-See the clock display in action and some other captures of it below.
+See the clock display in all of its glory and some other captures of it below.
 
 ## Gratitude
 
