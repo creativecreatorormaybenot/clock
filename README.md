@@ -7,6 +7,12 @@
 * Reconsider ball.
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
+  
+  + Ball from small to big.
+
+* Better rain animation (maybe less and shorter drops).
+
+* Line near the digital time is weird.
 
 <hr>
 
