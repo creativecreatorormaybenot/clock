@@ -1,7 +1,5 @@
 ## TODO
 
-* Draw wavy bar.
-
 * Find better colors for some of the stuff in vibrant dark.
 
 * Reconsider ball.

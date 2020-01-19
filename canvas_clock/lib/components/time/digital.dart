@@ -287,12 +287,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
   double get movementY => yMovementSequence.transform(_minuteProgress);
 
-  double get sequenceProgress {
-    final initialValue = yMovementSequence.transform(0);
-    return (yMovementSequence.transform(_minuteProgress) - initialValue) / (yMovementSequence.transform(1) - initialValue);
-  }
-
-  static const barPaddingFactor = .08, wavePeaksAndTroughs = 2, waveSpeed = 18;
+  static const barPaddingFactor = .08, waveSpeed = 12, widthToWaveLengthRatio = 5 / 2, widthToWaveHeightRatio = 13 / 1;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -301,24 +296,48 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    // Need to clip because the moving element can be out of view.
-    canvas.clipRect(Offset.zero & size);
-
+    // Draw the time before clipping as it is out of the clipping
+    // area.
     _timePainter.paint(canvas, Offset.zero);
 
-    if (_use24HourFormat) {
-      final width = _amPmPainter.size.width,
-          start = _timePainter.width + width * barPaddingFactor,
-          path = Path()..moveTo(start, movementY),
-          point = Offset(start + ((sequenceProgress * waveSpeed) % 1) * width * (1 - barPaddingFactor * 2), movementY);
+    final width = _amPmPainter.size.width;
 
-      for (var i = -1; i < wavePeaksAndTroughs - 1; i++) {
-        final x = point.dx + width / wavePeaksAndTroughs * i;
-        path.quadraticBezierTo(x - width / wavePeaksAndTroughs / 2, point.dy + width / 4 * (i % 1 == 0 ? -1 : 1), x, point.dy);
+    // Need to clip because the moving element can be out of view.
+    // Additionally, parts of the wave can be out of view, which is
+    // necessary to draw the curves properly.
+    canvas.clipRect(
+      Rect.fromLTWH(
+        _timePainter.width + (_use24HourFormat ? width * barPaddingFactor : 0),
+        0,
+        width - (_use24HourFormat ? width * barPaddingFactor * 2 : 0),
+        size.height,
+      ),
+    );
+
+    if (_use24HourFormat) {
+      final start = _timePainter.width + width * barPaddingFactor,
+          path = Path()..moveTo(start, movementY),
+          // Want to have a constant spend, hence,
+          // using the minute progress.
+          waveProgress = (_minuteProgress * waveSpeed) % 1;
+
+      final waveLength = width / widthToWaveLengthRatio, minX = -waveLength;
+
+      for (var i = 0; i < (width - minX) / waveLength + 1; i++) {
+        final x = minX + (i + waveProgress * 2) * waveLength;
+        path.quadraticBezierTo(
+          start + x - waveLength / 2,
+          movementY + width / widthToWaveHeightRatio * (i % 2 == 0 ? -1 : 1),
+          start + x,
+          movementY,
+        );
       }
 
+      final end = _timePainter.width + width * (1 - barPaddingFactor);
+
       path
-        ..lineTo(_timePainter.width + width * (1 - barPaddingFactor), size.height)
+        ..lineTo(end, movementY)
+        ..lineTo(end, size.height)
         ..lineTo(start, size.height)
         ..close();
 
