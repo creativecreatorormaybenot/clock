@@ -10,6 +10,10 @@
 
   + Ball from small to big.
 
+  + Potentially lower the analog clock to show the whole ball all the time.
+
+    - Check if being able to see the ball completely all the time is really the correct thing to do.
+
 * Reconsider digital time in 24 hour mode.
 
 * Create an automated customization flow.
