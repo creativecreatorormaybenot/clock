@@ -103,9 +103,9 @@ class Palette extends StatefulWidget {
     ClockColor.shadow: Color(0xff000000),
 
     // Dots on the ball
-    ClockColor.dotsIdleColor: Color(0xa0e5e4e2),
+    ClockColor.dotsIdleColor: Color(0x90e5e4e2),
     ClockColor.dotsPrimedColor: Color(0xc3e00201),
-    ClockColor.dotsDisengagedColor: Color(0xa04682b4),
+    ClockColor.dotsDisengagedColor: Color(0x804682b4),
   },
       light = {
     ClockColor.text: Color(0xcd000000),
