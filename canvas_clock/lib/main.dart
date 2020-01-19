@@ -47,6 +47,7 @@ const ballEvery = 60;
 /// There are timers that predefine when
 /// what setting will be adjusted. For variation, there is some randomness
 /// included in the flow generation.
+/// I used this automated flow to create demo videos of the clock face.
 ///
 /// Changing this requires a hot restart to take into effect.
 const customizationFlowMode = CustomizationFlow.manual;

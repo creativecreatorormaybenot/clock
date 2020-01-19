@@ -204,7 +204,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
       ..textDirection = TextDirection.ltr;
   }
 
-  /// Determines for how many seconds the moving item (AM/PM or the line)
+  /// Determines for how many seconds the moving item (AM/PM or the bar)
   /// should move at the start and end of a minute.
   /// This time is taken both at the start and the end for a total of
   /// [fastMoveSeconds] * 2 per minute.
@@ -246,7 +246,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
     size = Size(
       _timePainter.width +
-          // This is always correct because the line that is used instead of AM-PM
+          // This is always correct because the bar that is used instead of AM-PM
           // should have the same width as the text.
           _amPmPainter.width,
       _timePainter.height,
@@ -287,7 +287,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
   double get movementY => yMovementSequence.transform(_minuteProgress);
 
-  static const linePaddingFactor = .07;
+  static const barPaddingFactor = .07;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -306,8 +306,8 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
       canvas.drawRect(
           Rect.fromPoints(
-            Offset(_timePainter.width + width * linePaddingFactor, movementY),
-            Offset(_timePainter.width + width * (1 - linePaddingFactor), size.height),
+            Offset(_timePainter.width + width * barPaddingFactor, movementY),
+            Offset(_timePainter.width + width * (1 - barPaddingFactor), size.height),
           ),
           Paint()
             ..color = _textColor
