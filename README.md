@@ -2,17 +2,13 @@
 
 * Find better colors for some of the stuff in vibrant dark.
 
-* Reconsider ball.
+* Create an automated customization flow.
+
+* Ball options:
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
 
-  + Ball from small to big.
-
-  + Potentially lower the analog clock to show the whole ball all the time.
-
-    - Check if being able to see the ball completely all the time is really the correct thing to do.
-
-* Create an automated customization flow.
+  + From small to big.
 
 <hr>
 

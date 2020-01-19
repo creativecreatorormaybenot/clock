@@ -5,9 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class Slide extends LeafRenderObjectWidget {
-  final Animation<double> ballTravelAnimation,
-      ballArrivalAnimation,
-      ballDepartureAnimation;
+  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
 
   final Color primaryColor, secondaryColor, shadowColor;
 
@@ -54,11 +52,8 @@ class SlideParentData extends ClockChildrenParentData {
   double ballRadius;
 }
 
-class RenderSlide
-    extends RenderCompositionChild<ClockComponent, SlideParentData> {
-  final Animation<double> ballTravelAnimation,
-      ballArrivalAnimation,
-      ballDepartureAnimation;
+class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
+  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
 
   RenderSlide({
     this.ballTravelAnimation,
@@ -140,16 +135,11 @@ class RenderSlide
   /// if they should only touch the ball instead of overlapping.
   double strokeWidth;
 
-  TweenSequence<double> leftTravelSequence,
-      rightTravelSequence,
-      arrivalSequence,
-      departureSequence;
+  TweenSequence<double> leftTravelSequence, rightTravelSequence, arrivalSequence, departureSequence;
 
   @override
   void performResize() {
-    final start = compositionData.start,
-        end = compositionData.end,
-        destination = compositionData.destination;
+    final start = compositionData.start, end = compositionData.end, destination = compositionData.destination;
 
     // Need to know where the start line is located in order to
     // properly add padding to account for the ball's size.
@@ -157,19 +147,17 @@ class RenderSlide
 
     startLine = Line2d(start: start, end: destination)
       ..padStartEnd(
-        1.6,
+        1.85,
         .99,
       );
     endLine = Line2d(start: end, end: destination)
       ..padStartEnd(
-        1.5,
+        1.6,
         .58,
       );
     travelLine = Line2d(start: end, end: start);
 
-    final ballRadius = compositionData.ballRadius,
-        travelLength = travelLine.length,
-        ballLengthFraction = ballRadius * 5 / travelLength;
+    final ballRadius = compositionData.ballRadius, travelLength = travelLine.length, ballLengthFraction = ballRadius * 5 / travelLength;
 
     strokeWidth = constraints.biggest.shortestSide / 52;
 
@@ -178,12 +166,8 @@ class RenderSlide
     // The start line should touch the ball on its side.
     // The same also goes for the end line, which is
     // why startLeft is required.
-    startLine.shift(startLine.normal.offset *
-        ballRadius *
-        (startLeft ? shiftFactor : -shiftFactor));
-    endLine.shift(endLine.normal.offset *
-        ballRadius *
-        (startLeft ? -shiftFactor : shiftFactor));
+    startLine.shift(startLine.normal.offset * ballRadius * (startLeft ? shiftFactor : -shiftFactor));
+    endLine.shift(endLine.normal.offset * ballRadius * (startLeft ? -shiftFactor : shiftFactor));
 
     travelLine.pad(1.02);
 
@@ -245,9 +229,7 @@ class RenderSlide
     ]);
 
     // This assumes that the padded travel line will not exceed these bounds.
-    final rect = Rect.fromPoints(travelLine.start, travelLine.end)
-        .expandToInclude(Rect.fromPoints(startLine.start, startLine.end))
-        .expandToInclude(Rect.fromPoints(endLine.start, endLine.end));
+    final rect = Rect.fromPoints(travelLine.start, travelLine.end).expandToInclude(Rect.fromPoints(startLine.start, startLine.end)).expandToInclude(Rect.fromPoints(endLine.start, endLine.end));
 
     compositionData.offset = rect.topLeft;
     size = rect.size;
@@ -311,16 +293,11 @@ class RenderSlide
     canvas.save();
     // Need to translate by the offset and subtract the offset
     // set in performResize again.
-    canvas.translate(offset.dx + -compositionData.offset.dx,
-        offset.dy + -compositionData.offset.dy);
+    canvas.translate(offset.dx + -compositionData.offset.dx, offset.dy + -compositionData.offset.dy);
 
-    final travelPath = paddedTravelLine.pathWithWidth(strokeWidth),
-        startPath = startLine.pathWithWidth(strokeWidth),
-        endPath = endLine.pathWithWidth(strokeWidth);
+    final travelPath = paddedTravelLine.pathWithWidth(strokeWidth), startPath = startLine.pathWithWidth(strokeWidth), endPath = endLine.pathWithWidth(strokeWidth);
     canvas.drawShadow(
-      Path.from(travelPath)
-        ..addPath(startPath, Offset.zero)
-        ..addPath(endPath, Offset.zero),
+      Path.from(travelPath)..addPath(startPath, Offset.zero)..addPath(endPath, Offset.zero),
       _shadowColor,
       size.height / 99,
       false,
