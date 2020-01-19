@@ -1,7 +1,5 @@
 ## TODO
 
-* Find better colors for some of the stuff in vibrant dark.
-
 * Create an automated customization flow.
 
 * Ball options:

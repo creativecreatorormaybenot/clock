@@ -119,7 +119,7 @@ class Palette extends StatefulWidget {
 
     // These look too sad in light mode otherwise
     ClockColor.cloud: Color(0xebc1beba),
-    ClockColor.fog: Color(0xe5cdc8be),
+    ClockColor.fog: Color(0xe5dfdad0),
   },
       vibrantLight = {
     // Background
@@ -214,10 +214,10 @@ class Palette extends StatefulWidget {
     // other elements
     ClockColor.petals: Color(0xff483d8b),
     ClockColor.petalsHighlight: Color(0xff9f79ee),
-    ClockColor.ballPrimary: Color(0xff660198),
-    ClockColor.ballSecondary: Color(0xff380474),
-    ClockColor.slidePrimary: Color(0xff02021d),
-    ClockColor.slideSecondary: Color(0xff302b54),
+    ClockColor.ballPrimary: Color(0xff42426f),
+    ClockColor.ballSecondary: Color(0xff162252),
+    ClockColor.slidePrimary: Color(0xff200460),
+    ClockColor.slideSecondary: Color(0xff4d4870),
 
     // Thermometer
     ClockColor.thermometerMount: Color(0xff525252),
@@ -226,9 +226,9 @@ class Palette extends StatefulWidget {
     ClockColor.temperatureMin: Color(0xae071fdd),
 
     // Analog clock
-    ClockColor.hourHand: Color(0xff6600ff),
-    ClockColor.minuteHand: Color(0xffaaaaff),
-    ClockColor.secondHand: Color(0xff6959cd),
+    ClockColor.hourHand: Color(0xffcfbdff),
+    ClockColor.minuteHand: Color(0xfff0e0ff),
+    ClockColor.secondHand: Color(0xffc0aefd),
 
     // Weather dial
     ClockColor.weatherArrow: Color(0xffcdcded),

@@ -713,7 +713,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
               Color.lerp(
                 _backgroundHighlightColor,
                 _backgroundColor,
-                2 / 3,
+                1 / 2,
               ),
               _backgroundColor,
             ],
