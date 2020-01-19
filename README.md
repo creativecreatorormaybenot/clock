@@ -44,6 +44,8 @@
 
 * Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
 
+* Add preview image to the repository.
+
 * Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
 
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) (WIP) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
