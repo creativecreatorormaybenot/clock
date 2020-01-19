@@ -446,7 +446,8 @@ class RenderAnalogTime
 
     config
       ..label =
-          'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, minute $minute, and second $second'
+          'Analog clock showing hour $hour${_use24HourFormat ? ' (and ${hour + 12})' : ''}, '
+              'minute $minute, and second $second'
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr;
   }

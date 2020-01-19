@@ -80,8 +80,7 @@ enum ClockColor {
 /// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark],
 /// which override values in [light]/[dark] respectively, which override values in [base].
 class Palette extends StatefulWidget {
-  static _PaletteState of(BuildContext context) =>
-      context.findAncestorStateOfType<_PaletteState>();
+  static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
 
   static const Map<ClockColor, Color> base = {
     // Temperature colors are supposed to match
@@ -183,6 +182,7 @@ class Palette extends StatefulWidget {
   },
       dark = {
     ClockColor.text: Color(0xb3ffffff),
+    ClockColor.border: Color(0xffffffff),
   },
       vibrantDark = {
     ClockColor.background: Color(0xff121212),
@@ -193,7 +193,6 @@ class Palette extends StatefulWidget {
     ClockColor.analogTimeBackgroundHighlight: Color(0xffca1f7b),
     ClockColor.petals: Color(0xff483d8b),
     ClockColor.petalsHighlight: Color(0xff9f79ee),
-    ClockColor.border: Color(0xffffffff),
     ClockColor.weatherBackground: Color(0xff580058),
     ClockColor.weatherBackgroundHighlight: Color(0xffd900d9),
     ClockColor.ballPrimary: Color(0xffaddfad),
@@ -202,14 +201,41 @@ class Palette extends StatefulWidget {
     ClockColor.slideSecondary: Color(0xff343a22),
   },
       subtleDark = {
-    ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
-    ClockColor.thermometerBackgroundSecondary: Color(0xff010101),
+    // Background
+    ClockColor.background: Color(0x00),
+    ClockColor.goo: Color(0x00),
+
+    // Component backgrounds
+    ClockColor.analogTimeBackground: Color(0x00),
+    ClockColor.analogTimeBackgroundHighlight: Color(0x00),
     ClockColor.weatherBackground: Color(0xff343434),
     ClockColor.weatherBackgroundHighlight: Color(0xff454545),
+    ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
+    ClockColor.thermometerBackgroundSecondary: Color(0xff010101),
+    ClockColor.slideSecondary: Color(0x00),
+    ClockColor.slidePrimary: Color(0x00),
+
+    // Smaller elements
+    ClockColor.ballPrimary: Color(0x00),
+    ClockColor.ballSecondary: Color(0x00),
+    ClockColor.petals: Color(0x00),
+    ClockColor.petalsHighlight: Color(0x00),
+    ClockColor.digitalTimeText: Color(0x00),
+
+    // Thermometer
+    ClockColor.thermometerMount: Color(0x00),
+    ClockColor.thermometerTube: Color(0x00),
+
+    // Analog clock
+    ClockColor.hourHand: Color(0x00),
+    ClockColor.minuteHand: Color(0x00),
+    ClockColor.secondHand: Color(0x00),
+
+    // Weather dial
+    ClockColor.weatherArrow: Color(0x00),
   };
 
-  final Widget Function(BuildContext context, Map<ClockColor, Color> palette)
-      builder;
+  final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
 
   const Palette({
     @required this.builder,
@@ -219,24 +245,53 @@ class Palette extends StatefulWidget {
   _PaletteState createState() => _PaletteState();
 }
 
+/// The modes determine which palette in the given theme (dark or light) is shown.
+///
+/// This is controlled by the [paletteMode] constant.
+enum PaletteMode {
+  vibrant,
+  subtle,
+  adaptive,
+}
+
 Map<ClockColor, Color> resolvePalette(Brightness brightness, bool vibrant) {
   final palette = Map.of(Palette.base);
 
   if (brightness == Brightness.light) {
     palette.addAll(Palette.light);
 
-    if (forceVibrantPalette ?? vibrant) {
-      palette.addAll(Palette.vibrantLight);
-    } else {
-      palette.addAll(Palette.subtleLight);
+    switch (paletteMode) {
+      case PaletteMode.vibrant:
+        palette.addAll(Palette.vibrantLight);
+        break;
+      case PaletteMode.subtle:
+        palette.addAll(Palette.subtleLight);
+        break;
+      case PaletteMode.adaptive:
+        if (vibrant) {
+          palette.addAll(Palette.vibrantLight);
+        } else {
+          palette.addAll(Palette.subtleLight);
+        }
+        break;
     }
   } else {
     palette.addAll(Palette.dark);
 
-    if (forceVibrantPalette ?? vibrant) {
-      palette.addAll(Palette.vibrantDark);
-    } else {
-      palette.addAll(Palette.subtleDark);
+    switch (paletteMode) {
+      case PaletteMode.vibrant:
+        palette.addAll(Palette.vibrantDark);
+        break;
+      case PaletteMode.subtle:
+        palette.addAll(Palette.subtleDark);
+        break;
+      case PaletteMode.adaptive:
+        if (vibrant) {
+          palette.addAll(Palette.vibrantDark);
+        } else {
+          palette.addAll(Palette.subtleDark);
+        }
+        break;
     }
   }
 
@@ -263,8 +318,7 @@ class _PaletteState extends State<Palette> {
 
   bool get vibrant => _vibrant;
 
-  Map<ClockColor, Color> resolve(BuildContext context) =>
-      resolvePalette(Theme.of(context).brightness, _vibrant);
+  Map<ClockColor, Color> resolve(BuildContext context) => resolvePalette(Theme.of(context).brightness, _vibrant);
 
   @override
   Widget build(BuildContext context) {
