@@ -29,7 +29,7 @@ import 'package:flutter/widgets.dart';
 /// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
-const bool forceVibrantPalette = false;
+const bool forceVibrantPalette = null;
 
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
@@ -47,19 +47,21 @@ const ballEvery = 60;
 /// included in the flow generation.
 ///
 /// Changing this requires a hot restart to take into effect.
-const automateCustomizationFlow = false;
+const automateCustomizationFlow = true;
 
 void main() {
   runApp(
-    Customizer(
-      automatic: automateCustomizationFlow,
-      builder: (context, model) => Palette(
-        builder: (context, palette) {
-          return AnimatedClock(
-            model: model,
-            palette: palette,
-          );
-        },
+    SemanticsDebugger(
+      child: Customizer(
+        automatic: automateCustomizationFlow,
+        builder: (context, model) => Palette(
+          builder: (context, palette) {
+            return AnimatedClock(
+              model: model,
+              palette: palette,
+            );
+          },
+        ),
       ),
     ),
   );

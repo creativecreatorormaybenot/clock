@@ -766,7 +766,7 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
       canvas.drawPaint(Paint()..color = const Color(0x72000000));
 
       canvas.save();
-      canvas.translate(offset.dx + size.width / 2, offset.dy + size.height);
+      canvas.translate(offset.dx + size.width / 2, offset.dy);
       canvas.scale(4);
 
       final w = size.width / 5, h = size.height / 5;
@@ -1590,7 +1590,11 @@ class RenderSunny extends RenderWeatherIcon {
 
     for (var i = 0; i < _sunRays; i++) {
       final direction = pi * 2 / _sunRays * i;
-      canvas.drawLine(Offset.fromDirection(direction, radius / 8), Offset.fromDirection(direction, radius / 6), paint);
+      canvas.drawLine(
+        Offset.fromDirection(direction, radius / 8),
+        Offset.fromDirection(direction, radius / 6),
+        paint,
+      );
     }
 
     canvas.restore();

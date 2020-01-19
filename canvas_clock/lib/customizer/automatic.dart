@@ -13,7 +13,7 @@ const initialData = CustomizationData(
   high: 42,
   low: -5,
   condition: WeatherCondition.snowy,
-  theme: ThemeMode.dark,
+  theme: ThemeMode.light,
   timeFormat: TimeFormat.standard,
 ),
     changeWeatherConditionEvery = Duration(microseconds: 120 / 7 * 1e6 ~/ 1);

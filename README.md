@@ -8,6 +8,8 @@
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
 
+* Find shade of blue that fits onto all themes more nicely **or** use different blue weather colors for the vibrant light theme.
+
 <hr>
 
 * Check rules and FAQ: https://flutter.dev/clock
@@ -18,7 +20,7 @@
 
 * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
 
-* Use `master` branch when recording the videos.
+* Use `master` branch when recording the videos. Capture them on a real device for good performance.
 
 * Add GIF to README.
 
