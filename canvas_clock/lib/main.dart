@@ -31,7 +31,7 @@ import 'package:flutter/widgets.dart';
 /// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
-const PaletteMode paletteMode = PaletteMode.vibrant;
+const PaletteMode paletteMode = PaletteMode.adaptive;
 
 /// The ball will fall down on every [ballEvery]th second, i.e.
 /// it is timed in a way that the ball will arrive at its destination
@@ -50,7 +50,7 @@ const ballEvery = 60;
 /// I used this automated flow to create demo videos of the clock face.
 ///
 /// Changing this requires a hot restart to take into effect.
-const customizationFlowMode = CustomizationFlow.manual;
+const customizationFlowMode = CustomizationFlow.automatic;
 
 void main() {
   runApp(
