@@ -1,6 +1,6 @@
 ## TODO
 
-* For the weather dial use a arrow tip from the inspiration (similar to hour hand one).
+* For the weather dial use arrow tip from the inspiration (similar to hour hand one).
 
 * Create dark color palettes.
 
