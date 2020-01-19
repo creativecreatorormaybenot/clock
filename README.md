@@ -32,11 +32,9 @@
 
   + Deploy transpiled web version to `gh-pages` branch.
 
-    - Use `master` branch.
+    - Use Flutter `master` branch.
 
   + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
-
-  + Update link further down.
 
 * Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
 
