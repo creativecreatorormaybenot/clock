@@ -1,7 +1,5 @@
 ## TODO
 
-* Create vibrant dark.
-
 * Find shade of blue that fits onto all themes more nicely **or** use different blue weather colors for the vibrant light theme.
 
 * Create an automated customization flow.

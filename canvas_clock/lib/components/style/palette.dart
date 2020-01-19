@@ -191,20 +191,39 @@ class Palette extends StatefulWidget {
     ClockColor.thermometerTube: Color(0xc1d9d9d9),
   },
       vibrantDark = {
+    // Background
     ClockColor.background: Color(0xff121212),
-    ClockColor.goo: Color(0xff000000),
-    ClockColor.thermometerBackgroundSecondary: Color(0xff654321),
-    ClockColor.thermometerBackgroundPrimary: Color(0xff3b5055),
+    ClockColor.goo: Color(0xff000010),
+
+    // Component backgrounds
+    ClockColor.thermometerBackgroundPrimary: Color(0xff2f2f4f),
+    ClockColor.thermometerBackgroundSecondary: Color(0xff03031f),
     ClockColor.analogTimeBackground: Color(0xff980036),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffca1f7b),
+    ClockColor.weatherBackground: Color(0xff4b0082),
+    ClockColor.weatherBackgroundHighlight: Color(0xff7f00ff),
+
+    // other elements
     ClockColor.petals: Color(0xff483d8b),
     ClockColor.petalsHighlight: Color(0xff9f79ee),
-    ClockColor.weatherBackground: Color(0xff580058),
-    ClockColor.weatherBackgroundHighlight: Color(0xffd900d9),
-    ClockColor.ballPrimary: Color(0xffaddfad),
-    ClockColor.ballSecondary: Color(0xff009e60),
-    ClockColor.slidePrimary: Color(0xff8a9a5b),
-    ClockColor.slideSecondary: Color(0xff343a22),
+    ClockColor.ballPrimary: Color(0xff660198),
+    ClockColor.ballSecondary: Color(0xff380474),
+    ClockColor.slidePrimary: Color(0xff02021d),
+    ClockColor.slideSecondary: Color(0xff302b54),
+
+    // Thermometer
+    ClockColor.thermometerMount: Color(0xff525252),
+    ClockColor.temperature: Color(0xce3a97df),
+    ClockColor.temperatureMax: Color(0x8cdf1a2b),
+    ClockColor.temperatureMin: Color(0xae071fdd),
+
+    // Analog clock
+    ClockColor.hourHand: Color(0xff6600ff),
+    ClockColor.minuteHand: Color(0xffaaaaff),
+    ClockColor.secondHand: Color(0xff6959cd),
+
+    // Weather dial
+    ClockColor.weatherArrow: Color(0xffcdcded),
   },
       subtleDark = {
     // Background
