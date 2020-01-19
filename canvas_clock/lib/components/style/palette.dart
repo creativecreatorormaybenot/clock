@@ -225,6 +225,10 @@ class Palette extends StatefulWidget {
     // Thermometer
     ClockColor.thermometerMount: Color(0x00),
     ClockColor.thermometerTube: Color(0x00),
+    ClockColor.brad: Color(0x00),
+    ClockColor.bradHighlight: Color(0x00),
+    ClockColor.bracket: Color(0x00),
+    ClockColor.bracketHighlight: Color(0x00),
 
     // Analog clock
     ClockColor.hourHand: Color(0x00),
