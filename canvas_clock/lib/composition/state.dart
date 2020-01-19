@@ -34,11 +34,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   Timer updateTimer;
 
-  AnimationController analogBounceController, backgroundWaveController, ballTravelController, ballArrivalController, ballDepartureController, bounceController, minuteController, spinUpController;
+  AnimationController analogBounceController,
+      backgroundWaveController,
+      ballTravelController,
+      ballArrivalController,
+      ballDepartureController,
+      bounceController,
+      minuteController,
+      spinUpController;
 
   BallTrips ballTrips;
 
-  double minuteProgress(DateTime time) => (time.second + time.millisecond / 1e3 + time.microsecond / 1e6) / 60;
+  double minuteProgress(DateTime time) =>
+      (time.second + time.millisecond / 1e3 + time.microsecond / 1e6) / 60;
 
   @override
   void initState() {
@@ -68,7 +76,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     ballTrips = BallTrips();
     ballTravelController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: ballEvery) - departureDuration - arrivalDuration,
+      duration: const Duration(seconds: ballEvery) -
+          departureDuration -
+          arrivalDuration,
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           ballTravelController.reset();
@@ -99,7 +109,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ballDepartureController.reset();
           ballTrips.count++;
 
-          ballTravelController.forward(from: ballTravelProgress(DateTime.now()));
+          ballTravelController.forward(
+              from: ballTravelProgress(DateTime.now()));
         }
       });
 
@@ -158,7 +169,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   double ballTravelProgress(DateTime time) {
     // toGo is the time until the next ball
     // arrival animation should start in microseconds.
-    final toGo = ballEvery * 1e6 ~/ 1 - (time.second % ballEvery) * 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1 - arrivalDuration.inMicroseconds;
+    final toGo = ballEvery * 1e6 ~/ 1 -
+        (time.second % ballEvery) * 1e6 ~/ 1 -
+        time.microsecond -
+        time.millisecond * 1e3 ~/ 1 -
+        arrivalDuration.inMicroseconds;
 
     return max(0, 1 - toGo / ballTravelController.duration.inMicroseconds);
   }
@@ -166,9 +181,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   void update([bool initial = false]) {
     final time = DateTime.now();
 
-    updateTimer = Timer(Duration(microseconds: 1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1), update);
+    updateTimer = Timer(
+        Duration(
+            microseconds:
+                1e6 ~/ 1 - time.microsecond - time.millisecond * 1e3 ~/ 1),
+        update);
 
-    if (!ballArrivalController.isAnimating && !ballDepartureController.isAnimating) {
+    if (!ballArrivalController.isAnimating &&
+        !ballDepartureController.isAnimating) {
       // It should be fine to call this even when the travel
       // controller is already animating because it should be
       // at that exact value at the moment. The real value
@@ -186,7 +206,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       // This requires the duration to be less than one minute long, but it also ensures consistent behavior.
       final progress = waveProgress(time);
 
-      if ((backgroundWaveController.status == AnimationStatus.reverse || (time.second == 0 && backgroundWaveController.value > 1 / 2)) && !(time.second == 0 && backgroundWaveController.value < 1 / 2)) {
+      if ((backgroundWaveController.status == AnimationStatus.reverse ||
+              (time.second == 0 && backgroundWaveController.value > 1 / 2)) &&
+          !(time.second == 0 && backgroundWaveController.value < 1 / 2)) {
         backgroundWaveController.reverse(from: 1 - progress);
       } else {
         backgroundWaveController.forward(from: progress);
@@ -228,12 +250,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Animation<double> get bounceAnimation {
     return TweenSequence([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: bounceAwayCurve)),
-        weight: bounceAwayDuration.inMicroseconds / bounceController.duration.inMicroseconds,
+        tween: Tween<double>(begin: 0, end: 1)
+            .chain(CurveTween(curve: bounceAwayCurve)),
+        weight: bounceAwayDuration.inMicroseconds /
+            bounceController.duration.inMicroseconds,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1, end: 0).chain(CurveTween(curve: bounceBackCurve)),
-        weight: bounceBackDuration.inMicroseconds / bounceController.duration.inMicroseconds,
+        tween: Tween<double>(begin: 1, end: 0)
+            .chain(CurveTween(curve: bounceBackCurve)),
+        weight: bounceBackDuration.inMicroseconds /
+            bounceController.duration.inMicroseconds,
       ),
     ]).animate(bounceController);
   }
@@ -279,7 +305,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ),
           groundColor: widget.palette[ClockColor.background],
           gooColor: widget.palette[ClockColor.goo],
-          analogTimeComponentColor: widget.palette[ClockColor.analogTimeBackground],
+          analogTimeComponentColor:
+              widget.palette[ClockColor.analogTimeBackground],
           temperatureComponentColor: Color.lerp(
             widget.palette[ClockColor.thermometerBackgroundPrimary],
             widget.palette[ClockColor.thermometerBackgroundSecondary],

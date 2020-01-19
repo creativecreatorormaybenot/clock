@@ -54,9 +54,12 @@ class DoubleTuple {
 
   const DoubleTuple(this.first, this.second);
 
-  DoubleTuple operator +(DoubleTuple other) => DoubleTuple(first + other.first, second + other.second);
+  DoubleTuple operator +(DoubleTuple other) =>
+      DoubleTuple(first + other.first, second + other.second);
 
-  DoubleTuple operator -(DoubleTuple other) => DoubleTuple(first - other.first, second - other.second);
+  DoubleTuple operator -(DoubleTuple other) =>
+      DoubleTuple(first - other.first, second - other.second);
 
-  DoubleTuple operator *(double other) => DoubleTuple(first * other, second * other);
+  DoubleTuple operator *(double other) =>
+      DoubleTuple(first * other, second * other);
 }

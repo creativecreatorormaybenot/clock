@@ -55,7 +55,8 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
     applyData(initialData);
     model.addListener(update);
 
-    conditionTimer = Timer.periodic(changeWeatherConditionEvery, changeCondition);
+    conditionTimer =
+        Timer.periodic(changeWeatherConditionEvery, changeCondition);
     remainingConditions = [];
   }
 
@@ -78,7 +79,9 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
     List<WeatherCondition> selection;
 
     if (remainingConditions.contains(model.weatherCondition)) {
-      selection = remainingConditions.where((condition) => condition != model.weatherCondition).toList();
+      selection = remainingConditions
+          .where((condition) => condition != model.weatherCondition)
+          .toList();
     } else {
       selection = remainingConditions;
     }
