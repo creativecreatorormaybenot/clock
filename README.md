@@ -1,7 +1,5 @@
 ## TODO
 
-* For the weather dial use arrow tip from the inspiration (similar to hour hand one).
-
 * Create dark color palettes.
 
 * Create an automated customization flow.

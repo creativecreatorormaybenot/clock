@@ -642,17 +642,13 @@ class RenderAnalogTime extends RenderCompositionChild<ClockComponent, AnalogTime
           ..moveTo(0, 0)
           ..lineTo(-w / 2, 0)
           ..lineTo(-w / 2, h)
-          ..quadraticBezierTo(
-            -bw / 2,
-            h - bh / 4,
+          ..leafTipTo(
+            -w / 2,
+            h,
             0,
             h - bh,
-          )
-          ..quadraticBezierTo(
             bw / 2,
-            h - bh / 4,
-            w / 2,
-            h,
+            4,
           )
           ..lineTo(w / 2, 0)
           ..close();

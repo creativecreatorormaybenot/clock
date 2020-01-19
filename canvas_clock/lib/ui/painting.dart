@@ -101,6 +101,21 @@ extension ExtendedPath on Path {
     arcToPoint(Offset(x, y), radius: const Radius.circular(1), clockwise: clockwise);
   }
 
+  void leafTipTo(double sx, double sy, double ex, double ey, double c, double f) {
+    quadraticBezierTo(
+      -c,
+      sy - (sy - ey) / f,
+      ex,
+      ey,
+    );
+    quadraticBezierTo(
+      c,
+      sy - (sy - ey) / f,
+      ex - sx,
+      sy,
+    );
+  }
+
   /// Returns a trimmed version of this path.
   ///
   /// Adapted from https://github.com/2d-inc/Flare-Flutter/blob/eb4a7d77a9fe453f5907eb1c720a39ac9fe80a0c/flare_flutter/lib/trim_path.dart

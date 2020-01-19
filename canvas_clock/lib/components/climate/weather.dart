@@ -485,15 +485,20 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
   void _drawArrow(Canvas canvas) {
     final h = _radius * (indentationFactor - 1) * .957,
-        s = _radius / 20.4,
+        s = _radius / 7,
         w = _radius / 42,
         path = Path()
           // Remember that this is the center of the circle.
-          ..moveTo(-w / 2, h + s * 1.7)
-          ..lineTo(-s * 1.1, h + s * 2)
-          ..lineTo(0, h)
-          ..lineTo(s * 1.1, h + s * 2)
-          ..lineTo(w / 2, h + s * 1.7)
+          ..moveTo(-w / 2, h + s)
+          ..leafTipTo(
+            -w / 2,
+            h + s,
+            0,
+            h,
+            w * 3.4,
+            3,
+          )
+          ..lineTo(w / 2, h + s)
           ..lineTo(w / 2, 0)
           // Round cap - does not matter when
           // the lid covers it.
@@ -708,13 +713,14 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<WeatherCondition
             circle.center,
             circleRadius,
             [
-              _backgroundColor,
               Color.lerp(
-                _backgroundColor,
                 _backgroundHighlightColor,
-                1 / 3,
+                _backgroundColor,
+                2 / 3,
               ),
+              _backgroundColor,
             ],
+            const [0.4, 1],
           ),
         path = Path()..addOval(circle),
         borderPaint = Paint()
