@@ -1,18 +1,16 @@
 ## TODO
 
-* Find shade of blue that fits onto all themes more nicely **or** use different blue weather colors for the vibrant light theme.
+* Find better colors for some of the stuff in vibrant dark.
 
 * Create an automated customization flow.
 
 * Reconsider ball.
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
-  
+
   + Ball from small to big.
 
-* Better rain animation (maybe less and shorter drops).
-
-* Line near the digital time is weird.
+* Reconsider digital time in 24 hour mode.
 
 <hr>
 

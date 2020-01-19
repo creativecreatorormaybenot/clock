@@ -116,6 +116,10 @@ class Palette extends StatefulWidget {
     ClockColor.border: Color(0xff000000),
     ClockColor.petalsHighlight: Color(0xffffffff),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
+
+    // These look too sad in light mode otherwise
+    ClockColor.cloud: Color(0xebc1beba),
+    ClockColor.fog: Color(0xe5cdc8be),
   },
       vibrantLight = {
     // Background
@@ -148,6 +152,9 @@ class Palette extends StatefulWidget {
 
     // Weather dial
     ClockColor.weatherArrow: Color(0xff3D0C02),
+    ClockColor.raindrop: Color(0xbf8cdfe8),
+    ClockColor.windPrimary: Color(0xef99edf3),
+    ClockColor.windSecondary: Color(0xff1c70b7),
   },
       subtleLight = {
     // Background
@@ -180,6 +187,7 @@ class Palette extends StatefulWidget {
 
     // Weather dial
     ClockColor.weatherArrow: Color(0xff121314),
+    ClockColor.sun: Color(0xffe4bd29),
   },
       dark = {
     // Text

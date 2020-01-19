@@ -21,12 +21,7 @@ class Ball extends LeafRenderObjectWidget {
 
   final BallTrips trips;
 
-  final Color primaryColor,
-      secondaryColor,
-      dotsIdleColor,
-      dotsPrimedColor,
-      dotsDisengagedColor,
-      shadowColor;
+  final Color primaryColor, secondaryColor, dotsIdleColor, dotsPrimedColor, dotsDisengagedColor, shadowColor;
 
   const Ball({
     Key key,
@@ -123,8 +118,7 @@ class BallParentData extends ClockChildrenParentData {
 /// The ball also rotates to resemble rolling and this rotation is calculated
 /// by taking the circumference of the circle, the distance of the current stage, and
 /// the progress of the current movement.
-class RenderBall
-    extends RenderCompositionChild<ClockComponent, BallParentData> {
+class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> {
   final Animation<double> travelAnimation, arrivalAnimation, departureAnimation;
 
   final BallTrips trips;
@@ -148,12 +142,7 @@ class RenderBall
         _shadowColor = shadowColor,
         super(ClockComponent.ball);
 
-  Color _primaryColor,
-      _secondaryColor,
-      _dotsIdleColor,
-      _dotsPrimedColor,
-      _dotsDisengagedColor,
-      _shadowColor;
+  Color _primaryColor, _secondaryColor, _dotsIdleColor, _dotsPrimedColor, _dotsDisengagedColor, _shadowColor;
 
   set primaryColor(Color value) {
     assert(value != null);
@@ -308,9 +297,7 @@ class RenderBall
     if (departureAnimation.status == AnimationStatus.forward) {
       translation += _departureTween.evaluate(departureAnimation);
 
-      distanceTraveled = _travelDistance +
-          _arrivalDistance +
-          _departureDistance * departureAnimation.value;
+      distanceTraveled = _travelDistance + _arrivalDistance + _departureDistance * departureAnimation.value;
 
       stage = BallTripStage.departure;
     } else if (travelAnimation.status == AnimationStatus.forward) {
@@ -322,8 +309,7 @@ class RenderBall
     } else {
       translation += _arrivalTween.evaluate(arrivalAnimation);
 
-      distanceTraveled =
-          _travelDistance + _arrivalDistance * arrivalAnimation.value;
+      distanceTraveled = _travelDistance + _arrivalDistance * arrivalAnimation.value;
 
       stage = BallTripStage.arrival;
     }
@@ -335,7 +321,7 @@ class RenderBall
     // it is its length when unwrapping its circle.
     final ballLength = _radius * 2 * pi;
 
-    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius);
+    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius * distanceTraveled / 9);
 
     // Rotate the ball as if it rolled along the slides.
     // This value can be greater than 1, but I imagine that
@@ -366,8 +352,7 @@ class RenderBall
             // but I want to be able to host the clock face as a demo using
             // Flutter web and Flutter web does not currently support sweep gradients.
             // See https://github.com/flutter/flutter/issues/41389.
-            ? ui.Gradient.radial(
-                rect.center, rect.shortestSide / 2, shaderColors)
+            ? ui.Gradient.radial(rect.center, rect.shortestSide / 2, shaderColors)
             : SweepGradient(
                 startAngle: 0,
                 endAngle: pi / 2,

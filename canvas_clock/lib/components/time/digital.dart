@@ -74,8 +74,7 @@ class DigitalTime extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderDigitalTime renderObject) {
+  void updateRenderObject(BuildContext context, RenderDigitalTime renderObject) {
     renderObject
       ..textColor = textColor
       ..minuteProgress = minuteProgress
@@ -96,8 +95,7 @@ class DigitalTimeParentData extends ClockChildrenParentData {
   Offset position;
 }
 
-class RenderDigitalTime
-    extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
+class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTimeParentData> {
   RenderDigitalTime({
     double minuteProgress,
     int hour,
@@ -265,8 +263,7 @@ class RenderDigitalTime
     // Describes the center position of the element.
     yMovementSequence = TweenSequence([
       TweenSequenceItem(
-        tween: Tween(begin: size.height + h, end: size.height + h - inDistance)
-            .chain(
+        tween: Tween(begin: size.height + h, end: size.height + h - inDistance).chain(
           CurveTween(
             curve: const Cubic(.32, .62, .06, .95),
           ),
@@ -307,16 +304,16 @@ class RenderDigitalTime
     if (_use24HourFormat) {
       final width = _amPmPainter.size.width;
 
-      canvas.drawLine(
-          Offset(_timePainter.width + width * linePaddingFactor, movementY),
-          Offset(
-              _timePainter.width + width * (1 - linePaddingFactor), movementY),
+      canvas.drawRect(
+          Rect.fromPoints(
+            Offset(_timePainter.width + width * linePaddingFactor, movementY),
+            Offset(_timePainter.width + width * (1 - linePaddingFactor), size.height),
+          ),
           Paint()
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {
-      _amPmPainter.paint(canvas,
-          Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
+      _amPmPainter.paint(canvas, Offset(_timePainter.width, movementY - _amPmPainter.height / 2));
     }
 
     canvas.restore();
