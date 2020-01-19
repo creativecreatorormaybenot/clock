@@ -287,9 +287,12 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
   double get movementY => yMovementSequence.transform(_minuteProgress);
 
-  double get sequenceProgress => (yMovementSequence.transform(0) - yMovementSequence.transform(1)) / yMovementSequence.transform(_minuteProgress);
+  double get sequenceProgress {
+    final initialValue = yMovementSequence.transform(0);
+    return (yMovementSequence.transform(_minuteProgress) - initialValue) / (yMovementSequence.transform(1) - initialValue);
+  }
 
-  static const barPaddingFactor = .07;
+  static const barPaddingFactor = .08, wavePeaksAndTroughs = 2, waveSpeed = 18;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -305,14 +308,18 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
     if (_use24HourFormat) {
       final width = _amPmPainter.size.width,
-          path = Path()..moveTo(_timePainter.width + width * barPaddingFactor, movementY),
-          point = Offset(_timePainter.width + width * barPaddingFactor + sequenceProgress * width - 2 * width * barPaddingFactor, movementY);
+          start = _timePainter.width + width * barPaddingFactor,
+          path = Path()..moveTo(start, movementY),
+          point = Offset(start + ((sequenceProgress * waveSpeed) % 1) * width * (1 - barPaddingFactor * 2), movementY);
 
-      path.lineTo(point.dx, point.dy);
+      for (var i = -1; i < wavePeaksAndTroughs - 1; i++) {
+        final x = point.dx + width / wavePeaksAndTroughs * i;
+        path.quadraticBezierTo(x - width / wavePeaksAndTroughs / 2, point.dy + width / 4 * (i % 1 == 0 ? -1 : 1), x, point.dy);
+      }
 
       path
         ..lineTo(_timePainter.width + width * (1 - barPaddingFactor), size.height)
-        ..lineTo(_timePainter.width + width * barPaddingFactor, size.height)
+        ..lineTo(start, size.height)
         ..close();
 
       canvas.drawPath(
