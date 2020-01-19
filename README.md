@@ -1,14 +1,10 @@
 ## TODO
 
+* For the weather dial use a arrow tip from the inspiration (similar to hour hand one).
+
 * Create dark color palettes.
 
 * Create an automated customization flow.
-
-* Effects/filter ideas:
-
-  + Check https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/indie_3d for the blending effect.
-
-  + Add some texture over components, e.g.</a> metal-like, wood-like, or just w/e looks interesting.
 
 * Reconsider ball.
 
@@ -57,8 +53,6 @@
   + Share some of the technical details that make this submission special apart from what can be seen looking at it.
 
     - For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
-
-    - Mention that people can, if they are interested in doing custom layouts but `MultiChildRenderObjectWidget` seems too complicated for them, check out https://stackoverflow.com/a/59483482/6509751 to get started with `CustomMultiChildLayout` .
 
   + Consider embedding some visualizations made by https://debugger.skia.org/.
 
