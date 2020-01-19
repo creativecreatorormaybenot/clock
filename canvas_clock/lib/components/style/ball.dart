@@ -321,7 +321,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
     // it is its length when unwrapping its circle.
     final ballLength = _radius * 2 * pi;
 
-    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius * distanceTraveled / 99); // todo
+    final rect = Rect.fromCircle(center: Offset.zero, radius: _radius * distanceTraveled);
 
     // Rotate the ball as if it rolled along the slides.
     // This value can be greater than 1, but I imagine that
