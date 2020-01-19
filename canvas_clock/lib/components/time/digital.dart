@@ -287,6 +287,8 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
   double get movementY => yMovementSequence.transform(_minuteProgress);
 
+  double get sequenceProgress => (yMovementSequence.transform(0) - yMovementSequence.transform(1)) / yMovementSequence.transform(_minuteProgress);
+
   static const barPaddingFactor = .07;
 
   @override
@@ -302,14 +304,21 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
     _timePainter.paint(canvas, Offset.zero);
 
     if (_use24HourFormat) {
-      final width = _amPmPainter.size.width;
+      final width = _amPmPainter.size.width,
+          path = Path()..moveTo(_timePainter.width + width * barPaddingFactor, movementY),
+          point = Offset(_timePainter.width + width * barPaddingFactor + sequenceProgress * width - 2 * width * barPaddingFactor, movementY);
 
-      canvas.drawRect(
-          Rect.fromPoints(
-            Offset(_timePainter.width + width * barPaddingFactor, movementY),
-            Offset(_timePainter.width + width * (1 - barPaddingFactor), size.height),
-          ),
+      path.lineTo(point.dx, point.dy);
+
+      path
+        ..lineTo(_timePainter.width + width * (1 - barPaddingFactor), size.height)
+        ..lineTo(_timePainter.width + width * barPaddingFactor, size.height)
+        ..close();
+
+      canvas.drawPath(
+          path,
           Paint()
+            ..style = PaintingStyle.fill
             ..color = _textColor
             ..strokeWidth = size.height / 26);
     } else {

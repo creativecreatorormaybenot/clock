@@ -1,8 +1,8 @@
 ## TODO
 
-* Find better colors for some of the stuff in vibrant dark.
+* Draw wavy bar.
 
-* Create an automated customization flow.
+* Find better colors for some of the stuff in vibrant dark.
 
 * Reconsider ball.
 
@@ -12,11 +12,13 @@
 
 * Reconsider digital time in 24 hour mode.
 
+* Create an automated customization flow.
+
 <hr>
 
 * TODOs.
 
-* Remove unnecessary depencies and other stuff. For example, `pedantic` or `uses-material-design` if there are no icons in the final design.
+* Remove `pedantic` dependency and `analysis_options.yaml` .
 
 * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
 

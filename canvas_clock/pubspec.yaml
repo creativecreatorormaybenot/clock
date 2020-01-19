@@ -8,11 +8,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # The clock customizer is not part of the actual clock face.
   flutter_clock_helper:
     path: ../flutter_clock_helper
 
+flutter:
+  # The clock helper uses Material design icons, hence, this is added.
+  uses-material-design: true
+
 dev_dependencies:
   pedantic: 1.9.0 # todo remove analysis options
-
-flutter:
-  uses-material-design: true
