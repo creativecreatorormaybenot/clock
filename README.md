@@ -8,8 +8,6 @@
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
 
-* Consider if reversing to zero for the weather icon loops is really the right thing to do.
-
 <hr>
 
 * Check rules and FAQ: https://flutter.dev/clock
