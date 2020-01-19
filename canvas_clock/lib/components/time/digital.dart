@@ -287,7 +287,7 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
 
   double get movementY => yMovementSequence.transform(_minuteProgress);
 
-  static const barPaddingFactor = .08, waveSpeed = 12, widthToWaveLengthRatio = 5 / 2, widthToWaveHeightRatio = 13 / 1;
+  static const barPaddingFactor = .08, waveSpeed = 12, widthToWaveLengthRatio = 5 / 2, widthToWaveHeightRatio = 11.7 / 1;
 
   @override
   void paint(PaintingContext context, Offset offset) {
