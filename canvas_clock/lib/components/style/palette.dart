@@ -89,8 +89,7 @@ class Palette extends StatefulWidget {
     ClockColor.temperatureMax: Color(0x9cff3a4b),
     ClockColor.temperatureMin: Color(0xae2a42ff),
 
-    // Weather icons resemble real life colors
-    // and are not adjusted because of this
+    // Weather icons resemble real life colors.
     ClockColor.cloud: Color(0xcbc1beba),
     ClockColor.fog: Color(0xc5cdc8be),
     ClockColor.raindrop: Color(0xdda1c6cc),
@@ -101,6 +100,12 @@ class Palette extends StatefulWidget {
     ClockColor.windSecondary: Color(0xff008abf),
     ClockColor.shadow: Color(0xff000000),
 
+    // Based on some metal, works everywhere.
+    ClockColor.brad: Color(0xff898984),
+    ClockColor.bradHighlight: Color(0xff43464b),
+    ClockColor.bracket: Color(0xff87898c),
+    ClockColor.bracketHighlight: Color(0xffe0e1e2),
+
     // Dots on the ball
     ClockColor.dotsIdleColor: Color(0x90e5e4e2),
     ClockColor.dotsPrimedColor: Color(0xc3e00201),
@@ -109,10 +114,6 @@ class Palette extends StatefulWidget {
       light = {
     ClockColor.text: Color(0xcd000000),
     ClockColor.border: Color(0xff000000),
-    ClockColor.brad: Color(0xff898984),
-    ClockColor.bradHighlight: Color(0xff43464b),
-    ClockColor.bracket: Color(0xff87898c),
-    ClockColor.bracketHighlight: Color(0xffe0e1e2),
     ClockColor.petalsHighlight: Color(0xffffffff),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
   },
@@ -181,8 +182,13 @@ class Palette extends StatefulWidget {
     ClockColor.weatherArrow: Color(0xff121314),
   },
       dark = {
+    // Text
     ClockColor.text: Color(0xb3ffffff),
+    ClockColor.digitalTimeText: Color(0xb3ffffff),
+
+    // Misc
     ClockColor.border: Color(0xffffffff),
+    ClockColor.thermometerTube: Color(0xc1d9d9d9),
   },
       vibrantDark = {
     ClockColor.background: Color(0xff121212),
@@ -202,41 +208,38 @@ class Palette extends StatefulWidget {
   },
       subtleDark = {
     // Background
-    ClockColor.background: Color(0x00),
-    ClockColor.goo: Color(0x00),
+    ClockColor.background: Color(0xff050505),
+    ClockColor.goo: Color(0xff000000),
 
     // Component backgrounds
-    ClockColor.analogTimeBackground: Color(0x00),
-    ClockColor.analogTimeBackgroundHighlight: Color(0x00),
+    ClockColor.analogTimeBackground: Color(0xff535353),
+    ClockColor.analogTimeBackgroundHighlight: Color(0xff949494),
     ClockColor.weatherBackground: Color(0xff343434),
     ClockColor.weatherBackgroundHighlight: Color(0xff454545),
     ClockColor.thermometerBackgroundPrimary: Color(0xff343434),
-    ClockColor.thermometerBackgroundSecondary: Color(0xff010101),
-    ClockColor.slideSecondary: Color(0x00),
-    ClockColor.slidePrimary: Color(0x00),
+    ClockColor.thermometerBackgroundSecondary: Color(0xff0e0e0e),
+    ClockColor.slideSecondary: Color(0xff333333),
+    ClockColor.slidePrimary: Color(0xff101010),
 
     // Smaller elements
-    ClockColor.ballPrimary: Color(0x00),
-    ClockColor.ballSecondary: Color(0x00),
-    ClockColor.petals: Color(0x00),
-    ClockColor.petalsHighlight: Color(0x00),
-    ClockColor.digitalTimeText: Color(0x00),
+    ClockColor.ballPrimary: Color(0xff6c6c6c),
+    ClockColor.ballSecondary: Color(0xff080808),
+    ClockColor.petals: Color(0xffffffff),
+    ClockColor.petalsHighlight: Color(0x7f212121),
 
     // Thermometer
-    ClockColor.thermometerMount: Color(0x00),
-    ClockColor.thermometerTube: Color(0x00),
-    ClockColor.brad: Color(0x00),
-    ClockColor.bradHighlight: Color(0x00),
-    ClockColor.bracket: Color(0x00),
-    ClockColor.bracketHighlight: Color(0x00),
+    ClockColor.thermometerMount: Color(0xff525252),
+    ClockColor.temperature: Color(0xce3a97df),
+    ClockColor.temperatureMax: Color(0x8cdf1a2b),
+    ClockColor.temperatureMin: Color(0xae071fdd),
 
     // Analog clock
-    ClockColor.hourHand: Color(0x00),
-    ClockColor.minuteHand: Color(0x00),
-    ClockColor.secondHand: Color(0x00),
+    ClockColor.hourHand: Color(0xffd1d1d1),
+    ClockColor.minuteHand: Color(0xffffffff),
+    ClockColor.secondHand: Color(0xffbfbfbf),
 
     // Weather dial
-    ClockColor.weatherArrow: Color(0x00),
+    ClockColor.weatherArrow: Color(0xff979797),
   };
 
   final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;

@@ -1,6 +1,8 @@
 ## TODO
 
-* Create dark color palettes.
+* Create vibrant dark.
+
+* Find shade of blue that fits onto all themes more nicely **or** use different blue weather colors for the vibrant light theme.
 
 * Create an automated customization flow.
 
@@ -8,11 +10,7 @@
 
   + https://api.flutter.dev/flutter/physics/physics-library.html
 
-* Find shade of blue that fits onto all themes more nicely **or** use different blue weather colors for the vibrant light theme.
-
 <hr>
-
-* Check rules and FAQ: https://flutter.dev/clock
 
 * TODOs.
 

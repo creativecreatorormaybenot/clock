@@ -1,6 +1,5 @@
 name: canvas_clock
 description: creativecreatorormaybenot's entry to the Flutter clock challenge.
-
 version: 1.0.0+1
 
 environment:
@@ -13,7 +12,7 @@ dependencies:
     path: ../flutter_clock_helper
 
 dev_dependencies:
-  pedantic: 1.9.0
+  pedantic: 1.9.0 # todo remove analysis options
 
 flutter:
   uses-material-design: true
