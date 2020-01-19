@@ -42,47 +42,9 @@
 
 * Submit submission :)
 
+* Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
+
 * Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
-
-<hr>
-
-* Write article about the creation process of the submission on Flutter Community.
-
-  + Ideally go into details regarding the different stages of the process providing images and maybe snapshots by linking to a particular commit on GitHub.
-
-  + Share some of the technical details that make this submission special apart from what can be seen looking at it.
-
-    - For example: what kinds of `RenderObject` s were used and information about `Canvas` and Bézier curves (the simple quadratic and cubic ones `Canvas` offers).
-
-  + Consider embedding some visualizations made by https://debugger.skia.org/.
-
-    - Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
-
-    - Capture using `flutter screenshot --type=skia --observatory-uri=..` .
-
-  + Mention `RenderObject.isRepaintBoundary` for performance optimizations (did not use raster caching) and `RepaintBoundary` for widgets.
-
-    - Show illustrations with the **repaint rainbow** enabled.
-
-  + Can also play with commenting components out from the paint order.
-
-  + Add an "Everything is implicitly animated" screen recording, where the model values are modified programmatically.
-
-  + Mention that usually accessibility and with that semantics are taken care of by prebuilt widgets, but for this clock face it was necessary to do it manually, i.e.</a> override [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) .
-
-    - Show the semantics view.
-
-  + Show every (major) component by itself.
-
-  + Add link to it to README.
-
-    - Update the link further down.
-
-  + Potentially post it on https://dev.to/.
-
-  + Share on FlutterDev: Twitter, Reddit, and Discord.
-
-    - Tweet be like "Can you create a #FlutterClock face with animations without using Flare/Rive? I have done exactly that.."
 
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
