@@ -1,10 +1,8 @@
 ## TODO
 
-* Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
-
 * Use `master` branch when recording the videos. Capture them on a real device for good performance.
 
-* Add GIF to README.
+* Add captures to gallery.
 
 * Publish repository.
 
@@ -14,11 +12,15 @@
 
     - Use Flutter `master` branch.
 
-  + Watch "Designing for the Web with Flutter" from Flutter Interact for this.
-
 * Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
 
 * Submit submission :)
+
+  + Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
+
+  + Create the zip by downloading from GitHub (easiest way).
+
+  + Remove some unnecessary stuff from the zip file.
 
 * Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
 
