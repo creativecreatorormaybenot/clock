@@ -9,6 +9,14 @@ import 'package:canvas_clock/clock.dart';
 class AnimatedClock extends ImplicitlyAnimatedWidget {
   final ClockModel model;
 
+  /// Color palette for all clock components managed by [Palette].
+  ///
+  /// You can define your own palette as well by creating a
+  /// `Map<ClockColor, Color>` and assigning a color for each key.
+  /// This is the only top-level adjustment because I did not
+  /// feel the need to expose more as all the components of the clock
+  /// can easily be modified inside of [Clock], i.e. in the
+  /// [State.build] method of its state.
   final Map<ClockColor, Color> palette;
 
   const AnimatedClock({

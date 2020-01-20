@@ -1,25 +1,9 @@
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/customizer.dart';
 
 /// Hello and welcome to my Flutter Clock submission :)
-///
-/// The palette is a good tool for exploring the
-/// versatility of this entry by seeing different color palettes
-/// for the clock. Notice that by default, the color palette
-/// is switched every [ballEvery] seconds. This is always the case
-/// when [paletteMode] is set to [PaletteMode.adaptive].
-/// When [PaletteMode.vibrant] is set, the vibrant palette is forced and
-/// when [PaletteMode.subtle] is set, the subtle palette.
-/// All palette modes react to the theme set, i.e. dark mode
-/// or light mode.
-///
-/// You can define your own palette as well by creating a
-/// `Map<ClockColor, Color>` and assigning a color for each key.
-/// This is the only top-level adjustment because I did not
-/// feel the need to expose more as all the components of the clock
-/// can easily be modified inside of [Clock], i.e. in the
-/// [State.build] method of its state.
 ///
 /// I documented the code when I felt like documentation or comments
 /// where necessary in order to understand what it does, hence, it
@@ -31,27 +15,23 @@ import 'package:flutter/widgets.dart';
 /// which also contains a link to an article I wrote explaining
 /// the structure of this project and the different parts that
 /// I used to make it all work.
-const PaletteMode paletteMode = PaletteMode.adaptive;
-
-/// The ball will fall down on every [ballEvery]th second, i.e.
-/// it is timed in a way that the ball will arrive at its destination
-/// exactly then.
-///
-/// The value must evenly divide 60 (seconds).
-///
-/// Changing this requires a full restart to update the animation controllers.
-const ballEvery = 60;
 
 /// Enables or disables a preset automated customization flow.
+///
+/// Customization is a good tool for exploring the versatility of this
+/// entry by seeing the different states the clock face can be in.
+///
+/// If you set it to [CustomizationFlow.manual], you can use the
+/// default [ClockCustomizer] provided with the challenge, see
+/// https://github.com/flutter/flutter_clock/tree/master/flutter_clock_helper.
 ///
 /// If [CustomizationFlow.automatic] is enabled, the clock will run
 /// through various [ClockModel] settings automatically.
 /// There are timers that predefine when
-/// what setting will be adjusted. For variation, there is some randomness
-/// included in the flow generation.
+/// what setting will be adjusted.
 /// I used this automated flow to create demo videos of the clock face.
 ///
-/// Changing this requires a hot restart to take into effect.
+/// Changing this requires a hot restart to take the mode into effect.
 const customizationFlowMode = CustomizationFlow.automatic;
 
 /// This flag controls whether the [Customizer] will insert a
@@ -59,7 +39,35 @@ const customizationFlowMode = CustomizationFlow.automatic;
 ///
 /// Enabling this will visualize the semantic tree of the clock
 /// face.
+/// It might be interesting to check this out as it will clearly
+/// show what parts of the clock have semantic information.
+/// If you are using [CustomizationFlow.manual], you will see
+/// some semantics annotations from the [ClockCustomizer],
+/// which is not part of my submission.
+/// Thus, I recommend to use [CustomizationFlow.automatic] when
+/// [debugSemantics] is enabled.
+///
+/// A hot restart is required in order to apply changes to this value.
 const debugSemantics = false;
+
+/// The ball will fall down on every [ballEvery]th second, i.e.
+/// it is timed in a way that the ball will arrive at its destination
+/// exactly then.
+///
+/// The value must evenly divide 60 (seconds).
+///
+/// Changing this requires a hot restart to update the animation controllers.
+const ballEvery = 60;
+
+/// Sets the palette mode.
+///
+/// This is a debug constant that will always force a
+/// vibrant palette if [PaletteMode.vibrant] is set and
+/// force a subtle palette if [PaletteMode.subtle] is set.
+///
+/// Notice that by default, the color palette
+/// is switched every [ballEvery] seconds.
+const PaletteMode paletteMode = PaletteMode.adaptive;
 
 void main() {
   runApp(

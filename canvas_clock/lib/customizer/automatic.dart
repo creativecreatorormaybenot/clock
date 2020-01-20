@@ -131,8 +131,6 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
   int currentIndex;
 
   void changeData() {
-    print('_AutomatedCustomizerState.changeData ${DateTime.now()}');
-
     if (currentIndex == null) {
       setState(() {
         applyData(data[currentIndex = 0]);

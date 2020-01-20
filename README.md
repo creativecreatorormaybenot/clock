@@ -1,7 +1,5 @@
 ## TODO
 
-* Make the customization flow the first constant (with introduction), ball third, and palette last as a debug option.
-
 * Fix that slide shadow is not updated (rendered).
 
 * Fix thermometer in the automated flow.
