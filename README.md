@@ -1,26 +1,24 @@
 ## TODO
 
+* Fix weather condition semantics `RangeError (length): Invalid value: Not in range 0..6, inclusive: 7` .
+
 * Use `master` branch when recording the videos. Capture them on a real device for good performance.
 
-* Record whole automated flow running through at least once (maybe hot restart at some point for the spin up animation).
+* Cut together one 29 second video showcasing everything.
 
-  + At the end go into debug semantics mode and let it run through for a while.
+  + Export as MP4.
 
-  + After that toggle repaint boundary and record some time with that.
+* Cut together one shorter video as a GIF.
 
-  + Cut together one 29 second video showcasing everything.
+  + Export in lower resolution.
 
-    - Export as MP4.
+* Export Semantics Debugging to a GIF.
 
-  + Cut together one shorter video as a GIF.
+* Export repaint rainbow GIF.
 
-    - Export in lower resolution.
+* Export paint baselines spin up GIF.
 
-  + Export Semantics Debugging to a GIF.
-
-  + Export repaint rainbow GIF.
-
-  + Extract at least one screenshot of each palette from the whole clip.
+* Extract at least one screenshot of each palette from the whole clip.
 
 * Record a clip using Skia debugger (https://debugger.skia.org/).
 
@@ -35,6 +33,8 @@
   + Shorter GIF.
 
   + Skia debugger GIF.
+
+  + Paint baselines GIF.
 
   + Semantics debugger GIF.
 
