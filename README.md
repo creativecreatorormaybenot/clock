@@ -4,12 +4,6 @@
 
 * Fix thermometer in the automated flow.
 
-* Ball options:
-
-  + https://api.flutter.dev/flutter/physics/physics-library.html
-
-  + From small to big.
-
 <hr>
 
 * TODOs.
