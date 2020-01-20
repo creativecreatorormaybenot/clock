@@ -45,7 +45,7 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
 
-![Quick screen capture showing the final result of the submission](capture.gif)
+![Quick screen capture showing the final result of the submission](screen_captures/test.gif)
 
 The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
 
