@@ -5,6 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
 
+const temperatureScale = {
+  TemperatureUnit.celsius: [-16, 50],
+  TemperatureUnit.fahrenheit: [3, 122],
+};
+
 class AnimatedTemperature extends ImplicitlyAnimatedWidget {
   final ClockModel model;
 
@@ -27,13 +32,38 @@ class AnimatedTemperature extends ImplicitlyAnimatedWidget {
 }
 
 class _AnimatedTemperatureState extends AnimatedWidgetBaseState<AnimatedTemperature> {
-  Tween<double> _temperature, _low, _high;
+  Tween<double> _temperatureRelative, _lowRelative, _highRelative;
+
+  /// Converts a given [temperature] to the fractional value this
+  /// temperature has on the current scale, i.e. the value relative
+  /// to the current range.
+  ///
+  /// This allows smooth transitions even when the temperature unit
+  /// and the temperatures change at once :)
+  double temperatureToRelative(double temperature) {
+    final currentScale = temperatureScale[widget.model.unit], temperatureRange = currentScale[0].difference(currentScale[1]), currentTemperature = temperature - currentScale[0];
+    return temperatureRange / (temperatureRange - currentTemperature);
+  }
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _temperature = visitor(_temperature, widget.model.temperature, (value) => Tween<double>(begin: value as double)) as Tween<double>;
-    _low = visitor(_low, widget.model.low, (value) => Tween<double>(begin: value as double)) as Tween<double>;
-    _high = visitor(_high, widget.model.high, (value) => Tween<double>(begin: value as double)) as Tween<double>;
+    _temperatureRelative = visitor(
+      _temperatureRelative,
+      temperatureToRelative(widget.model.temperature),
+      (value) => Tween<double>(begin: value as double),
+    ) as Tween<double>;
+
+    _lowRelative = visitor(
+      _lowRelative,
+      temperatureToRelative(widget.model.low),
+      (value) => Tween<double>(begin: value as double),
+    ) as Tween<double>;
+
+    _highRelative = visitor(
+      _highRelative,
+      temperatureToRelative(widget.model.high),
+      (value) => Tween<double>(begin: value as double),
+    ) as Tween<double>;
   }
 
   @override
@@ -41,9 +71,9 @@ class _AnimatedTemperatureState extends AnimatedWidgetBaseState<AnimatedTemperat
     return Temperature(
       unit: widget.model.unit,
       unitString: widget.model.unitString,
-      temperature: _temperature?.evaluate(animation) ?? 0,
-      low: _low?.evaluate(animation) ?? 0,
-      high: _high?.evaluate(animation) ?? 0,
+      temperatureRelative: _temperatureRelative?.evaluate(animation) ?? 0,
+      lowRelative: _lowRelative?.evaluate(animation) ?? 0,
+      highRelative: _highRelative?.evaluate(animation) ?? 0,
       textColor: widget.palette[ClockColor.text],
       tubeColor: widget.palette[ClockColor.thermometerTube],
       mountColor: widget.palette[ClockColor.thermometerMount],
@@ -66,7 +96,7 @@ class Temperature extends LeafRenderObjectWidget {
   final TemperatureUnit unit;
   final String unitString;
 
-  final double temperature, low, high;
+  final double temperatureRelative, lowRelative, highRelative;
 
   final Color textColor,
       tubeColor,
@@ -87,9 +117,9 @@ class Temperature extends LeafRenderObjectWidget {
     Key key,
     @required this.unit,
     @required this.unitString,
-    @required this.temperature,
-    @required this.low,
-    @required this.high,
+    @required this.temperatureRelative,
+    @required this.lowRelative,
+    @required this.highRelative,
     @required this.textColor,
     @required this.tubeColor,
     @required this.mountColor,
@@ -106,9 +136,9 @@ class Temperature extends LeafRenderObjectWidget {
     @required this.shadowColor,
   })  : assert(unit != null),
         assert(unitString != null),
-        assert(temperature != null),
-        assert(low != null),
-        assert(high != null),
+        assert(temperatureRelative != null),
+        assert(lowRelative != null),
+        assert(highRelative != null),
         assert(textColor != null),
         assert(tubeColor != null),
         assert(mountColor != null),
@@ -130,9 +160,9 @@ class Temperature extends LeafRenderObjectWidget {
     return RenderTemperature(
       unit: unit,
       unitString: unitString,
-      temperature: temperature,
-      low: low,
-      high: high,
+      temperatureRelative: temperatureRelative,
+      lowRelative: lowRelative,
+      highRelative: highRelative,
       textColor: textColor,
       tubeColor: tubeColor,
       mountColor: mountColor,
@@ -155,9 +185,9 @@ class Temperature extends LeafRenderObjectWidget {
     renderObject
       ..unit = unit
       ..unitString = unitString
-      ..temperature = temperature
-      ..low = low
-      ..high = high
+      ..temperatureRelative = temperatureRelative
+      ..lowRelative = lowRelative
+      ..highRelative = highRelative
       ..textColor = textColor
       ..tubeColor = tubeColor
       ..mountColor = mountColor
@@ -176,17 +206,12 @@ class Temperature extends LeafRenderObjectWidget {
 }
 
 class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
-  static const temperatureScale = {
-    TemperatureUnit.celsius: [-16, 50],
-    TemperatureUnit.fahrenheit: [3, 122],
-  };
-
   RenderTemperature({
     TemperatureUnit unit,
     String unitString,
-    double temperature,
-    double low,
-    double high,
+    double temperatureRelative,
+    double lowRelative,
+    double highRelative,
     Color textColor,
     Color tubeColor,
     Color mountColor,
@@ -203,9 +228,9 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     Color shadowColor,
   })  : _unit = unit,
         _unitString = unitString,
-        _temperature = temperature,
-        _low = low,
-        _high = high,
+        _temperatureRelative = temperatureRelative,
+        _lowRelative = lowRelative,
+        _highRelative = highRelative,
         _textColor = textColor,
         _tubeColor = tubeColor,
         _mountColor = mountColor,
@@ -249,40 +274,40 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     markNeedsSemanticsUpdate();
   }
 
-  double _temperature, _low, _high;
+  double _temperatureRelative, _lowRelative, _highRelative;
 
-  set temperature(double value) {
+  set temperatureRelative(double value) {
     assert(value != null);
 
-    if (_temperature == value) {
+    if (_temperatureRelative == value) {
       return;
     }
 
-    _temperature = value;
+    _temperatureRelative = value;
     markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
 
-  set low(double value) {
+  set lowRelative(double value) {
     assert(value != null);
 
-    if (_low == value) {
+    if (_lowRelative == value) {
       return;
     }
 
-    _low = value;
+    _lowRelative = value;
     markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
 
-  set high(double value) {
+  set highRelative(double value) {
     assert(value != null);
 
-    if (_high == value) {
+    if (_highRelative == value) {
       return;
     }
 
-    _high = value;
+    _highRelative = value;
     markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
@@ -473,7 +498,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     config
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr
-      ..label = 'Thermometer showing a temperature of $_temperature$_unitString, a high of $_high$_unitString, and a low of $_low$_unitString';
+      ..label = 'Thermometer showing a temperature of $_temperatureRelative$_unitString, a high of $_highRelative$_unitString, and a low of $_lowRelative$_unitString';
   }
 
   @override
@@ -650,7 +675,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       tube,
       lines,
       smallStrokeWidth,
-      _high,
+      _highRelative,
       _maxTemperatureColor,
       text: 'max',
       textLeft: false,
@@ -660,7 +685,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       tube,
       lines,
       tubeWidth * .85,
-      _temperature,
+      _temperatureRelative,
       _temperatureColor,
       horizontalLineWidth: tubeWidth,
     );
@@ -669,7 +694,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       tube,
       lines,
       smallStrokeWidth,
-      _low,
+      _lowRelative,
       _minTemperatureColor,
       text: 'min',
     );
@@ -801,7 +826,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     Line1d tube,
     Line1d lines,
     double strokeWidth,
-    double temperature,
+    double relativeValue,
     Color color, {
     String text,
     bool textLeft = true,
@@ -812,10 +837,7 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.butt;
 
-    final currentScale = temperatureScale[_unit],
-        temperatureRange = currentScale[0].difference(currentScale[1]),
-        currentTemperature = temperature - currentScale[0],
-        offset = lines.startOffset(dx: size.width / 2) + Offset(0, lines.extent / temperatureRange * (temperatureRange - currentTemperature));
+    final offset = lines.startOffset(dx: size.width / 2) + Offset(0, lines.extent / relativeValue);
 
     // Bars
     canvas.drawLine(
@@ -852,16 +874,18 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
       painter.paint(canvas, offset + Offset(textLeft ? -painter.width - textPadding : textPadding, -painter.height / 2));
     }
 
-    // Add little tick marks to make it more clear what value this bar indicates.
-    final horizontalLine = Line1d.fromCenter(
-      center: offset.dx,
-      extent: horizontalLineWidth ?? strokeWidth,
-    );
-    canvas.drawLine(
-        horizontalLine.startOffset(dy: offset.dy),
-        horizontalLine.endOffset(dy: offset.dy),
-        Paint()
-          ..color = _textColor
-          ..strokeWidth = size.height / 368);
+    // Add a little tick mark to indicate the current temperature.
+    if (horizontalLineWidth != null) {
+      final horizontalLine = Line1d.fromCenter(
+        center: offset.dx,
+        extent: horizontalLineWidth,
+      );
+      canvas.drawLine(
+          horizontalLine.startOffset(dy: offset.dy),
+          horizontalLine.endOffset(dy: offset.dy),
+          Paint()
+            ..color = _textColor
+            ..strokeWidth = size.height / 312);
+    }
   }
 }

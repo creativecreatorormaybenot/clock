@@ -1,9 +1,5 @@
 ## TODO
 
-* Fix temperature implicit animation when the temperature unit also changes.
-
-<hr>
-
 * TODOs.
 
 * Remove `pedantic` dependency and `analysis_options.yaml` .
