@@ -8,6 +8,8 @@
 
 <hr>
 
+* Move captures to a directory (do not send this directory with the submission (check rules again)).
+
 * TODOs.
 
 * Remove `pedantic` dependency and `analysis_options.yaml` .
