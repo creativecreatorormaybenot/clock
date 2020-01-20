@@ -1,6 +1,6 @@
 ## TODO
 
-* Fix thermometer in the automated flow.
+* Check if temperature animates from the correct spot on change.
 
 <hr>
 

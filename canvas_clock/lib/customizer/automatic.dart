@@ -7,6 +7,8 @@ import 'package:flutter_clock_helper/model.dart';
 
 const nextDataEvery = Duration(microseconds: 120 / 7 * 1e6 ~/ 1),
 // These need to be applied in sequence in order to make sense.
+// Additionally, the first entry must not have any null values.
+// This means that it also needs to specify every property.
     data = [
   // Initial data
   CustomizationData(
@@ -130,16 +132,15 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
 
   int currentIndex;
 
+  CustomizationData currentData;
+
   void changeData() {
     if (currentIndex == null) {
-      setState(() {
-        applyData(data[currentIndex = 0]);
-      });
+      currentData = data[currentIndex = 0];
+      setState(applyData);
 
       return;
     }
-
-    final previousData = data[currentIndex];
 
     currentIndex++;
 
@@ -147,28 +148,25 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
       currentIndex = 0;
     }
 
-    setState(() {
-      applyData(previousData.copyWith(data[currentIndex]));
-    });
+    currentData = currentData.copyWith(data[currentIndex]);
+    setState(applyData);
   }
 
-  void applyData(CustomizationData data) {
-    print('_AutomatedCustomizerState.applyData ${DateTime.now()} ${data.unit}');
-
-    theme = data.theme;
+  void applyData() {
+    theme = currentData.theme;
 
     model
-      ..is24HourFormat = data.timeFormat == TimeFormat.standard
-      ..location = data.location
-      ..weatherCondition = data.condition
+      ..is24HourFormat = currentData.timeFormat == TimeFormat.standard
+      ..location = currentData.location
+      ..weatherCondition = currentData.condition
       // It is important that the unit is changed
       // before the temperature. Otherwise, the new
       // temperature will be confusing because the model
       // will store it using the old unit.
-      ..unit = data.unit
-      ..temperature = data.temperature
-      ..high = data.high
-      ..low = data.low;
+      ..unit = currentData.unit
+      ..temperature = currentData.temperature
+      ..high = currentData.high
+      ..low = currentData.low;
   }
 
   @override
