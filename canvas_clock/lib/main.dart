@@ -37,6 +37,8 @@ const PaletteMode paletteMode = PaletteMode.adaptive;
 /// it is timed in a way that the ball will arrive at its destination
 /// exactly then.
 ///
+/// The value must evenly divide 60 (seconds).
+///
 /// Changing this requires a full restart to update the animation controllers.
 const ballEvery = 60;
 
