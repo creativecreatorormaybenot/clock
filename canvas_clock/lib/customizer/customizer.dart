@@ -46,9 +46,9 @@ class Customizer extends StatelessWidget {
 
     if (mode == CustomizationFlow.automatic) {
       result = AutomatedCustomizer(builder: builder);
+    } else {
+      result = ManualCustomizer(builder: builder);
     }
-
-    result = ManualCustomizer(builder: builder);
 
     if (debugSemantics) {
       result = SemanticsDebugger(child: result);

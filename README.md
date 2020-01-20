@@ -1,8 +1,8 @@
 ## TODO
 
-* Check if the DevTools tree shows prebuilt widgets, i.e.</a> widgets that are alreay in the framework, above the clock (adjust sentiment).
+* Fix that slide shadow is not updated (rendered).
 
-* Create an automated customization flow.
+* Fix thermometer in the automated flow.
 
 * Ball options:
 
@@ -41,6 +41,8 @@
 * Add preview image to the repository.
 
 * Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
+
+  + Mention the issue in code.
 
 # clock | [View demo](https://creativecreatorormaybenot.github.io/clock) (WIP) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter Follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 

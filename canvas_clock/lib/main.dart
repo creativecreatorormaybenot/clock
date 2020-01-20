@@ -50,14 +50,14 @@ const ballEvery = 60;
 /// I used this automated flow to create demo videos of the clock face.
 ///
 /// Changing this requires a hot restart to take into effect.
-const customizationFlowMode = CustomizationFlow.manual;
+const customizationFlowMode = CustomizationFlow.automatic;
 
 /// This flag controls whether the [Customizer] will insert a
 /// [DebugSemantics].
 ///
 /// Enabling this will visualize the semantic tree of the clock
 /// face.
-const debugSemantics = true;
+const debugSemantics = false;
 
 void main() {
   runApp(
