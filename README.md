@@ -4,10 +4,6 @@
 
 * Use `master` branch when recording the videos. Capture them on a real device for good performance.
 
-* Cut together one 29 second video showcasing everything.
-
-  + Export as MP4.
-
 * Cut together one shorter video as a GIF.
 
   + Export in lower resolution.
