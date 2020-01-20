@@ -2,12 +2,6 @@
 
 * Fix weather condition semantics `RangeError (length): Invalid value: Not in range 0..6, inclusive: 7` .
 
-* Use `master` branch when recording the videos. Capture them on a real device for good performance.
-
-* Cut together one shorter video as a GIF.
-
-  + Export in lower resolution.
-
 * Export Semantics Debugging to a GIF.
 
 * Export repaint rainbow GIF.
