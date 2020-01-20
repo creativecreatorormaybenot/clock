@@ -235,18 +235,29 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     // Location
     final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
 
-    location.layout(
-      BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height),
-      // The text painter determines the size, hence, there is no way to determine it here
-      // (except creating the text painter here).
-      // This is not critical as long as the location is not updated frequently, which it is not.
-      parentUsesSize: true,
-    );
     () {
-      final padding = weatherData.offset.dy / 3.4 - location.size.height / 2;
+      final padding = weatherData.offset.dy / 3.4, horizontalLocationPadding = padding * 1.1;
+
+      location.layout(
+        BoxConstraints(
+            maxWidth: weatherSize.width -
+                (horizontalLocationPadding -
+                        // Using the padding value instead of the weather components
+                        // offset because it is not influenced by the spin up animation.
+                        horizontalPadding) *
+                    2,
+            maxHeight: size.height),
+        // The text painter determines the size, hence, there is no way to determine it here
+        // (except creating the text painter here).
+        // This is not critical as long as the location is not updated frequently, which it is not.
+        parentUsesSize: true,
+      );
+
+      final verticalPadding = padding - location.size.height / 3;
+
       locationData.offset = Offset(
-        weatherData.offset.dx,
-        padding,
+        horizontalLocationPadding,
+        verticalPadding,
       );
     }();
 

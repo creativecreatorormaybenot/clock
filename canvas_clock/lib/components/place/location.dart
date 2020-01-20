@@ -35,8 +35,7 @@ class Location extends LeafRenderObjectWidget {
   }
 }
 
-class RenderLocation
-    extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderLocation({
     String text,
     TextStyle textStyle,
@@ -117,7 +116,7 @@ class RenderLocation
       text: TextSpan(
         text: _text,
         style: _textStyle.copyWith(
-          fontSize: width / 12.3,
+          fontSize: width / 9.7,
           shadows: [
             Shadow(
               color: _shadowColor.withOpacity(.46),

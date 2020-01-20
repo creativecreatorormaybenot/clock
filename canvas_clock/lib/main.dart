@@ -50,7 +50,11 @@ const ballEvery = 60;
 /// I used this automated flow to create demo videos of the clock face.
 ///
 /// Changing this requires a hot restart to take into effect.
-const customizationFlowMode = CustomizationFlow.automatic;
+const customizationFlowMode = CustomizationFlow.manual;
+
+/// This flag controls whether the [Customizer] will insert a
+/// [DebugSemantics]
+const debugSemantics = false; // todo
 
 void main() {
   runApp(
