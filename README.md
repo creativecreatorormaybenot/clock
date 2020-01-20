@@ -1,6 +1,6 @@
 ## TODO
 
-* Check if temperature animates from the correct spot on change.
+* Fix temperature implicit animation when the temperature unit also changes.
 
 <hr>
 
