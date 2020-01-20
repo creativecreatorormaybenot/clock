@@ -2,7 +2,45 @@
 
 * Use `master` branch when recording the videos. Capture them on a real device for good performance.
 
+* Record whole automated flow running through at least once (maybe hot restart at some point for the spin up animation).
+
+  + At the end go into debug semantics mode and let it run through for a while.
+
+  + After that toggle repaint boundary and record some time with that.
+
+  + Cut together one 29 second video showcasing everything.
+
+    - Export as MP4.
+
+  + Cut together one shorter video as a GIF.
+
+    - Export in lower resolution.
+
+  + Export Semantics Debugging to a GIF.
+
+  + Export repaint rainbow GIF.
+
+  + Extract at least one screenshot of each palette from the whole clip.
+
+* Record a clip using Skia debugger (https://debugger.skia.org/).
+
+  + Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
+
+  + `flutter screenshot --type=skia --observatory-uri=..` for the screenshot.
+
+  + Export to GIF.
+
 * Add captures to gallery.
+
+  + Shorter GIF.
+
+  + Skia debugger GIF.
+
+  + Semantics debugger GIF.
+
+  + Repaint rainbow GIF.
+
+  + The screenshots.
 
 * Publish repository.
 
