@@ -2,11 +2,7 @@
 
 * Fix weather condition semantics `RangeError (length): Invalid value: Not in range 0..6, inclusive: 7` .
 
-* Export repaint rainbow GIF.
-
-* Export paint baselines spin up GIF.
-
-* Extract at least one screenshot of each palette from the whole clip.
+* Extract at least one screenshot for each palette from the whole clip.
 
 * Record a clip using Skia debugger (https://debugger.skia.org/).
 
