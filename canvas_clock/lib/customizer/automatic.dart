@@ -153,16 +153,22 @@ class _AutomatedCustomizerState extends State<AutomatedCustomizer> {
   }
 
   void applyData(CustomizationData data) {
+    print('_AutomatedCustomizerState.applyData ${DateTime.now()} ${data.unit}');
+
     theme = data.theme;
 
     model
-      ..location = data.location
       ..is24HourFormat = data.timeFormat == TimeFormat.standard
+      ..location = data.location
+      ..weatherCondition = data.condition
+      // It is important that the unit is changed
+      // before the temperature. Otherwise, the new
+      // temperature will be confusing because the model
+      // will store it using the old unit.
+      ..unit = data.unit
       ..temperature = data.temperature
       ..high = data.high
-      ..low = data.low
-      ..weatherCondition = data.condition
-      ..unit = data.unit;
+      ..low = data.low;
   }
 
   @override
