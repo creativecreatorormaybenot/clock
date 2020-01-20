@@ -2,8 +2,6 @@
 
 * Fix weather condition semantics `RangeError (length): Invalid value: Not in range 0..6, inclusive: 7` .
 
-* Export Semantics Debugging to a GIF.
-
 * Export repaint rainbow GIF.
 
 * Export paint baselines spin up GIF.
