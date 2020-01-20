@@ -1,6 +1,6 @@
 ## TODO
 
-* TODOs.
+* Fix the location layout issue.
 
 * Remove `pedantic` dependency and `analysis_options.yaml` .
 
