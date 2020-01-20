@@ -22,20 +22,38 @@ class Customizer extends StatelessWidget {
 
   final CustomizationFlow mode;
 
+  /// Inserts a [SemanticsDebugger] when `true`.
+  ///
+  /// It does not matter where the debugger is inserted.
+  /// It will always show semantics information for the parent
+  /// widgets as well. Thus, it is fine to wrap the customizers
+  /// in the debugger.
+  final bool debugSemantics;
+
   const Customizer({
     Key key,
     @required this.mode,
+    this.debugSemantics = false,
     @required this.builder,
   })  : assert(mode != null),
+        assert(debugSemantics != null),
         assert(builder != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget result;
+
     if (mode == CustomizationFlow.automatic) {
-      return AutomatedCustomizer(builder: builder);
+      result = AutomatedCustomizer(builder: builder);
     }
 
-    return ManualCustomizer(builder: builder);
+    result = ManualCustomizer(builder: builder);
+
+    if (debugSemantics) {
+      result = SemanticsDebugger(child: result);
+    }
+
+    return result;
   }
 }

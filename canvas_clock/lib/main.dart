@@ -53,13 +53,20 @@ const ballEvery = 60;
 const customizationFlowMode = CustomizationFlow.manual;
 
 /// This flag controls whether the [Customizer] will insert a
-/// [DebugSemantics]
-const debugSemantics = false; // todo
+/// [DebugSemantics].
+///
+/// Enabling this will visualize the semantic tree of the clock
+/// face.
+const debugSemantics = true;
 
 void main() {
   runApp(
+    // The customizer and palette) are not
+    // part of the clock face. They are only used
+    // to control its appearance in this demonstration.
     Customizer(
       mode: customizationFlowMode,
+      debugSemantics: debugSemantics,
       builder: (context, model) => Palette(
         builder: (context, palette) {
           return AnimatedClock(
