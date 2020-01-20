@@ -334,10 +334,12 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
   /// The shadow issue does not appear in Flutter web, but the rotation
   /// is not rendered properly in web anyway.
   void _transformedPaint(PaintingContext context, Offset offset) {
-    // This addresses the shadow problem mentioned above.
-    (layoutParentData[ClockComponent.slide] as SlideParentData).shadowEnabled =
-        // This boundary is arbitrary - as is the bug.
-        spinUpAnimation.value > .97;
+    // The transform below does not do anything when the spin up
+    // animation is completed.
+    if (spinUpAnimation.isCompleted) {
+      _paintChildren(context, offset);
+      return;
+    }
 
     context.pushTransform(
       needsCompositing,

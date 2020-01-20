@@ -1,12 +1,8 @@
 ## TODO
 
-* Fix that slide shadow is not updated (rendered).
-
 * Fix thermometer in the automated flow.
 
 <hr>
-
-* Move captures to a directory (do not send this directory with the submission (check rules again)).
 
 * TODOs.
 

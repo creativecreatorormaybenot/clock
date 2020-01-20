@@ -9,6 +9,14 @@ class Slide extends LeafRenderObjectWidget {
 
   final Color primaryColor, secondaryColor, shadowColor;
 
+  /// Disables the shadow of the slide during the spin up animation.
+  ///
+  /// This is necessary because of a bug in the current native version
+  /// of Flutter (I assume it is, otherwise it is odd behavior).
+  /// The slide shadow is reversed when the canvas is transformed.
+  /// See `_transformedPaint` of [CompositedClock].
+  final Animation<double> spinUpAnimation;
+
   Slide({
     Key key,
     @required this.ballTravelAnimation,
@@ -17,11 +25,13 @@ class Slide extends LeafRenderObjectWidget {
     @required this.primaryColor,
     @required this.secondaryColor,
     @required this.shadowColor,
+    @required this.spinUpAnimation,
   })  : assert(ballTravelAnimation != null),
         assert(ballArrivalAnimation != null),
         assert(ballDepartureAnimation != null),
         assert(primaryColor != null),
         assert(shadowColor != null),
+        assert(spinUpAnimation != null),
         super(key: key);
 
   @override
@@ -33,6 +43,7 @@ class Slide extends LeafRenderObjectWidget {
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
       shadowColor: shadowColor,
+      spinUpAnimation: spinUpAnimation,
     );
   }
 
@@ -50,22 +61,16 @@ class SlideParentData extends ClockChildrenParentData {
   Offset start, end, destination;
 
   double ballRadius;
-
-  /// Disables the shadow of the slide during the spin up animation.
-  ///
-  /// This is necessary because of a bug in the current native version
-  /// of Flutter. The slide shadow is reversed when the canvas is transformed.
-  /// See `_transformedPaint` of [CompositedClock].
-  bool shadowEnabled;
 }
 
 class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData> {
-  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation;
+  final Animation<double> ballTravelAnimation, ballArrivalAnimation, ballDepartureAnimation, spinUpAnimation;
 
   RenderSlide({
     this.ballTravelAnimation,
     this.ballArrivalAnimation,
     this.ballDepartureAnimation,
+    this.spinUpAnimation,
     Color primaryColor,
     Color secondaryColor,
     Color shadowColor,
@@ -124,6 +129,9 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     ballTravelAnimation.addListener(updatePadding);
     ballArrivalAnimation.addListener(updatePadding);
     ballDepartureAnimation.addListener(updatePadding);
+
+    spinUpAnimation.addStatusListener(handleShadow);
+    hideShadow = true;
   }
 
   @override
@@ -132,7 +140,30 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     ballArrivalAnimation.removeListener(updatePadding);
     ballDepartureAnimation.removeListener(updatePadding);
 
+    spinUpAnimation.removeStatusListener(handleShadow);
+
     super.detach();
+  }
+
+  bool hideShadow;
+
+  void handleShadow(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      if (hideShadow == false) {
+        return;
+      }
+
+      hideShadow = false;
+      markNeedsPaint();
+      return;
+    }
+
+    if (hideShadow == true) {
+      return;
+    }
+
+    hideShadow = true;
+    markNeedsPaint();
   }
 
   Line2d startLine, endLine, travelLine;
@@ -303,7 +334,8 @@ class RenderSlide extends RenderCompositionChild<ClockComponent, SlideParentData
     canvas.translate(offset.dx + -compositionData.offset.dx, offset.dy + -compositionData.offset.dy);
 
     final travelPath = paddedTravelLine.pathWithWidth(strokeWidth), startPath = startLine.pathWithWidth(strokeWidth), endPath = endLine.pathWithWidth(strokeWidth);
-    if (compositionData.shadowEnabled) {
+
+    if (!hideShadow) {
       canvas.drawShadow(
         Path.from(travelPath)..addPath(startPath, Offset.zero)..addPath(endPath, Offset.zero),
         _shadowColor,
