@@ -1,7 +1,5 @@
 ## TODO
 
-* Remove `pedantic` dependency and `analysis_options.yaml` .
-
 * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
 
 * Use `master` branch when recording the videos. Capture them on a real device for good performance.

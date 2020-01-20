@@ -341,7 +341,7 @@ class RenderBall extends RenderCompositionChild<ClockComponent, BallParentData> 
             ballLength,
         path = Path()..addOval(rect);
 
-    canvas.drawShadow(path, _shadowColor, _radius / 5, false);
+    canvas.drawShadow(path, _shadowColor, _radius / 6, false);
 
     canvas.rotate(2 * pi * progress);
     canvas.drawPath(
