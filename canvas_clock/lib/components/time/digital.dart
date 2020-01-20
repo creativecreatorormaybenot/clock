@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -245,10 +247,13 @@ class RenderDigitalTime extends RenderCompositionChild<ClockComponent, DigitalTi
     _timePainter.layout(maxWidth: given.width - _amPmPainter.width);
 
     size = Size(
-      _timePainter.width +
-          // This is always correct because the bar that is used instead of AM-PM
-          // should have the same width as the text.
-          _amPmPainter.width,
+      min(
+          // See https://github.com/flutter/flutter/issues/49183.
+          constraints.biggest.width,
+          _timePainter.width +
+              // This is always correct because the bar that is used instead of AM-PM
+              // should have the same width as the text.
+              _amPmPainter.width),
       _timePainter.height,
     );
 

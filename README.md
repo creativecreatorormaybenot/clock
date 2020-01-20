@@ -1,7 +1,5 @@
 ## TODO
 
-* Fix the location layout issue.
-
 * Remove `pedantic` dependency and `analysis_options.yaml` .
 
 * Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).

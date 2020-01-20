@@ -132,7 +132,12 @@ class RenderLocation extends RenderCompositionChild<ClockComponent, ClockChildre
     );
     _textPainter.layout(maxWidth: width);
 
-    size = _textPainter.size;
+    // I used _textPainter.size here before,
+    // however, on Flutter web, the width of the
+    // text painter sometimes exceeded the maxWidth
+    // specified (:
+    // https://github.com/flutter/flutter/issues/49183
+    size = Size(width, _textPainter.height);
   }
 
   @override

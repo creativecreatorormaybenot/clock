@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:canvas_clock/clock.dart';
 
 class UpdatedDate extends StatefulWidget {
   final Map<ClockColor, Color> palette;
@@ -42,9 +42,7 @@ class _UpdatedDateState extends State<UpdatedDate> {
       // DateTime handles passing e.g. 32 as the day just fine, i.e. even when the day should actually roll over,
       // passing the previous day + 1 is fine because DateTime will convert it into the correct date anyway,
       // which means that the time difference here will always be correct.
-      timer = Timer(
-          DateTime(time.year, time.month, time.day + 1).difference(time),
-          update);
+      timer = Timer(DateTime(time.year, time.month, time.day + 1).difference(time), update);
     });
   }
 
@@ -87,8 +85,7 @@ class Date extends LeafRenderObjectWidget {
   }
 }
 
-class RenderDate
-    extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
+class RenderDate extends RenderCompositionChild<ClockComponent, ClockChildrenParentData> {
   RenderDate({
     String text,
     TextStyle textStyle,
@@ -157,7 +154,8 @@ class RenderDate
     );
     _textPainter.layout(maxWidth: width);
 
-    size = _textPainter.size;
+    // See https://github.com/flutter/flutter/issues/49183.
+    size = Size(width, _textPainter.height);
   }
 
   @override
