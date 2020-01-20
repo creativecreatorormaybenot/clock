@@ -1,5 +1,9 @@
 ## TODO
 
+* Add `debugSemantics` flags to `Customizer` and as a constant. Explain that clock is the first real part of the clock face.
+
+* Check if the DevTools tree shows prebuilt widgets, i.e. widgets that are alreay in the framework, above the clock (adjust sentiment).
+
 * Create an automated customization flow.
 
 * Ball options:
