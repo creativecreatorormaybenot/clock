@@ -418,7 +418,7 @@ class RenderWeather extends RenderComposition<WeatherCondition,
     markNeedsPaint();
   }
 
-  /// Declares that the weather background is not a
+  /// Declares that the weather background is a
   /// repaint boundary.
   ///
   /// This is useful because [markNeedsPaint] is called when the
