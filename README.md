@@ -1,54 +1,4 @@
-## TODO
-
-* Record a clip using Skia debugger (https://debugger.skia.org/).
-
-  + Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
-
-  + `flutter screenshot --type=skia --observatory-uri=..` for the screenshot.
-
-  + Export to GIF.
-
-* Add captures to gallery.
-
-  + Shorter GIF.
-
-  + Skia debugger GIF.
-
-  + Paint baselines GIF.
-
-  + Semantics debugger GIF.
-
-  + Repaint rainbow GIF.
-
-  + The screenshots.
-
-* Publish repository.
-
-* Make clock available on web via GitHub pages.
-
-  + Deploy transpiled web version to `gh-pages` branch.
-
-    - Use Flutter `master` branch.
-
-* Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
-
-* Submit submission :)
-
-  + Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
-
-  + Create the zip by downloading from GitHub (easiest way).
-
-  + Remove some unnecessary stuff from the zip file.
-
-* Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
-
-* Add preview image to the repository.
-
-* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
-
-  + Mention the issue in code.
-
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) (WIP) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
@@ -111,4 +61,44 @@ See the clock display in all of its glory and some other captures of it below.
 ## Gratitude
 
 Thanks to [Pants](https://github.com/Pants44) for being awesome and patiently giving me some design feedback, to the Flutter team for creating this challenge and the framework, actively working with the open source community, and providing awesome content like the [Flutter Interact sessions](https://www.youtube.com/playlist?list=PLjxrf2q8roU0o0wKRJTjyN0pSUA6TI8lg), to everyone who shared Flutter Clock progress, which inspired me and helped to keep me motivated, and to all other creators of resources I linked to in the **TODO** section (in this `README.md` file) throughout the development of this entry.
+
+## TODO
+
+* Record a clip using Skia debugger (https://debugger.skia.org/).
+
+  + Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
+
+  + `flutter screenshot --type=skia --observatory-uri=..` for the screenshot.
+
+  + Export to GIF.
+
+* Add captures to gallery.
+
+  + Skia debugger GIF.
+
+* Publish repository.
+
+* Make clock available on web via GitHub pages.
+
+  + Deploy transpiled web version to `gh-pages` branch.
+
+    - Use Flutter `master` branch.
+
+* Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
+
+* Submit submission :)
+
+  + Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
+
+  + Create the zip by downloading from GitHub (easiest way).
+
+  + Remove some unnecessary stuff from the zip file.
+
+* Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
+
+* Add preview image to the repository.
+
+* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
+
+  + Mention the issue in code.
 
