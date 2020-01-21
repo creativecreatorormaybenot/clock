@@ -16,19 +16,21 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
 ### Web version
 
-You can view the clock face running on Flutter web [here](https://creativecreatorormaybenot.github.io/clock).
+ * You can view the clock face running on Flutter web [here](https://creativecreatorormaybenot.github.io/clock).
 
-**Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.</a>  
-Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web. Ironically, the radial gradients look so much sweeter - you should really see the vibrant dark palette running on Flutter web!
+ * **Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.</a>  
+
+ * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web. Ironically, the radial gradients look so much sweeter - you should really see the vibrant dark palette running on Flutter web!
 
 ### Implementation
 
-No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/pubspec.yaml)). No premade widgets from the framework were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.</a>
-Accessibility was implemented customly and it had to because I did not use any prebuilt widgets that come with `Semantics` implementations. Instead I overrode [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) for every component with semantic relevancy.</a>
-Last but not least, no assets were used - I think you also get it now (:
+ * No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/pubspec.yaml)). No premade widgets from the framework were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.</a>
 
-I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did) nor the rendering layer exclusively.</a>  
-This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them (they make the app reactive) :)
+ * Accessibility was implemented customly and it had to because I did not use any prebuilt widgets that come with `Semantics` implementations. Instead I overrode [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) for every component with semantic relevancy.</a>
+
+ * Last but not least, no assets were used - I think you also get it now (: I wanted to stress it to show what Flutter is capable of.
+
+ * I did not go with the raw layer (here is an [old demonstration](https://github.com/creativecreatorormaybenot/pong) of the Flutter raw layer I did) nor the rendering layer exclusively.<br>This was not compatible with the `ClockCustomizer` and is also not convenient for working with data at all. The Flutter trees are pretty neat, so we should use them (they make the app reactive) :)
 
 ### Hand bouncing
 
