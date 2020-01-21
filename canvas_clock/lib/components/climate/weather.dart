@@ -664,6 +664,10 @@ abstract class RenderWeatherIcon extends RenderCompositionChild<
     markNeedsPaint();
   }
 
+  /// Declares that a [RenderWeatherIcon] is a repaint boundary.
+  ///
+  /// This makes sure that other weather icons and the background
+  /// do not have to repaint when only this icon changes.
   @override
   bool get isRepaintBoundary => true;
 
