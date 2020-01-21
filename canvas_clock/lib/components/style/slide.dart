@@ -14,6 +14,7 @@ class Slide extends LeafRenderObjectWidget {
   /// Disables the shadow of the slide during the spin up animation.
   ///
   /// This is necessary because of a bug in the current native version
+  /// (https://github.com/flutter/flutter/issues/49233)
   /// of Flutter (I assume it is, otherwise it is odd behavior).
   /// The slide shadow is reversed when the canvas is transformed.
   /// See `_transformedPaint` of [CompositedClock].
