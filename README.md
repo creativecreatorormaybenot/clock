@@ -62,35 +62,3 @@ See the clock display in all of its glory and some other captures of it below.
 
 Thanks to [Pants](https://github.com/Pants44) for being awesome and patiently giving me some design feedback, to the Flutter team for creating this challenge and the framework, actively working with the open source community, and providing awesome content like the [Flutter Interact sessions](https://www.youtube.com/playlist?list=PLjxrf2q8roU0o0wKRJTjyN0pSUA6TI8lg), to everyone who shared Flutter Clock progress, which inspired me and helped to keep me motivated, and to all other creators of resources I linked to in the **TODO** section (in this `README.md` file) throughout the development of this entry.
 
-## TODO
-
-* Record a clip using Skia debugger (https://debugger.skia.org/).
-
-  + Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).
-
-  + `flutter screenshot --type=skia --observatory-uri=..` for the screenshot.
-
-  + Export to GIF.
-
-* Add captures to gallery.
-
-  + Skia debugger GIF.
-
-* Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
-
-* Submit submission :)
-
-  + Format code and follow all other steps decribed [here](https://flutter.dev/clock#submissions).
-
-  + Create the zip by downloading from GitHub (easiest way).
-
-  + Remove some unnecessary stuff from the zip file.
-
-* Add back GitHub topics: `flutter` , `flutter-clock` , & `dart` .
-
-* Add preview image to the repository.
-
-* Create issue for the shadow issue caused by the slide and `CompositedClock._transformedPaint` .
-
-  + Mention the issue in code.
-
