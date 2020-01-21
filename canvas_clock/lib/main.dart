@@ -32,7 +32,7 @@ import 'package:flutter_clock_helper/customizer.dart';
 /// I used this automated flow to create demo videos of the clock face.
 ///
 /// Changing this requires a hot restart to take the mode into effect.
-const customizationFlowMode = CustomizationFlow.automatic;
+const customizationFlowMode = CustomizationFlow.manual;
 
 /// This flag controls whether the [Customizer] will insert a
 /// [DebugSemantics].

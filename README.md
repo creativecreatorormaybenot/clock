@@ -1,7 +1,5 @@
 ## TODO
 
-* Fix weather condition semantics `RangeError (length): Invalid value: Not in range 0..6, inclusive: 7` .
-
 * Record a clip using Skia debugger (https://debugger.skia.org/).
 
   + Make sure to replace all `Paint.shader` properties by solid colors when taking the screenshots because the debugger seems to not be able to render shaders (https://stackoverflow.com/q/59589892/6509751).

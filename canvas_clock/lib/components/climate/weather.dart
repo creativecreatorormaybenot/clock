@@ -417,13 +417,11 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
 
   List<WeatherCondition> get conditions => children;
 
-  WeatherCondition get condition => conditions[(_angle / pi / 2 * conditions.length).round()];
+  WeatherCondition get condition => conditions[(_angle / pi / 2 * conditions.length).round() % conditions.length];
 
   @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
-
-    print('RenderWeather.describeSemanticsConfiguration $condition');
 
     config
       ..isReadOnly = true

@@ -491,6 +491,14 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     compositionData.hasSemanticsInformation = true;
   }
 
+  /// Converts the relative (to the range) values back to
+  /// temperatures.
+  double relativeToTemperature(double relative) {
+    final currentScale = temperatureScale[_unit], temperatureRange = currentScale[0].difference(currentScale[1]);
+
+    return temperatureRange - temperatureRange / relative + currentScale[0];
+  }
+
   @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
@@ -498,7 +506,9 @@ class RenderTemperature extends RenderCompositionChild<ClockComponent, ClockChil
     config
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr
-      ..label = 'Thermometer showing a temperature of $_temperatureRelative$_unitString, a high of $_highRelative$_unitString, and a low of $_lowRelative$_unitString';
+      ..label = 'Thermometer showing a temperature of ${relativeToTemperature(_temperatureRelative)}$_unitString, '
+          'a high of ${relativeToTemperature(_highRelative)}$_unitString, '
+          'and a low of ${relativeToTemperature(_lowRelative)}$_unitString';
   }
 
   @override
