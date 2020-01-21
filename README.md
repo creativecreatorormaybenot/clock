@@ -57,7 +57,7 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are no assets, plugins, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree was custom made by me.
 
-![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/showcase.gif)
+![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/showcase.gif)
 
 The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
 
@@ -96,21 +96,21 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
 See the clock display in all of its glory and some other captures of it below.
 
-![Screenshot of the vibrant light palette](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/vibrant_light.png)
+![Screenshot of the vibrant light palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_light.png)
 
-![Screenshot of the vibrant dark palette](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/vibrant_dark_1.png)
+![Screenshot of the vibrant dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_1.png)
 
-![Screenshot of the vibrant dark palette with the ball in the air](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/vibrant_dark_2.png)
+![Screenshot of the vibrant dark palette with the ball in the air](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_2.png)
 
-![Screenshot of the subtle light palette](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/subtle_light.png)
+![Screenshot of the subtle light palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_light.png)
 
-![Screenshot of the subtle dark palette](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/subtle_dark.png)
+![Screenshot of the subtle dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_dark.png)
 
-![Screen capture of the clock face with baseline debug paint enabled](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/baselines.gif)
+![Screen capture of the clock face with baseline debug paint enabled](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/baselines.gif)
 
-![Screen capture of the clock face showing semantics](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/semantics.gif)
+![Screen capture of the clock face showing semantics](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/semantics.gif)
 
-![Screen capture of the clock face with the repaint rainbow enabled](https://github.com/creativecreatorormaybenot/clock/tree/master/screen_captures/repaint.gif)
+![Screen capture of the clock face with the repaint rainbow enabled](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/repaint.gif)
 
 ## Gratitude
 
