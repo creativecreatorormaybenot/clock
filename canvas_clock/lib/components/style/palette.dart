@@ -80,7 +80,8 @@ enum ClockColor {
 /// Predefined palettes are [vibrantLight] and [subtleLight] or [vibrantDark] and [subtleDark],
 /// which override values in [light]/[dark] respectively, which override values in [base].
 class Palette extends StatefulWidget {
-  static _PaletteState of(BuildContext context) => context.findAncestorStateOfType<_PaletteState>();
+  static _PaletteState of(BuildContext context) =>
+      context.findAncestorStateOfType<_PaletteState>();
 
   static const Map<ClockColor, Color> base = {
     // Temperature colors are supposed to match
@@ -269,7 +270,8 @@ class Palette extends StatefulWidget {
     ClockColor.weatherArrow: Color(0xff979797),
   };
 
-  final Widget Function(BuildContext context, Map<ClockColor, Color> palette) builder;
+  final Widget Function(BuildContext context, Map<ClockColor, Color> palette)
+      builder;
 
   const Palette({
     @required this.builder,
@@ -352,7 +354,8 @@ class _PaletteState extends State<Palette> {
 
   bool get vibrant => _vibrant;
 
-  Map<ClockColor, Color> resolve(BuildContext context) => resolvePalette(Theme.of(context).brightness, _vibrant);
+  Map<ClockColor, Color> resolve(BuildContext context) =>
+      resolvePalette(Theme.of(context).brightness, _vibrant);
 
   @override
   Widget build(BuildContext context) {

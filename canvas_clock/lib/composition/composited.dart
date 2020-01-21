@@ -56,11 +56,13 @@ const List<ClockComponent> paintOrder = [
   ClockComponent.slide,
 ];
 
-class ClockChildrenParentData extends CompositionChildrenParentData<ClockComponent> {
+class ClockChildrenParentData
+    extends CompositionChildrenParentData<ClockComponent> {
   bool hasSemanticsInformation;
 }
 
-class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChildrenParentData, CompositedClock> {
+class RenderCompositedClock extends RenderComposition<ClockComponent,
+    ClockChildrenParentData, CompositedClock> {
   final Animation<double> spinUpAnimation;
 
   RenderCompositedClock({
@@ -122,22 +124,30 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     //<editor-fold desc="Laying out children">
     // Background
-    final background = layoutChildren[ClockComponent.background], backgroundData = layoutParentData[ClockComponent.background] as BackgroundParentData;
+    final background = layoutChildren[ClockComponent.background],
+        backgroundData =
+            layoutParentData[ClockComponent.background] as BackgroundParentData;
 
     backgroundData.clearRects();
 
     background.layout(BoxConstraints.tight(size));
 
     // Ball
-    final ball = layoutChildren[ClockComponent.ball], ballData = layoutParentData[ClockComponent.ball] as BallParentData, ballRadius = constraints.biggest.height / 21, ballSize = Size.fromRadius(ballRadius);
+    final ball = layoutChildren[ClockComponent.ball],
+        ballData = layoutParentData[ClockComponent.ball] as BallParentData,
+        ballRadius = constraints.biggest.height / 21,
+        ballSize = Size.fromRadius(ballRadius);
 
     // Slide
-    final slide = layoutChildren[ClockComponent.slide], slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
+    final slide = layoutChildren[ClockComponent.slide],
+        slideData = layoutParentData[ClockComponent.slide] as SlideParentData;
 
     // Analog time (paint order is different, but the weather component depends on the size of the analog component).
     final analogTime = layoutChildren[ClockComponent.analogTime],
-        analogTimeData = layoutParentData[ClockComponent.analogTime] as AnalogTimeParentData,
-        analogTimeSize = Size.fromRadius(size.height / 2.9) * spinUpAnimation.value;
+        analogTimeData =
+            layoutParentData[ClockComponent.analogTime] as AnalogTimeParentData,
+        analogTimeSize =
+            Size.fromRadius(size.height / 2.9) * spinUpAnimation.value;
 
     // The ball destination depends on where the analog clock is positioned, which depends on the size of the analog component.
     final analogClockBasePosition = Offset(
@@ -203,40 +213,56 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
       analogTimeData
         ..offset = analogClockBasePosition
         ..bounce = bounce;
-      analogTime.layout(BoxConstraints.tight(analogTimeSize + bounce), parentUsesSize: false);
+      analogTime.layout(BoxConstraints.tight(analogTimeSize + bounce),
+          parentUsesSize: false);
     }();
 
-    backgroundData.addRect(ClockComponent.analogTime, analogTimeData.offset, analogTimeSize);
+    backgroundData.addRect(
+        ClockComponent.analogTime, analogTimeData.offset, analogTimeSize);
 
     // Weather
-    final weather = layoutChildren[ClockComponent.weather], weatherData = layoutParentData[ClockComponent.weather], weatherSize = Size.fromRadius(size.height / 4);
+    final weather = layoutChildren[ClockComponent.weather],
+        weatherData = layoutParentData[ClockComponent.weather],
+        weatherSize = Size.fromRadius(size.height / 4);
     weather.layout(BoxConstraints.tight(weatherSize), parentUsesSize: false);
 
     // Horizontal padding for both weather and temperature.
     final horizontalPadding = size.width / 62;
 
     weatherData.offset = Offset(
-      horizontalPadding - (horizontalPadding + weatherSize.width) * (1 - spinUpAnimation.value),
+      horizontalPadding -
+          (horizontalPadding + weatherSize.width) * (1 - spinUpAnimation.value),
       size.height / 2 - weatherSize.height / 2,
     );
-    backgroundData.addRect(ClockComponent.weather, weatherData.offset, weatherSize);
+    backgroundData.addRect(
+        ClockComponent.weather, weatherData.offset, weatherSize);
 
     // Temperature
-    final temperature = layoutChildren[ClockComponent.temperature], temperatureData = layoutParentData[ClockComponent.temperature], temperatureSize = Size(size.width / 6, size.height / 1.2);
+    final temperature = layoutChildren[ClockComponent.temperature],
+        temperatureData = layoutParentData[ClockComponent.temperature],
+        temperatureSize = Size(size.width / 6, size.height / 1.2);
 
-    temperature.layout(BoxConstraints.tight(temperatureSize), parentUsesSize: false);
+    temperature.layout(BoxConstraints.tight(temperatureSize),
+        parentUsesSize: false);
 
     temperatureData.offset = Offset(
-      size.width - temperatureSize.width - horizontalPadding * 3 / 2 + (temperatureSize.width + horizontalPadding * 3 / 2) * (1 - spinUpAnimation.value),
+      size.width -
+          temperatureSize.width -
+          horizontalPadding * 3 / 2 +
+          (temperatureSize.width + horizontalPadding * 3 / 2) *
+              (1 - spinUpAnimation.value),
       size.height / 2 - temperatureSize.height / 2,
     );
-    backgroundData.addRect(ClockComponent.temperature, temperatureData.offset, temperatureSize);
+    backgroundData.addRect(
+        ClockComponent.temperature, temperatureData.offset, temperatureSize);
 
     // Location
-    final location = layoutChildren[ClockComponent.location], locationData = layoutParentData[ClockComponent.location];
+    final location = layoutChildren[ClockComponent.location],
+        locationData = layoutParentData[ClockComponent.location];
 
     () {
-      final padding = weatherData.offset.dy / 3.4, horizontalLocationPadding = padding * 1.1;
+      final padding = weatherData.offset.dy / 3.4,
+          horizontalLocationPadding = padding * 1.1;
 
       location.layout(
         BoxConstraints(
@@ -262,18 +288,25 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
     }();
 
     // Date
-    final date = layoutChildren[ClockComponent.date], dateData = layoutParentData[ClockComponent.date];
+    final date = layoutChildren[ClockComponent.date],
+        dateData = layoutParentData[ClockComponent.date];
 
-    date.layout(BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height), parentUsesSize: false);
-    dateData.offset = ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
+    date.layout(
+        BoxConstraints(maxWidth: weatherSize.width, maxHeight: size.height),
+        parentUsesSize: false);
+    dateData.offset =
+        ExtendedOffset(locationData.offset).plus(location.size.onlyHeight);
 
     // Digital clock
-    final digitalTime = layoutChildren[ClockComponent.digitalTime], digitalTimeData = layoutParentData[ClockComponent.digitalTime] as DigitalTimeParentData;
+    final digitalTime = layoutChildren[ClockComponent.digitalTime],
+        digitalTimeData = layoutParentData[ClockComponent.digitalTime]
+            as DigitalTimeParentData;
 
     // The position needs to be assigned before layout
     // as it is used in the layout function of digital time.
     () {
-      final padding = (size.height - (weatherData.offset.dy + weatherSize.height)) / 2;
+      final padding =
+          (size.height - (weatherData.offset.dy + weatherSize.height)) / 2;
       digitalTimeData.position = Offset(
         padding * 1.96,
         size.height - padding * .9,
@@ -303,9 +336,11 @@ class RenderCompositedClock extends RenderComposition<ClockComponent, ClockChild
 
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as ClockChildrenParentData, component = childParentData.childType;
+      final childParentData = child.parentData as ClockChildrenParentData,
+          component = childParentData.childType;
 
-      assert(childParentData.hasSemanticsInformation != null, 'The render object ($child) for $component did not set $ClockChildrenParentData.hasSemanticsInformation properly.');
+      assert(childParentData.hasSemanticsInformation != null,
+          'The render object ($child) for $component did not set $ClockChildrenParentData.hasSemanticsInformation properly.');
 
       if (childParentData.hasSemanticsInformation) {
         toBeVisited[component] = child;

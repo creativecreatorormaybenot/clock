@@ -76,14 +76,6 @@ Thanks to [Pants](https://github.com/Pants44) for being awesome and patiently gi
 
   + Skia debugger GIF.
 
-* Publish repository.
-
-* Make clock available on web via GitHub pages.
-
-  + Deploy transpiled web version to `gh-pages` branch.
-
-    - Use Flutter `master` branch.
-
 * Confirm that submission runs on `stable` ([Getting Started, 6.](https://flutter.dev/clock))
 
 * Submit submission :)

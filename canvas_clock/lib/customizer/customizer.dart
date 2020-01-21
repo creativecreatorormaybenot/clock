@@ -6,7 +6,8 @@ import 'package:flutter_clock_helper/model.dart';
 export 'automatic.dart';
 export 'manual.dart';
 
-typedef ClockModelBuilder = Widget Function(BuildContext context, ClockModel model);
+typedef ClockModelBuilder = Widget Function(
+    BuildContext context, ClockModel model);
 
 /// Customization flows control the behavior of the clock.
 ///
