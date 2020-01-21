@@ -78,7 +78,7 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
 * No plugins were used at all (check [ `pubspec.yaml` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/pubspec.yaml)).
 
-* No premade widgets from the standard library were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.
+* No premade widgets from the framework were used in my own code, i.e.</a> every `RenderObject` in the tree of the clock was custom created by me.
 
   + Accessibility was implemented customly and it had to because I did not use any prebuilt widgets that come with `Semantics` implementations. Instead I overrode [ `RenderObject.describeSemanticsConfiguration` ](https://api.flutter.dev/flutter/rendering/RenderObject/describeSemanticsConfiguration.html) for every component with semantic relevance.
 

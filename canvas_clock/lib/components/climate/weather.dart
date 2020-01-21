@@ -423,6 +423,8 @@ class RenderWeather extends RenderComposition<WeatherCondition, WeatherChildrenP
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
 
+    print('RenderWeather.describeSemanticsConfiguration $condition');
+
     config
       ..isReadOnly = true
       ..textDirection = TextDirection.ltr
