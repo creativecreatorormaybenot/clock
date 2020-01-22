@@ -20,7 +20,7 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
  * **Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.</a>  
 
- * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web. **Ironically**, the radial gradients look *so much sweeter* - you should really see the vibrant dark palette running on Flutter web!
+ * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web.**Ironically**, the radial gradients look *so much sweeter* - you should really see the vibrant dark palette running on Flutter web!
 
 ### Implementation
 
@@ -44,11 +44,15 @@ See the clock display in all of its glory and some other captures of it below.
 
 ![Screenshot of the vibrant dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_1.png)
 
+![Capture of the assembly of two single frames with vibrant palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_assembly.gif)
+
 ![Screenshot of the vibrant dark palette with the ball in the air](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_2.png)
 
 ![Screenshot of the subtle light palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_light.png)
 
 ![Screenshot of the subtle dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_dark.png)
+
+![Capture of the assembly of two single frames with subtle palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_assembly.gif)
 
 ![Screen capture of the clock face with baseline debug paint enabled](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/baselines.gif)
 
