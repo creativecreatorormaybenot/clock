@@ -38,8 +38,8 @@ For the animation of the second hand (and minute hand) bouncing of the analog cl
 
 ### Mistakes in code
 
-Trying to fix some issues, trying to optimize, or just by being human in general, I introduced some bad practices and mistakes to the code on accident that I noticed now after the challenge period has ended.</a>  
-I will **not** fix these issues to keep the code how it was when I submitted it - just note that there are things I did not intend to write the way they are and I would have fixed in a real product :)
+Trying to fix some issues, trying to optimize, or just by being human in general, I introduced some bad practices and mistakes into the code on accident that I noticed now after the challenge period has ended.</a>  
+I will **not** fix these issues to keep the code how it was when I submitted it - just note that there are things I did not intend to write the way they are and I would have normally fixed :)
 
 ## Gallery
 
