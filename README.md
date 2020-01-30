@@ -1,4 +1,4 @@
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://medium.com/@creativecreatorormaybenot) (coming soon) | [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://link.medium.com/ZBn2ctPvF3) | [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are **no assets**, **no plugins**, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree is custom made by me.
@@ -12,7 +12,7 @@ The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](http
 I was inspired by the design of an old analog barometer and hygrometer kind of device initially and took many design ideas away from that. Later on, many other inspirations came my way :)
 
 You can follow my whole process of building the clock face in this repository, i.e.</a> every bit of it. Maybe it helps someone :)  
-Additionally, I wrote a whole article about the technical implementation of my submission.</a> [Read it here (when it comes out)]().
+Additionally, I wrote a whole article about the technical implementation of my submission.</a> You can [read it here](https://link.medium.com/ZBn2ctPvF3).
 
 ### Web version
 
@@ -20,7 +20,7 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
  * **Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.</a>  
 
- * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web.**Ironically**, the radial gradients look *so much sweeter* - you should really see the vibrant dark palette running on Flutter web!
+ * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web.</a> **Ironically**, the radial gradients look *so much sweeter* - you should really see the vibrant dark palette running on Flutter web!
 
 ### Implementation
 
