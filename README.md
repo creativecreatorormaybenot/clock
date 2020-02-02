@@ -34,7 +34,7 @@ I did not go with the raw layer (here is an [old demonstration](https://github.c
 
 ### Understanding the code
 
-As this is a complex project, it will probably be difficult for you to get into the code and understand the structure and reasoning for the parts. This was also the case for [HaMMeReD on Reddit](https://www.reddit.com/r/FlutterDev/comments/ewtqoo/drawing_every_line_pixelperfectly_with_custom/fg88mx5?utm_source=share&utm_medium=web2x). Thanks to him, I have written this [extensive elaboration on the structure and logic behind the project](https://www.reddit.com/r/FlutterDev/comments/ewtqoo/drawing_every_line_pixelperfectly_with_custom/fg9l75a?utm_source=share&utm_medium=web2x). Reading it should give you a good idea of how to navigate the repository and why I chose to do certain things.
+As this is a complex project, it will probably be difficult for you to get into the code and understand the structure and reasoning for the parts. This was also the case for [HaMMeReD on Reddit](https://www.reddit.com/r/FlutterDev/comments/ewtqoo/drawing_every_line_pixelperfectly_with_custom/fg88mx5?utm_source=share&utm_medium=web2x). Thanks to them, I have written this [extensive elaboration on the structure and logic behind the project](https://www.reddit.com/r/FlutterDev/comments/ewtqoo/drawing_every_line_pixelperfectly_with_custom/fg9l75a?utm_source=share&utm_medium=web2x). Reading it should give you a good idea of how to navigate the repository and why I chose to do certain things.
 
 ### Hand bouncing
 
