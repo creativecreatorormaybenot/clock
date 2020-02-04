@@ -3,10 +3,10 @@
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are **no assets**, **no plugins**, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree is custom made by me.
 
-![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/showcase.gif)
+![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/showcase.gif)
 
 The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).</a>  
-If you want to build the app yourself, make sure to run ***`flutter create .`** first* in `canvas_clock` before `flutter run` in order to [generate required directories](https://github.com/creativecreatorormaybenot/clock/issues/1#issuecomment-582123585) first. Note that the repo size is ~100 MB due to the `screen-captures` and `gh-pages` branches. You can [download as ZIP](https://github.com/creativecreatorormaybenot/clock/archive/master.zip), which will only contain the `master` branch without any commits saving a lot of space. If you want to navigate through my process, however, you will need to [clone the repo](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
+If you want to build the app yourself, make sure to run ***`flutter create .`*** in `canvas_clock` before `flutter run` in order to [generate required directories](https://github.com/creativecreatorormaybenot/clock/issues/1#issuecomment-582123585) first. Note that the repo size is ~100 MB due to the `screen-captures` and `gh-pages` branches. You can [download as ZIP](https://github.com/creativecreatorormaybenot/clock/archive/master.zip), which will only contain the `master` branch without any commits saving a lot of space. If you want to navigate through my process, however, you will need to [clone the repo](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
 
 ## Notes
 
@@ -50,25 +50,25 @@ I will **not** fix these issues to keep the code how it was when I submitted it 
 
 See the clock display in all of its glory and some other captures of it below.
 
-![Screenshot of the vibrant light palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_light.png)
+![Screenshot of the vibrant light palette](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/vibrant_light.png)
 
-![Screenshot of the vibrant dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_1.png)
+![Screenshot of the vibrant dark palette](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/vibrant_dark_1.png)
 
-![Capture of the assembly of two single frames with vibrant palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_assembly.gif)
+![Capture of the assembly of two single frames with vibrant palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/vibrant_assembly.gif)
 
-![Screenshot of the vibrant dark palette with the ball in the air](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/vibrant_dark_2.png)
+![Screenshot of the vibrant dark palette with the ball in the air](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/vibrant_dark_2.png)
 
-![Screenshot of the subtle light palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_light.png)
+![Screenshot of the subtle light palette](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/subtle_light.png)
 
-![Screenshot of the subtle dark palette](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_dark.png)
+![Screenshot of the subtle dark palette](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/subtle_dark.png)
 
-![Capture of the assembly of two single frames with subtle palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/subtle_assembly.gif)
+![Capture of the assembly of two single frames with subtle palettes from Skia debugger](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/subtle_assembly.gif)
 
-![Screen capture of the clock face with baseline debug paint enabled](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/baselines.gif)
+![Screen capture of the clock face with baseline debug paint enabled](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/baselines.gif)
 
-![Screen capture of the clock face showing semantics](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/semantics.gif)
+![Screen capture of the clock face showing semantics](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/semantics.gif)
 
-![Screen capture of the clock face with the repaint rainbow enabled](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/repaint.gif)
+![Screen capture of the clock face with the repaint rainbow enabled](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/repaint.gif)
 
 ## Gratitude
 
