@@ -5,7 +5,8 @@ This is a clock display that uses exclusively the Flutter `Canvas` to draw every
 
 ![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/raw/master/screen_captures/showcase.gif)
 
-The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
+The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).</a>  
+If you want to build the app yourself, make sure to run ***`flutter create .`** first* in `canvas_clock` before `flutter run` in order to [generate required directories](https://github.com/creativecreatorormaybenot/clock/issues/1#issuecomment-582123585) first. Note that the repo size is ~100 MB due to the `screen-captures` and `gh-pages` branches. You can [download as ZIP](https://github.com/creativecreatorormaybenot/clock/archive/master.zip), which will only contain the `master` branch without any commits saving a lot of space. If you want to navigate through my process, however, you will need to [clone the repo](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
 
 ## Notes
 
