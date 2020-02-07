@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const handBounceDuration = Duration(milliseconds: 274);
 
@@ -551,9 +552,9 @@ class RenderAnalogTime
       final painter = TextPainter(
         text: TextSpan(
           text: '$n',
-          style: TextStyle(
+          style: GoogleFonts.unifrakturMaguntia(
             color: _textColor,
-            fontSize: _radius / 7.5,
+            fontSize: _radius / 6.2,
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -585,9 +586,9 @@ class RenderAnalogTime
           final painter = TextPainter(
             text: TextSpan(
               text: '${n + 12}',
-              style: TextStyle(
+              style: GoogleFonts.unifrakturMaguntia(
                 color: _textColor,
-                fontSize: _radius / 9,
+                fontSize: _radius / 8,
               ),
             ),
             textDirection: TextDirection.ltr,

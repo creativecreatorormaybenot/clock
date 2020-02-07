@@ -8,14 +8,19 @@ class Location extends LeafRenderObjectWidget {
   /// The [TextStyle.fontSize] of this is ignored as the text is scaled based on the available width.
   final TextStyle textStyle;
 
-  final Color shadowColor;
+  final Color shadowColor, dropCapColor;
 
   Location({
     Key key,
     @required this.text,
     @required this.textStyle,
     @required this.shadowColor,
-  }) : super(key: key);
+    @required this.dropCapColor,
+  })  : assert(text != null),
+        assert(textStyle != null),
+        assert(shadowColor != null),
+        assert(dropCapColor != null),
+        super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -23,6 +28,7 @@ class Location extends LeafRenderObjectWidget {
       text: text,
       textStyle: textStyle,
       shadowColor: shadowColor,
+      dropCapColor: dropCapColor,
     );
   }
 
@@ -31,7 +37,8 @@ class Location extends LeafRenderObjectWidget {
     renderObject
       ..text = text
       ..textStyle = textStyle
-      ..shadowColor = shadowColor;
+      ..shadowColor = shadowColor
+      ..dropCapColor = dropCapColor;
   }
 }
 
@@ -41,9 +48,11 @@ class RenderLocation
     String text,
     TextStyle textStyle,
     Color shadowColor,
+    Color dropCapColor,
   })  : _text = text,
         _textStyle = textStyle,
         _shadowColor = shadowColor,
+        _dropCapColor = dropCapColor,
         super(ClockComponent.location);
 
   String _text;
@@ -75,7 +84,7 @@ class RenderLocation
     markNeedsLayout();
   }
 
-  Color _shadowColor;
+  Color _shadowColor, _dropCapColor;
 
   set shadowColor(Color value) {
     assert(value != null);
@@ -88,6 +97,17 @@ class RenderLocation
     // This is not optimal, I know,
     // but it is w/e now.
     markNeedsLayout();
+  }
+
+  set dropCapColor(Color value) {
+    assert(value != null);
+
+    if (_dropCapColor == value) {
+      return;
+    }
+
+    _dropCapColor = value;
+    markNeedsPaint();
   }
 
   TextPainter _textPainter;
@@ -115,7 +135,16 @@ class RenderLocation
 
     _textPainter = TextPainter(
       text: TextSpan(
-        text: _text,
+        children: [
+          TextSpan(
+            text: _text.substring(0, 1),
+            style: TextStyle(
+              fontSize: width / 8,
+              color: _dropCapColor,
+            ),
+          ),
+          TextSpan(text: _text.substring(1)),
+        ],
         style: _textStyle.copyWith(
           fontSize: width / 9.7,
           shadows: [

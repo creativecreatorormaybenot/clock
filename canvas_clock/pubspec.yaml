@@ -12,6 +12,8 @@ dependencies:
   flutter_clock_helper:
     path: ../flutter_clock_helper
 
+  google_fonts: ^0.3.7
+
 flutter:
   # The clock helper uses Material design icons, hence, this is added.
   uses-material-design: true

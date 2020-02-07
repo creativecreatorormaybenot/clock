@@ -69,6 +69,9 @@ enum ClockColor {
   /// Colors used for [ExtendedCanvas.drawPetals].
   petals,
   petalsHighlight,
+
+  /// Used to highlight the initial letter of the location.
+  dropCap,
 }
 
 /// A controller for the palette for all colors used in the clock face.
@@ -114,6 +117,7 @@ class Palette extends StatefulWidget {
   },
       light = {
     ClockColor.text: Color(0xcd000000),
+    ClockColor.dropCap: Color(0xcd622408),
     ClockColor.border: Color(0xff000000),
     ClockColor.petalsHighlight: Color(0xffffffff),
     ClockColor.analogTimeBackgroundHighlight: Color(0xffffffff),
@@ -193,6 +197,7 @@ class Palette extends StatefulWidget {
       dark = {
     // Text
     ClockColor.text: Color(0xb3ffffff),
+    ClockColor.dropCap: Color(0xb3f2b386),
     ClockColor.digitalTimeText: Color(0xb3ffffff),
 
     // Misc

@@ -6,6 +6,7 @@ import 'package:canvas_clock/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const spinUpDuration = Duration(milliseconds: 1735);
 
@@ -328,11 +329,12 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         ),
         Location(
           text: model.location,
-          textStyle: TextStyle(
+          textStyle: GoogleFonts.unifrakturMaguntia(
             color: widget.palette[ClockColor.text],
             fontWeight: FontWeight.bold,
           ),
           shadowColor: widget.palette[ClockColor.shadow],
+          dropCapColor: widget.palette[ClockColor.dropCap],
         ),
         Slide(
           ballTravelAnimation: ballTravelAnimation,

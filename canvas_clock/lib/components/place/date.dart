@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UpdatedDate extends StatefulWidget {
   final Map<ClockColor, Color> palette;
@@ -51,7 +52,7 @@ class _UpdatedDateState extends State<UpdatedDate> {
   @override
   Widget build(BuildContext context) => Date(
         text: '${time.month}/${time.day}/${time.year}',
-        textStyle: TextStyle(
+        textStyle: GoogleFonts.unifrakturMaguntia(
           color: widget.palette[ClockColor.text],
           fontWeight: FontWeight.normal,
           fontStyle: FontStyle.normal,

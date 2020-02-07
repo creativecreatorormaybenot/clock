@@ -4,6 +4,7 @@ import 'package:canvas_clock/clock.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const temperatureScale = {
   TemperatureUnit.celsius: [-16, 50],
@@ -596,9 +597,10 @@ class RenderTemperature
         unitPainter = TextPainter(
       text: TextSpan(
         text: '$_unitString',
-        style: TextStyle(
+        style: GoogleFonts.yantramanav(
           color: _textColor,
           fontSize: size.width / 6,
+          fontWeight: FontWeight.bold,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -813,9 +815,9 @@ class RenderTemperature
         intermediateValue = majorValue / 2,
         minorValue = intermediateValue / 5;
 
-    final fontSize = size.width / 7.4,
+    final fontSize = size.width / 8,
         fontIndent = fontSize / 9,
-        style = TextStyle(
+        style = GoogleFonts.oswald(
       color: _textColor,
       fontSize: fontSize,
       fontWeight: FontWeight.bold,
@@ -930,7 +932,7 @@ class RenderTemperature
       final painter = TextPainter(
         text: TextSpan(
           text: text,
-          style: TextStyle(
+          style: GoogleFonts.oswald(
             color: color,
             fontSize: size.width / 13,
             fontWeight: FontWeight.bold,

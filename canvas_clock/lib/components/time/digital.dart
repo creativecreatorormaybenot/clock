@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AnimatedDigitalTime extends AnimatedWidget {
   final Animation<double> animation;
@@ -226,9 +227,10 @@ class RenderDigitalTime
     _timePainter = TextPainter(
       text: TextSpan(
         text: time,
-        style: TextStyle(
+        style: GoogleFonts.unifrakturMaguntia(
           color: _textColor,
           fontSize: given.width / 7.4,
+          letterSpacing: given.width / 64,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -237,9 +239,10 @@ class RenderDigitalTime
     _amPmPainter = TextPainter(
       text: TextSpan(
         text: amPm,
-        style: TextStyle(
+        style: GoogleFonts.unifrakturCook(
           color: _textColor,
           fontSize: given.width / 13,
+          letterSpacing: given.width / 244,
         ),
       ),
       textDirection: TextDirection.ltr,
