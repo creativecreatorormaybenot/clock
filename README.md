@@ -5,8 +5,7 @@ This is a clock display that uses exclusively the Flutter `Canvas` to draw every
 
 ![Quick screen capture showing the final result of the submission](https://github.com/creativecreatorormaybenot/clock/raw/screen-captures/showcase.gif)
 
-The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).</a>  
-If you want to build the app yourself, make sure to run ***`flutter create .`*** in `canvas_clock` before `flutter run` in order to [generate required directories](https://github.com/creativecreatorormaybenot/clock/issues/1#issuecomment-582123585) first. Note that the repo size is ~100 MB due to the `screen-captures` and `gh-pages` branches. You can [download as ZIP](https://github.com/creativecreatorormaybenot/clock/archive/master.zip), which will only contain the `master` branch without any commits saving a lot of space. If you want to navigate through my process, however, you will need to [clone the repo](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
+The code entry point for the clock face is [ `canvas_clock/lib/main.dart` ](https://github.com/creativecreatorormaybenot/clock/blob/master/canvas_clock/lib/main.dart).
 
 ## Notes
 
@@ -36,6 +35,14 @@ I did not go with the raw layer (here is an [old demonstration](https://github.c
 ### Hand bouncing
 
 For the animation of the second hand (and minute hand) bouncing of the analog clock, I enjoyed looking at this [slow motion capture of a watch](https://youtu.be/tyl7-gHRBX8?t=29) (the important part is blurry (:, yes).
+
+### Custom fonts
+
+You can view the [ `custom-fonts` branch](https://github.com/creativecreatorormaybenot/clock/tree/custom-fonts) for a version of the clock face with fonts that better match the rest of the design. Watch [a demo of this](https://twitter.com/creativemaybeno/status/1225832214623145985?s=20) (note: this is not part of the design submitted to the Flutter Clock challenge).
+
+## The code
+
+If you want to build the app yourself, make sure to run ***`flutter create .`*** in `canvas_clock` before `flutter run` in order to [generate required directories](https://github.com/creativecreatorormaybenot/clock/issues/1#issuecomment-582123585) first. Note that the repo size is ~100 MB due to the `screen-captures` and `gh-pages` branches. You can [download as ZIP](https://github.com/creativecreatorormaybenot/clock/archive/master.zip), which will only contain the `master` branch without any commits saving a lot of space. If you want to navigate through my process, however, you will need to [clone the repo](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
 
 ### Understanding the code
 
