@@ -1,4 +1,4 @@
-# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://link.medium.com/ZBn2ctPvF3) | [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
+# clock | [View demo](https://creativecreatorormaybenot.github.io/clock) | [Read article](https://link.medium.com/ZBn2ctPvF3) | [Watch video](https://youtu.be/E1KIjOsX974) [![Twitter follow](https://img.shields.io/twitter/follow/creativemaybeno?label=Follow%20me&style=social)](https://twitter.com/creativemaybeno)
 
 [creativecreatorormaybenot](https://github.com/creativecreatorormaybenot)'s playful entry to the [Flutter clock challenge](https://flutter.dev/clock) (is it weird to say it like that?).</a>  
 This is a clock display that uses exclusively the Flutter `Canvas` to draw everything you see on screen. That means that there are **no assets**, **no plugins**, and not even prebuilt widgets used, i.e.</a> every `RenderObject` in the tree is custom made by me.
