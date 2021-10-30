@@ -18,6 +18,8 @@ Additionally, I wrote a whole article about the technical implementation of my s
 
  * You can view the clock face running on Flutter web [here](https://creativecreatorormaybenot.github.io/clock).
 
+ * *2021 note: this is still the build from Feb 2020, using the Flutter web beta version from Feb 2020. Expect it to not run as well as today's Flutter web apps.*
+
  * **Notice**: some features are not supported on web, e.g.</a> some of the weather icon animations because trimming paths does not yet work in Flutter web. Same goes for some of the shaders, which are also still *unimplemented*. The sections in code have documentation or comments that link to [Flutter GitHub issues](https://github.com/flutter/flutter/issues) discussing these problems.</a>  
 
  * Apart from unsupported features, the web version looks slightly different in general because some features of the framework are currently implemented differently in Flutter web.</a> **Ironically**, the radial gradients look *so much sweeter* - you should really see the vibrant dark palette running on Flutter web!
